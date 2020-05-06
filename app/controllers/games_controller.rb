@@ -150,12 +150,12 @@ class GamesController < ApplicationController
     production_vol = @game.production
     messages << "Production volume: #{production_vol}"
 
-    if @game.ingredient * 2 < production_vol
-      production_vol = @game.ingredient * 2
+    if @game.ingredient / 2 < production_vol
+      production_vol = @game.ingredient / 2
       messages << "Reduced Production volume: #{production_vol}"
     end
 
-    @game.ingredient -= production_vol / 2
+    @game.ingredient -= production_vol * 2
 
     # if @game.ingredient + @game.product + production_vol <= @game.storage
     #   # good
