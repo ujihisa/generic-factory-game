@@ -77,21 +77,8 @@ class GamesController < ApplicationController
 
   def create_employee
     @game = Game.find(params[:id])
-    @factory = Factory.where(game_id: params[:id], name: 'idle').first
-    raise 'Must not happen' unless @factory
 
-    case params[:type]
-    when 'junior'
-      @factory.junior += 1
-    when 'intermediate'
-      @factory.intermediate += 1
-    when 'senior'
-      @factory.senior += 1
-    else
-      raise 'Must not happen'
-    end
-
-    if @factory.save
+    if @game.hire(params[:type].to_sym)
       redirect_to new_dispatch_game_path, notice: "Successfully hired the #{params[:type]} employee"
     else
       redirect_to @game, notice: "Failed to hire the employee"

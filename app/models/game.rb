@@ -33,4 +33,25 @@ class Game < ApplicationRecord
   def production
     factories.map(&:performance).sum / 2
   end
+
+  # Similar to save()
+  def hire(employee_type)
+    factory = Factory.where(game_id: id, name: 'idle').first
+    raise 'Must not happen' unless factory
+
+    raise 'Must not happen' unless Employee::RECRUITING_FEES[employee_type]
+    self.money -= Employee::RECRUITING_FEES[employee_type]
+
+    case employee_type
+    when :junior
+      factory.junior += 1
+    when :intermediate
+      factory.intermediate += 1
+    when :senior
+      factory.senior += 1
+    else
+      raise 'Must not happen'
+    end
+    save && factory.save
+  end
 end

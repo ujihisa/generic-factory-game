@@ -21,7 +21,7 @@
         <th>Intermediates</th>
         <th>Seniors</th>
       </tr>
-    <%- @game.factories.each do |factory| %>
+    <%- @game.factories.order('id ASC').each do |factory| %>
       <tr>
         <td><%= factory.name.capitalize %></td>
         <td><%= factory.junior %>

@@ -7,16 +7,20 @@
 
 <pre>
 Junior employee
+    Recruiting $3k
     $3k/month, 20 skil
 
 Intermediate
+    Recruiting $5k
     $5k/month, 40 skil
 
 Senior
+    Recruiting $9k
     $9k/month, 80 skil
 </pre>
 
-<%- ['junior', 'intermediate', 'senior'].each do |type| %>
+<%- [:junior, :intermediate, :senior].each do |type| %>
+  <%- next if @game.money < Employee::RECRUITING_FEES[type] %>
   <p>
   <%= form_with(url: create_employee_game_url, method: 'post') do |form| %>
     <%= hidden_field_tag 'type', type %>
