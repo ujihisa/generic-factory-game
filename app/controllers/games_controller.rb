@@ -2,6 +2,7 @@ class GamesController < ApplicationController
   before_action :set_game, only: [
     :show, :edit, :update, :destroy, :new_storages, :create_storages,
     :new_employee, :create_employee, :new_dispatch, :create_dispatch,
+    :new_ingredients, :create_ingredients,
   ]
 
   # GET /games
@@ -62,8 +63,8 @@ class GamesController < ApplicationController
   def create_storages
     num = params[:num].to_i
     @game = Game.find(params[:id])
-    @game.money -= 1
-    @game.storage += 100
+    @game.money -= num
+    @game.storage += 100 * num
     if 0 <= @game.money && @game.save
       redirect_to @game, notice: "Successfully Bought #{num * 100}t Storages"
     else
@@ -137,6 +138,22 @@ class GamesController < ApplicationController
       redirect_to @game, notice: "Failed to dispatch the employee"
     end
   end
+
+  def new_ingredients
+  end
+
+  def create_ingredients
+    num = params[:num].to_i
+    @game = Game.find(params[:id])
+    @game.money -= num
+    @game.ingredient += num * 20
+    if 0 <= @game.money && @game.save
+      redirect_to @game, notice: "Successfully Bought #{num * 20}t Ingredients"
+    else
+      redirect_to @game, notice: "Failed to buy Ingredients"
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

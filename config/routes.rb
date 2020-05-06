@@ -9,6 +9,9 @@ Rails.application.routes.draw do
 
       get 'new_dispatch'
       post 'create_dispatch'
+
+      get 'new_ingredients'
+      post 'create_ingredients'
     end
     resources :factories
   end
