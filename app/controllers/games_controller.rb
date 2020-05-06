@@ -34,7 +34,7 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       if @game.save && Factory.create(game_id: @game.id, name: 'idle')
-        format.html { redirect_to @game, notice: 'Game was successfully created.' }
+        format.html { redirect_to @game, notice: 'Game start!' }
         format.json { render :show, status: :created, location: @game }
       else
         format.html { render :new }
@@ -92,7 +92,7 @@ class GamesController < ApplicationController
     end
 
     if @factory.save
-      redirect_to @game, notice: "Successfully hired the #{params[:type]} employee"
+      redirect_to new_dispatch_game_path, notice: "Successfully hired the #{params[:type]} employee"
     else
       redirect_to @game, notice: "Failed to hire the employee"
     end

@@ -17,10 +17,12 @@ Senior
 </pre>
 
 <%- ['junior', 'intermediate', 'senior'].each do |type| %>
+  <p>
   <%= form_with(url: create_employee_game_url, method: 'post') do |form| %>
     <%= hidden_field_tag 'type', type %>
     <%= form.submit "Hire 1 #{type}" %>
   <% end %>
+  </p>
 <%- end %>
 
 <p>

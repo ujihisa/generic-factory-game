@@ -1,4 +1,3 @@
-<%= form_with(model: game, local: true) do |form| %>
   <% if game.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(game.errors.count, "error") %> prohibited this game from being saved:</h2>
@@ -12,11 +11,12 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :player %>
-    <%= form.select :player_id, @players.map { [_1.name, _1.id] } %>
+    <%- @players.each do |player| %>
+      <p>
+      <%= form_with(model: game, local: true) do |form| %>
+        <%= hidden_field_tag :'game[player_id]', player.id %>
+        <%= form.submit "Play as #{player.name}" %>
+      <% end %>
+      </p>
+    <%- end %>
   </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>

@@ -31,6 +31,6 @@ class Game < ApplicationRecord
   end
 
   def production
-    factories.map(&:production).sum / 2
+    factories.map(&:performance).sum / 2
   end
 end
