@@ -63,7 +63,7 @@
       <li>Contract <%= contract.name %> (<%= Contract::DESCRIPTIONS[contract.name] %>)</li>
     <%- end %>
   </ul>
-  Current required products: <%= @game.contracts.map(&:name).map { Contract::RULES[_1][@game.current_month][0] }.sum %>t
+  Total required products for <%= @game.next_month %>: <%= @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>t
 </p>
 
 

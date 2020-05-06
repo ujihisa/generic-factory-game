@@ -9,4 +9,17 @@ class Factory < ApplicationRecord
     'semi-auto': 90,
     'full-auto': 180,
   }.freeze
+
+  # performance = α * #ES + β * ΣES
+  PERFORMANCE_A_B = {
+    'idle': [0, 0],
+    'manual': [0, 1],
+    'semi-auto': [20, 0.5],
+    'full-auto': [60, 0],
+  }
+
+  def production
+    (a, b) = PERFORMANCE_A_B[name.to_sym]
+    a * (junior + intermediate + senior) + b * (junior * 20 + intermediate * 40 + senior * 80)
+  end
 end
