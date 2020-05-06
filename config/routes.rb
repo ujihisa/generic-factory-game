@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
       get 'new_ingredients'
       post 'create_ingredients'
+
+      post 'end_month'
     end
     resources :factories
     resources :contracts

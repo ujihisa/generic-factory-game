@@ -1,5 +1,12 @@
 <p id="notice"><%= notice %></p>
 
+<%- if @game.money < 0 %>
+  <font size=7 color=red>GAME OVER</font>
+<%- elsif 1000 <= @game.money %>
+  <font size=5>Game Clear!</font>
+<%- end %>
+
+
 <p>
   <strong>Player:</strong>
   <%= @game.player.name %>
@@ -43,8 +50,8 @@
     </table>
 
     <ul>
-      <li>Estimated Ingredients Consumption: 0t</li>
-      <li>Estimated Product Generation: 0t</li>
+      <li>Estimated Ingredients Consumption: <%= @game.production * 2 %>t</li>
+      <li>Estimated Product Generation: <%= @game.production %>t</li>
     </ul>
   <%- end %>
 </p>
@@ -71,6 +78,9 @@
     <li><%= link_to 'Buy Ingredients', new_ingredients_game_path %> (原料の購入)
     <li><%= link_to 'Make a contract', new_game_contract_path(@game.id) %> (新規契約を結ぶ)
   </ul>
+  <%= form_with(url: end_month_game_url, method: 'post') do |form| %>
+    <%= form.submit 'End month' %>
+  <% end %>
 <%- end %>
 
 <br/>

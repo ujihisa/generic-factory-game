@@ -5,6 +5,7 @@
 <table>
   <thead>
     <tr>
+      <th>Game ID</th>
       <th>Player</th>
       <th>Months spent</th>
       <th>Money</th>
@@ -18,6 +19,7 @@
   <tbody>
     <% @games.each do |game| %>
       <tr>
+        <td><%= game.id %></td>
         <td><%= game.player.name %></td>
         <td><%= game.month %></td>
         <td><%= number_to_currency(game.money, precision: 0, format: '%u%nK') %></td>

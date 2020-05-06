@@ -6,23 +6,10 @@
   <li>特定の月は、生産物の量と報酬の額が変動する。具体的にどの月にどう変わるかは、結ぶ契約による。</li>
 </ul>
 
-<pre>
-Contract A
-    20t for $10k
-    40t for $20k only in November
-Contract B
-    40t for $20k
-    0t for $0k only in February
-Contract C
-    60t for $32k
-    100t for $50k only in July and August
-Contract D
-    80t for $38k
-    160t for $80k only in December
-Contract E
-    100t for $50k
-    200t for $100k only in December
-</pre>
+<%- Contract::DESCRIPTIONS.each do |name, description| %>
+  <h3>Contract <%= name %><%= @game.contracts.map(&:name).include?(name) ? ' (契約済み)' : '' %></h3>
+  <pre><%= description %></pre>
+<%- end %>
 
 <%= form_with(model: [@game, contract], local: true) do |form| %>
   <% if contract.errors.any? %>

@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   before_action :set_game, only: [
     :show, :edit, :update, :destroy, :new_storages, :create_storages,
     :new_employee, :create_employee, :new_dispatch, :create_dispatch,
-    :new_ingredients, :create_ingredients,
+    :new_ingredients, :create_ingredients, :end_month,
   ]
 
   # GET /games
@@ -154,6 +154,86 @@ class GamesController < ApplicationController
     end
   end
 
+  def end_month
+    messages = []
+
+    @game.month += 1
+
+    # produce
+    production_vol = @game.factories.map {|factory|
+      case factory.name
+      when 'manual'
+        factory.junior * 20 + factory.intermediate * 40 + factory.senior * 80
+      when 'semi-auto'
+        factory.junior * 50 + factory.intermediate * 60 + factory.senior * 80
+      when 'full-auto'
+        factory.junior * 80 + factory.intermediate * 80 + factory.senior * 80
+      when 'idle'
+        0
+      else
+        raise 'Must not happen'
+      end
+    }.sum
+    messages << "Production volume: #{production_vol}"
+
+    if @game.ingredient * 2 < production_vol
+      production_vol = @game.ingredient * 2
+      messages << "Reduced Production volume: #{production_vol}"
+    end
+
+    @game.ingredient -= production_vol / 2
+
+    # if @game.ingredient + @game.product + production_vol <= @game.storage
+    #   # good
+    # else
+    #   # pay penalty
+    #   @game.money -= 10 * (@game.ingredient + @game.product + production_vol - @game.storage)
+    #   production_vol = @game.storage - @game.product - @game.ingredient
+    # end
+
+    @game.product += production_vol
+
+    # gain sales
+    @game.contracts.each do |contract|
+      (required_products, fee) = Contract::RULES[contract.name][@game.current_month]
+      if required_products <= @game.product
+        # good
+        @game.product -= required_products
+        @game.money += fee
+      else
+        # penalty
+        @game.money -= fee * 10
+
+        messages << "Paid penalty for contract #{contract.name}"
+      end
+    end
+
+    # pay fees
+    @game.money -= @game.storage / 100
+    messages << "Paid storage $#{@game.storage / 100}K"
+
+    salary =
+      @game.factories.map {|factory|
+        factory.junior * 3 + factory.intermediate * 5 + factory.senior * 9
+      }.sum
+    @game.money -= salary
+    messages << "Paid salary $#{salary}K"
+
+    if @game.save
+      if @game.money < 0
+        messages << 'Game over!'
+        redirect_to @game, notice: messages.join(",\n")
+      elsif 1000 <= @game.money
+        messages << 'Game clear!'
+        redirect_to @game, notice: messages.join(",\n")
+      else
+        messages << 'Successfully ended the month'
+        redirect_to @game, notice: messages.join(",\n")
+      end
+    else
+      redirect_to @game, notice: 'Hmm. something was wrong...'
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
