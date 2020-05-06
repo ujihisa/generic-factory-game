@@ -13,18 +13,18 @@
 ActiveRecord::Schema.define(version: 2020_05_06_001149) do
 
   create_table "games", force: :cascade do |t|
-    t.integer "player_id"
-    t.integer "month"
-    t.integer "money"
-    t.integer "storage"
-    t.integer "ingredient"
-    t.integer "product"
+    t.integer "player_id", null: false
+    t.integer "month", default: 0, null: false
+    t.integer "money", default: 100, null: false
+    t.integer "storage", default: 0, null: false
+    t.integer "ingredient", default: 0, null: false
+    t.integer "product", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "players", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

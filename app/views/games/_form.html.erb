@@ -13,32 +13,7 @@
 
   <div class="field">
     <%= form.label :player %>
-    <%= form.text_field :player %>
-  </div>
-
-  <div class="field">
-    <%= form.label :month %>
-    <%= form.number_field :month %>
-  </div>
-
-  <div class="field">
-    <%= form.label :money %>
-    <%= form.number_field :money %>
-  </div>
-
-  <div class="field">
-    <%= form.label :storage %>
-    <%= form.number_field :storage %>
-  </div>
-
-  <div class="field">
-    <%= form.label :ingredient %>
-    <%= form.number_field :ingredient %>
-  </div>
-
-  <div class="field">
-    <%= form.label :product %>
-    <%= form.number_field :product %>
+    <%= form.select :player_id, @players.map { [_1.name, _1.id] } %>
   </div>
 
   <div class="actions">
