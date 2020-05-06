@@ -8,6 +8,8 @@ class CreateFactories < ActiveRecord::Migration[6.0]
       t.integer :senior, default: 0, null: false
 
       t.timestamps null: false
+
+      t.index [:game_id, :name], unique: true
     end
   end
 end

@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2020_05_06_025338) do
     t.integer "senior", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["game_id", "name"], name: "index_factories_on_game_id_and_name", unique: true
   end
 
   create_table "games", force: :cascade do |t|

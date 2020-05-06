@@ -20,11 +20,35 @@
   (<%= @game.ingredient %>t + <%= @game.product %>t) / <%= @game.storage %>t
 </p>
 
+<p>
+  <strong>Factories:</strong>
+  <%- if @game.factories.empty? %>
+    No factories
+  <%- else %>
+    <table border=1>
+      <tr>
+        <th>Name</th>
+        <th>Juniors assigned</th>
+        <th>Intermediates assigned</th>
+        <th>Seniors assigned</th>
+      </tr>
+    <%- @game.factories.each do |factory| %>
+      <tr>
+        <td><%= factory.name.capitalize %></td>
+        <td><%= factory.junior %></td>
+        <td><%= factory.intermediate %></td>
+        <td><%= factory.senior %></td>
+      </tr>
+    <%- end %>
+    </table>
+  <%- end %>
+</p>
+
 
 <%- if (0..1000).include?(@game.money) %>
   <ul>
     <li><%= link_to 'Buy Storage', new_storages_game_path %>
-    <li><%= link_to 'Buy Factory', new_factory_game_path %>
+    <li><%= link_to 'Build Factory', new_game_factory_path(@game.id) %>
   </ul>
 <%- end %>
 
