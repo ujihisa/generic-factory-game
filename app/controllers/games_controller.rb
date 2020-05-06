@@ -26,6 +26,7 @@ class GamesController < ApplicationController
   # POST /games.json
   def create
     @game = Game.new(game_params)
+    @players = Player.all
 
     respond_to do |format|
       if @game.save
@@ -70,6 +71,6 @@ class GamesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def game_params
-      params.require(:game).permit(:player, :month, :money, :storage, :ingredient, :product)
+      params.require(:game).permit(:player_id, :month, :money, :storage, :ingredient, :product)
     end
 end
