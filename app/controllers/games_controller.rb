@@ -79,7 +79,7 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
 
     if @game.hire(params[:type].to_sym)
-      redirect_to new_dispatch_game_path, notice: "Successfully hired the #{params[:type]} employee"
+      redirect_to @game, notice: "Successfully hired the #{params[:type]} employee"
     else
       redirect_to @game, notice: "Failed to hire the employee"
     end
@@ -147,14 +147,7 @@ class GamesController < ApplicationController
     @game.month += 1
 
     # produce
-    production_vol = @game.production
-    messages << "Production volume: #{production_vol}"
-
-    if @game.ingredient / 2 < production_vol
-      production_vol = @game.ingredient / 2
-      messages << "Reduced Production volume: #{production_vol}"
-    end
-
+    production_vol = @game.capped_production
     @game.ingredient -= production_vol * 2
 
     # if @game.ingredient + @game.product + production_vol <= @game.storage
@@ -178,20 +171,20 @@ class GamesController < ApplicationController
         # penalty
         @game.money -= fee * 10
 
-        messages << "Paid penalty for contract #{contract.name}"
+        messages << "[PENALTY] Paid $#{fee * 10}K for contract #{contract.name}"
       end
     end
 
     # pay fees
     @game.money -= @game.storage / 100
-    messages << "Paid storage $#{@game.storage / 100}K"
+    messages << "Paid $#{@game.storage / 100}K for storage maintenance"
 
     salary =
       @game.factories.map {|factory|
         factory.junior * 3 + factory.intermediate * 5 + factory.senior * 9
       }.sum
     @game.money -= salary
-    messages << "Paid salary $#{salary}K"
+    messages << "Paid $#{salary}K for employees salary"
 
     if @game.save
       if @game.money < 0
