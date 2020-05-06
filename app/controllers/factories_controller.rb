@@ -12,7 +12,7 @@ class FactoriesController < ApplicationController
     @game = Game.find(params[:game_id])
 
     @game = Game.find(params[:game_id])
-    @game.money -= @factory.cost_to_buy
+    @game.money -= Factory::COST_TO_BUY[@factory.name.to_sym]
 
     if (0..1000).include?(@game.money)
       if @factory.save && @game.save

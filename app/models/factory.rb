@@ -3,16 +3,10 @@ class Factory < ApplicationRecord
   validates :name, inclusion: ['idle', 'manual', 'semi-auto', 'full-auto']
   validates_uniqueness_of :name, scope: :game_id
 
-  def cost_to_buy
-    case name
-    when 'idle', 'manual'
-      0
-    when 'semi-auto'
-      90
-    when 'full-auto'
-      180
-    else
-      raise 'Must not happen'
-    end
-  end
+  COST_TO_BUY = {
+    'idle': 0,
+    'manual': 0,
+    'semi-auto': 90,
+    'full-auto': 180,
+  }.freeze
 end
