@@ -1,6 +1,8 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Games</h1>
+<h1>GenericFactoryGame Saved Data</h1>
+
+<h2>Version <%= GenericFactoryGame::VERSION %></h2>
 
 <table>
   <thead>
@@ -17,7 +19,7 @@
   </thead>
 
   <tbody>
-    <% @games.each do |game| %>
+    <% @current_games.each do |game| %>
       <tr>
         <td><%= game.id %></td>
         <td><%= game.player.name %></td>
@@ -33,3 +35,37 @@
 </table>
 
 <br>
+
+<h2>Archived games</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Game Version</th>
+      <th>Game ID</th>
+      <th>Player</th>
+      <th>Months spent</th>
+      <th>Money</th>
+      <th>Storage</th>
+      <th>Ingredient</th>
+      <th>Product</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @archived_games.each do |game| %>
+      <tr>
+        <td><%= game.version %></td>
+        <td><%= game.id %></td>
+        <td><%= game.player.name %></td>
+        <td><%= game.month %></td>
+        <td><%= number_to_currency(game.money, precision: 0, format: '%u%nK') %></td>
+        <td><%= game.storage %></td>
+        <td><%= game.ingredient %></td>
+        <td><%= game.product %></td>
+        <td><%= link_to game.status.to_s.capitalize, game %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

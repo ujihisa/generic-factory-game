@@ -1,6 +1,8 @@
 <p id="notice"><%= notice %></p>
 
-<h1>High score</h1>
+<h1>High score</h2>
+
+<h2>Version <%= GenericFactoryGame::VERSION %></h2>
 
 <table>
   <thead>
@@ -17,6 +19,33 @@
         <td>
           <%- if player.best_game %>
             <%= player.best_game.month %> months</td>
+          <%- else %>
+            N/A
+          <%- end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<h2>Version <%= GenericFactoryGame::PREVIOUS_VERSION %></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Shortest months to win</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @players.each do |player| %>
+      <tr>
+        <td><%= player.name %></td>
+        <td>
+          <%- if player.previous_best_game %>
+            <%= player.previous_best_game.month %> months</td>
           <%- else %>
             N/A
           <%- end %>

@@ -8,6 +8,7 @@ Bundler.require(*Rails.groups)
 
 module GenericFactoryGame
   VERSION = '0.0.2'
+  PREVIOUS_VERSION = '0.0.1'
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

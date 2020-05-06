@@ -8,7 +8,8 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @games = Game.order('updated_at ASC').all
+    @current_games = Game.where(version: GenericFactoryGame::VERSION)
+    @archived_games = Game.where.not(version: GenericFactoryGame::VERSION).order('version ASC, updated_at ASC')
   end
 
   # GET /games/1
@@ -29,7 +30,7 @@ class GamesController < ApplicationController
   # POST /games
   # POST /games.json
   def create
-    @game = Game.new(game_params)
+    @game = Game.new(version: GenericFactoryGame::VERSION, **game_params)
     @players = Player.all
 
     respond_to do |format|
