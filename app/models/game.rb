@@ -1,6 +1,7 @@
 class Game < ApplicationRecord
   belongs_to :player
   has_many :factories
+  has_many :contracts
 
   def current_month
     [

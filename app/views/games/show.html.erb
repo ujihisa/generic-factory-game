@@ -41,9 +41,26 @@
       </tr>
     <%- end %>
     </table>
+
+    <ul>
+      <li>Estimated Ingredients Consumption: 0t</li>
+      <li>Estimated Product Generation: 0t</li>
+    </ul>
   <%- end %>
 </p>
 
+<p>
+  <strong>Contracts:</strong>
+  <ul>
+    <%- @game.contracts.each do |contract| %>
+      <li>Contract <%= contract.name %> (<%= Contract::DESCRIPTIONS[contract.name] %>)</li>
+    <%- end %>
+  </ul>
+  Current required products: <%= @game.contracts.map(&:name).map { Contract::RULES[_1][@game.current_month][0] }.sum %>t
+</p>
+
+
+<h3>Actions</h3>
 
 <%- if (0..1000).include?(@game.money) %>
   <ul>

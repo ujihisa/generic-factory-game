@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :contracts
   resources :games do
     member do
       get 'new_storages'
@@ -15,6 +14,7 @@ Rails.application.routes.draw do
       post 'create_ingredients'
     end
     resources :factories
+    resources :contracts
   end
 
   resources :players
