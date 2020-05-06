@@ -5,12 +5,17 @@
 </ul>
 
 <div class="field">
-  <%- (1..([@game.money, (@game.storage - @game.ingredient - @game.product) / 20].min)).each do |num| %>
-    <%= form_with(url: create_ingredients_game_url, method: 'post') do |form| %>
-      <%= hidden_field_tag 'num', num %>
-      <%= form.submit "Buy #{20 * num}t" %>
-      (Money: <%= number_to_currency(@game.money, precision: 0, format: '%u%nK')%> → <%= number_to_currency(@game.money - num, precision: 0, format: '%u%nK')%>)
-    <% end %>
+  <%- max_num = [@game.money, (@game.storage - @game.ingredient - @game.product) / 20].min %>
+  <%- if 1 <= max_num %>
+    <%- (1..max_num).each do |num| %>
+      <%= form_with(url: create_ingredients_game_url, method: 'post') do |form| %>
+        <%= hidden_field_tag 'num', num %>
+        <%= form.submit "Buy #{20 * num}t" %>
+        (Money: <%= number_to_currency(@game.money, precision: 0, format: '%u%nK')%> → <%= number_to_currency(@game.money - num, precision: 0, format: '%u%nK')%>)
+      <% end %>
+    <%- end %>
+  <%- else %>
+    <font color=red>You don't have enough money or storage to buy any amount of ingredient</font>
   <%- end %>
 </div>
 
