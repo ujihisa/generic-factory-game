@@ -58,4 +58,10 @@ class Game < ApplicationRecord
     end
     save && factory.save
   end
+
+  def salary
+    factories.map {|factory|
+      factory.junior * 3 + factory.intermediate * 5 + factory.senior * 9
+    }.sum
+  end
 end
