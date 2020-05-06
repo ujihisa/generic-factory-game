@@ -8,7 +8,7 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @games = Game.all
+    @games = Game.order('updated_at ASC').all
   end
 
   # GET /games/1

@@ -3,6 +3,19 @@ class Game < ApplicationRecord
   has_many :factories
   has_many :contracts
 
+  def status
+    case money
+    when (...0)
+      :game_over
+    when 0..1000
+      :in_progress
+    when (1001..)
+      :completed
+    else
+      raise 'Must not happen'
+    end
+  end
+
   def current_month
     [
       'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',

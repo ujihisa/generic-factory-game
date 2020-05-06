@@ -12,7 +12,7 @@
       <th>Storage</th>
       <th>Ingredient</th>
       <th>Product</th>
-      <th colspan="3"></th>
+      <th>Status</th>
     </tr>
   </thead>
 
@@ -26,7 +26,7 @@
         <td><%= game.storage %></td>
         <td><%= game.ingredient %></td>
         <td><%= game.product %></td>
-        <td><%= link_to (0..1000).include?(game.money) ? 'Continue' : 'Show', game %></td>
+        <td><%= link_to game.status.to_s.capitalize, game %></td>
       </tr>
     <% end %>
   </tbody>
