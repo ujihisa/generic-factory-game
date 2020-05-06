@@ -29,6 +29,12 @@
   </tr>
 
   <tr>
+    <th><strong>Expense</strong></th>
+    <td><%= number_to_currency(@game.storage / 100 + @game.salary, precision: 0, format: '%u%nK') %></td>
+    <td></td>
+  </tr>
+
+  <tr>
     <th><strong>Storage</strong></th>
     <td>
       Size: <%= @game.storage %>t
@@ -49,7 +55,15 @@
   <tr>
     <th><strong>Employees</strong></th>
     <td>
-      <%= @game.factories.map { _1.junior + _1.intermediate + _1.senior }.sum %>
+      <%- @game.factories.sum(&:junior).times do %>
+        <img src='/images/employee-junior.png' width=16 title=junior>
+      <%- end %>
+      <%- @game.factories.sum(&:intermediate).times do %>
+        <img src='/images/employee-intermediate.png' width=16 title=intermediate>
+      <%- end %>
+      <%- @game.factories.sum(&:senior).times do %>
+        <img src='/images/employee-senior.png' width=16 title=senior>
+      <%- end %>
     </td>
     <td>
       <%= link_to '👉', new_employee_game_path %>
@@ -74,12 +88,6 @@
     <td>
       <%= link_to '👉', new_game_contract_path(@game.id) %>
     </td>
-  </tr>
-
-  <tr>
-    <th><strong>Expense</strong></th>
-    <td><%= number_to_currency(@game.storage / 100 + @game.salary, precision: 0, format: '%u%nK') %></td>
-    <td></td>
   </tr>
 
 </table>
@@ -107,13 +115,17 @@
   <li>
     Estimated Ingredients Consumption: <%= @game.production * 2 %>t
     <%- if @game.production != @game.capped_production %>
-      <font color=red>(Capped to <%= @game.capped_production * 2 %>t)</font>
+      <ul>
+        <li><font color=red>(Capped to <%= @game.capped_production * 2 %>t, because you don't have much ingredients!)</font>
+      </ul>
     <%- end %>
   </li>
   <li>
     Estimated Product Generation: <%= @game.production %>t
     <%- if @game.production != @game.capped_production %>
-      <font color=red>(Capped to <%= @game.capped_production %>t)</font>
+      <ul>
+        <li><font color=red>(Capped to <%= @game.capped_production %>t, because you don't have much ingredients!)</font>
+      </ul>
     <%- end %>
   </li>
 </ul>

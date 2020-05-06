@@ -24,41 +24,96 @@
     <%- @game.factories.order('id ASC').each do |factory| %>
       <tr>
         <td><%= factory.name.capitalize %></td>
-        <td><%= factory.junior %>
-            <%- if 0 < factory.junior %>
-              <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
-                <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
-                  <%= hidden_field_tag 'type', 'junior' %>
-                  <%= hidden_field_tag 'from', factory.name %>
-                  <%= hidden_field_tag 'to', to_name %>
-                  <%- factory_name_readable = { 'idle' => 'IDLE', 'manual' => 'Manual Factory', 'semi-auto' => 'Semi-auto Factory', 'full-auto' => 'Full-auto Factory' } %>
+        <td>
+          <%= factory.junior %>
+          <%- if 0 < factory.junior %>
+            <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
+              <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
+                <%= hidden_field_tag 'type', 'junior' %>
+                <%= hidden_field_tag 'from', factory.name %>
+                <%= hidden_field_tag 'to', to_name %>
+                <%= hidden_field_tag 'num', 1 %>
+                <%- factory_name_readable = { 'idle' => 'IDLE', 'manual' => 'Manual Factory', 'semi-auto' => 'Semi-auto Factory', 'full-auto' => 'Full-auto Factory' } %>
 
                   <%= form.submit "Move 1 junior to #{factory_name_readable[to_name]}" %>
                 <% end %>
               <%- end %>
-            <%- end %>
-        </td>
-        <td><%= factory.intermediate %>
-            <%- if 0 < factory.intermediate %>
-              <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
-                <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
-                  <%= hidden_field_tag 'type', 'intermediate' %>
-                  <%= hidden_field_tag 'from', factory.name %>
-                  <%= hidden_field_tag 'to', to_name %>
-                  <%= form.submit "Move 1 intermediate to #{to_name.capitalize} factory" %>
-                <% end %>
+
+              <%- if 1 < factory.junior %>
+                <br/>
+                <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
+                  <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
+                    <%= hidden_field_tag 'type', 'junior' %>
+                    <%= hidden_field_tag 'from', factory.name %>
+                    <%= hidden_field_tag 'to', to_name %>
+                    <%= hidden_field_tag 'num', factory.junior %>
+                    <%- factory_name_readable = { 'idle' => 'IDLE', 'manual' => 'Manual Factory', 'semi-auto' => 'Semi-auto Factory', 'full-auto' => 'Full-auto Factory' } %>
+
+                    <%= form.submit "Move #{factory.junior} juniors to #{factory_name_readable[to_name]}" %>
+                  <% end %>
+                <%- end %>
               <%- end %>
             <%- end %>
         </td>
-        <td><%= factory.senior %>
-            <%- if 0 < factory.senior %>
-              <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
-                <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
-                  <%= hidden_field_tag 'type', 'senior' %>
-                  <%= hidden_field_tag 'from', factory.name %>
-                  <%= hidden_field_tag 'to', to_name %>
-                  <%= form.submit "Move 1 senior to #{to_name.capitalize} factory" %>
+        <td>
+          <%= factory.intermediate %>
+          <%- if 0 < factory.intermediate %>
+            <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
+              <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
+                <%= hidden_field_tag 'type', 'intermediate' %>
+                <%= hidden_field_tag 'from', factory.name %>
+                <%= hidden_field_tag 'to', to_name %>
+                <%= hidden_field_tag 'num', 1 %>
+                <%- factory_name_readable = { 'idle' => 'IDLE', 'manual' => 'Manual Factory', 'semi-auto' => 'Semi-auto Factory', 'full-auto' => 'Full-auto Factory' } %>
+
+                  <%= form.submit "Move 1 intermediate to #{factory_name_readable[to_name]}" %>
                 <% end %>
+              <%- end %>
+
+              <%- if 1 < factory.intermediate %>
+                <br/>
+                <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
+                  <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
+                    <%= hidden_field_tag 'type', 'intermediate' %>
+                    <%= hidden_field_tag 'from', factory.name %>
+                    <%= hidden_field_tag 'to', to_name %>
+                    <%= hidden_field_tag 'num', factory.intermediate %>
+                    <%- factory_name_readable = { 'idle' => 'IDLE', 'manual' => 'Manual Factory', 'semi-auto' => 'Semi-auto Factory', 'full-auto' => 'Full-auto Factory' } %>
+
+                    <%= form.submit "Move #{factory.intermediate} intermediates to #{factory_name_readable[to_name]}" %>
+                  <% end %>
+                <%- end %>
+              <%- end %>
+            <%- end %>
+        </td>
+        <td>
+          <%= factory.senior %>
+          <%- if 0 < factory.senior %>
+            <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
+              <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
+                <%= hidden_field_tag 'type', 'senior' %>
+                <%= hidden_field_tag 'from', factory.name %>
+                <%= hidden_field_tag 'to', to_name %>
+                <%= hidden_field_tag 'num', 1 %>
+                <%- factory_name_readable = { 'idle' => 'IDLE', 'manual' => 'Manual Factory', 'semi-auto' => 'Semi-auto Factory', 'full-auto' => 'Full-auto Factory' } %>
+
+                  <%= form.submit "Move 1 senior to #{factory_name_readable[to_name]}" %>
+                <% end %>
+              <%- end %>
+
+              <%- if 1 < factory.senior %>
+                <br/>
+                <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
+                  <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
+                    <%= hidden_field_tag 'type', 'senior' %>
+                    <%= hidden_field_tag 'from', factory.name %>
+                    <%= hidden_field_tag 'to', to_name %>
+                    <%= hidden_field_tag 'num', factory.senior %>
+                    <%- factory_name_readable = { 'idle' => 'IDLE', 'manual' => 'Manual Factory', 'semi-auto' => 'Semi-auto Factory', 'full-auto' => 'Full-auto Factory' } %>
+
+                    <%= form.submit "Move #{factory.senior} seniors to #{factory_name_readable[to_name]}" %>
+                  <% end %>
+                <%- end %>
               <%- end %>
             <%- end %>
         </td>

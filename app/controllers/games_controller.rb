@@ -96,24 +96,27 @@ class GamesController < ApplicationController
     to = Factory.where(game_id: params[:id], name: params[:to]).first
     raise 'must not happen' unless from && to
 
+    num = params[:num].to_i
+    raise 'Must not happen' if num == 0
+
     success =
       case params[:type]
       when 'junior'
         if 0 < from.junior
-          from.junior -= 1
-          to.junior += 1
+          from.junior -= num
+          to.junior += num
           from.save && to.save
         end
       when 'intermediate'
         if 0 < from.intermediate
-          from.intermediate -= 1
-          to.intermediate += 1
+          from.intermediate -= num
+          to.intermediate += num
           from.save && to.save
         end
       when 'senior'
         if 0 < from.senior
-          from.senior -= 1
-          to.senior += 1
+          from.senior -= num
+          to.senior += num
           from.save && to.save
         end
       else
@@ -121,7 +124,7 @@ class GamesController < ApplicationController
       end
 
     if success
-      redirect_to new_dispatch_game_path, notice: "Successfully dispatched the #{params[:type]} employee to #{params[:to]}"
+      redirect_to @game, notice: "Successfully dispatched the #{params[:type]} employee to #{params[:to]}"
     else
       redirect_to @game, notice: "Failed to dispatch the employee"
     end
