@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Player:</strong>
+  <%= @game.player %>
+</p>
+
+<p>
+  <strong>Month:</strong>
+  <%= @game.month %>
+</p>
+
+<p>
+  <strong>Money:</strong>
+  <%= @game.money %>
+</p>
+
+<p>
+  <strong>Storage:</strong>
+  <%= @game.storage %>
+</p>
+
+<p>
+  <strong>Ingredient:</strong>
+  <%= @game.ingredient %>
+</p>
+
+<p>
+  <strong>Product:</strong>
+  <%= @game.product %>
+</p>
+
+<%= link_to 'Edit', edit_game_path(@game) %> |
+<%= link_to 'Back', games_path %>
