@@ -160,20 +160,7 @@ class GamesController < ApplicationController
     @game.month += 1
 
     # produce
-    production_vol = @game.factories.map {|factory|
-      case factory.name
-      when 'manual'
-        factory.junior * 20 + factory.intermediate * 40 + factory.senior * 80
-      when 'semi-auto'
-        factory.junior * 50 + factory.intermediate * 60 + factory.senior * 80
-      when 'full-auto'
-        factory.junior * 80 + factory.intermediate * 80 + factory.senior * 80
-      when 'idle'
-        0
-      else
-        raise 'Must not happen'
-      end
-    }.sum
+    production_vol = @game.production
     messages << "Production volume: #{production_vol}"
 
     if @game.ingredient * 2 < production_vol

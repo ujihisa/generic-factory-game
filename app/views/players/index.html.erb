@@ -1,12 +1,12 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Players</h1>
+<h1>High score</h1>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
-      <th colspan="3"></th>
+      <th>Shortest months to win</th>
     </tr>
   </thead>
 
@@ -14,9 +14,12 @@
     <% @players.each do |player| %>
       <tr>
         <td><%= player.name %></td>
-        <td><%= link_to 'Show', player %></td>
-        <td><%= link_to 'Edit', edit_player_path(player) %></td>
-        <td><%= link_to 'Destroy', player, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+          <%- if player.best_game %>
+            <%= player.best_game.month %> months</td>
+          <%- else %>
+            N/A
+          <%- end %>
       </tr>
     <% end %>
   </tbody>

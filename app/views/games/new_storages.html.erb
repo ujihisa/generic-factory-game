@@ -7,7 +7,7 @@
 </ul>
 
 <div class="field">
-  <%- (1..(@game.money)).each do |num| %>
+  <%- (1..@game.money).each do |num| %>
     <%= form_with(url: create_storages_game_url, method: 'post') do |form| %>
       <%= hidden_field_tag 'num', num %>
       <%= form.submit "Buy #{num}" %>
