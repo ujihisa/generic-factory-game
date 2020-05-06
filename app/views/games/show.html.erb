@@ -2,17 +2,17 @@
 
 <p>
   <strong>Player:</strong>
-  <%= @game.player %>
+  <%= @game.player.name %>
 </p>
 
 <p>
   <strong>Month:</strong>
-  <%= @game.month %>
+  <%= @game.current_month %> (Months spent: <%= @game.month %>)
 </p>
 
 <p>
   <strong>Money:</strong>
-  <%= @game.money %>
+  <%= number_to_currency(@game.money, precision: 0, format: '%nK') %>
 </p>
 
 <p>
