@@ -6,7 +6,7 @@
   <thead>
     <tr>
       <th>Player</th>
-      <th>Month</th>
+      <th>Months spent</th>
       <th>Money</th>
       <th>Storage</th>
       <th>Ingredient</th>
@@ -18,15 +18,14 @@
   <tbody>
     <% @games.each do |game| %>
       <tr>
-        <td><%= game.player %></td>
+        <td><%= game.player.name %></td>
         <td><%= game.month %></td>
-        <td><%= game.money %></td>
+        <td><%= number_to_currency(game.money, precision: 0, format: '%u%nK') %></td>
         <td><%= game.storage %></td>
         <td><%= game.ingredient %></td>
         <td><%= game.product %></td>
-        <td><%= link_to 'Show', game %></td>
+        <td><%= link_to (0..1000).include?(game.money) ? 'Continue' : 'Show', game %></td>
         <td><%= link_to 'Edit', edit_game_path(game) %></td>
-        <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

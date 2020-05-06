@@ -12,23 +12,18 @@
 
 <p>
   <strong>Money:</strong>
-  <%= number_to_currency(@game.money, precision: 0, format: '%nK') %>
+  <%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %>
 </p>
 
 <p>
-  <strong>Storage:</strong>
-  <%= @game.storage %>
+  <strong>(Ingredient + Product) / Storage:</strong>
+  (<%= @game.ingredient %>t + <%= @game.product %>t) / <%= @game.storage %>t
 </p>
 
-<p>
-  <strong>Ingredient:</strong>
-  <%= @game.ingredient %>
-</p>
 
-<p>
-  <strong>Product:</strong>
-  <%= @game.product %>
-</p>
+<%- if (0..1000).include?(@game.money) %>
+  <%#= link_to 'Buy Storage', new_game_storage_path %>
+<%- end %>
 
-<%= link_to 'Edit', edit_game_path(@game) %> |
+<br/>
 <%= link_to 'Back', games_path %>
