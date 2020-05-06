@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: [:show, :edit, :update, :destroy]
+  before_action :set_game, only: [:show, :edit, :update, :destroy, :new_storages, :create_storages]
 
   # GET /games
   # GET /games.json
@@ -50,6 +50,21 @@ class GamesController < ApplicationController
         format.html { render :edit }
         format.json { render json: @game.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def new_storages
+  end
+
+  def create_storages
+    num = params[:num].to_i
+    @game = Game.find(params[:id])
+    @game.money -= 1
+    @game.storage += 100
+    if 0 <= @game.money && @game.save
+      redirect_to @game, notice: "Successfully Bought #{num * 100}t Storages"
+    else
+      redirect_to @game, notice: "Failed to buy Storages"
     end
   end
 
