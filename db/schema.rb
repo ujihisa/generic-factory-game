@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_06_025338) do
+ActiveRecord::Schema.define(version: 2020_05_06_045630) do
+
+  create_table "contracts", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["game_id", "name"], name: "index_contracts_on_game_id_and_name", unique: true
+  end
 
   create_table "factories", force: :cascade do |t|
     t.integer "game_id", null: false

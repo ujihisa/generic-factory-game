@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :contracts
   resources :games do
     member do
       get 'new_storages'

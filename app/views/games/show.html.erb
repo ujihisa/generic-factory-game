@@ -47,11 +47,12 @@
 
 <%- if (0..1000).include?(@game.money) %>
   <ul>
-    <li><%= link_to 'Buy Storages', new_storages_game_path %>
-    <li><%= link_to 'Build a Factory', new_game_factory_path(@game.id) %>
-    <li><%= link_to 'Hire an employee', new_employee_game_path %>
-    <li><%= link_to 'Dispatch an employee', new_dispatch_game_path %>
-    <li><%= link_to 'Buy Ingredients', new_ingredients_game_path %>
+    <li><%= link_to 'Buy Storages', new_storages_game_path %> (倉庫購入)
+    <li><%= link_to 'Build a Factory', new_game_factory_path(@game.id) %> (工場建設)
+    <li><%= link_to 'Hire an employee', new_employee_game_path %> (従業員新規雇用)
+    <li><%= link_to 'Dispatch an employee', new_dispatch_game_path %> (従業員の割当)
+    <li><%= link_to 'Buy Ingredients', new_ingredients_game_path %> (原料の購入)
+    <li><%= link_to 'Make a contract', new_game_contract_path(@game.id) %> (新規契約を結ぶ)
   </ul>
 <%- end %>
 
