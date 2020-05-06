@@ -1,7 +1,7 @@
 class CreateGames < ActiveRecord::Migration[6.0]
   def change
     create_table :games do |t|
-      t.player :player
+      t.integer :player_id
       t.integer :month
       t.integer :money
       t.integer :storage
