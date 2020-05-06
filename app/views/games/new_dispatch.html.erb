@@ -1,0 +1,70 @@
+<h2>Dispatch an employee</h2>
+
+<p>(ここUIがめちゃくちゃ悪いから、良い感じに直したい・・・)</p>
+<ul>
+  <li>従業員はいつでも別の工場に割り当てれます。</li>
+  <li>割り当てられた従業員は即座に仕事を始めます。オーバーヘッドなし</li>
+  <li>どこに割り当てられていても給料は同じです。</li>
+</ul>
+
+<p>
+  <strong>Factories:</strong>
+  <%- if @game.factories.empty? %>
+    No factories
+  <%- else %>
+    <table border=1>
+      <tr>
+        <th>Name</th>
+        <th>Juniors</th>
+        <th>Intermediates</th>
+        <th>Seniors</th>
+      </tr>
+    <%- @game.factories.each do |factory| %>
+      <tr>
+        <td><%= factory.name.capitalize %></td>
+        <td><%= factory.junior %>
+            <%- if 0 < factory.junior %>
+              <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
+                <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
+                  <%= hidden_field_tag 'type', 'junior' %>
+                  <%= hidden_field_tag 'from', factory.name %>
+                  <%= hidden_field_tag 'to', to_name %>
+                  <%= form.submit "Move 1 junior to #{to_name.capitalize} factory" %>
+                <% end %>
+              <%- end %>
+            <%- end %>
+        </td>
+        <td><%= factory.intermediate %>
+            <%- if 0 < factory.intermediate %>
+              <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
+                <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
+                  <%= hidden_field_tag 'type', 'intermediate' %>
+                  <%= hidden_field_tag 'from', factory.name %>
+                  <%= hidden_field_tag 'to', to_name %>
+                  <%= form.submit "Move 1 intermediate to #{to_name.capitalize} factory" %>
+                <% end %>
+              <%- end %>
+            <%- end %>
+        </td>
+        <td><%= factory.senior %>
+            <%- if 0 < factory.senior %>
+              <%- @game.factories.map(&:name).grep_v(/#{factory.name}/).each do |to_name| %>
+                <%= form_with(url: create_dispatch_game_url, method: 'post') do |form| %>
+                  <%= hidden_field_tag 'type', 'senior' %>
+                  <%= hidden_field_tag 'from', factory.name %>
+                  <%= hidden_field_tag 'to', to_name %>
+                  <%= form.submit "Move 1 senior to #{to_name.capitalize} factory" %>
+                <% end %>
+              <%- end %>
+            <%- end %>
+        </td>
+      </tr>
+    <%- end %>
+    </table>
+  <%- end %>
+</p>
+
+
+<p>
+<%= link_to 'Back', @game %>
+</p>

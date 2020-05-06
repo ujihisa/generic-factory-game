@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :set_game, only: [
     :show, :edit, :update, :destroy, :new_storages, :create_storages,
-    :new_employee, :create_employee,
+    :new_employee, :create_employee, :new_dispatch, :create_dispatch,
   ]
 
   # GET /games
@@ -94,6 +94,47 @@ class GamesController < ApplicationController
       redirect_to @game, notice: "Successfully hired the #{params[:type]} employee"
     else
       redirect_to @game, notice: "Failed to hire the employee"
+    end
+  end
+
+  def new_dispatch
+  end
+
+  def create_dispatch
+    raise unless params[:id] && params[:type] && params[:from] && params[:to]
+
+    from = Factory.where(game_id: params[:id], name: params[:from]).first
+    to = Factory.where(game_id: params[:id], name: params[:to]).first
+    raise 'must not happen' unless from && to
+
+    success =
+      case params[:type]
+      when 'junior'
+        if 0 < from.junior
+          from.junior -= 1
+          to.junior += 1
+          from.save && to.save
+        end
+      when 'intermediate'
+        if 0 < from.intermediate
+          from.intermediate -= 1
+          to.intermediate += 1
+          from.save && to.save
+        end
+      when 'senior'
+        if 0 < from.senior
+          from.senior -= 1
+          to.senior += 1
+          from.save && to.save
+        end
+      else
+        raise 'must not happen'
+      end
+
+    if success
+      redirect_to @game, notice: "Successfully dispatched the #{params[:type]} employee to #{params[:to]}"
+    else
+      redirect_to @game, notice: "Failed to dispatch the employee"
     end
   end
 

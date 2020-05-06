@@ -6,6 +6,9 @@ Rails.application.routes.draw do
 
       get 'new_employee'
       post 'create_employee'
+
+      get 'new_dispatch'
+      post 'create_dispatch'
     end
     resources :factories
   end
