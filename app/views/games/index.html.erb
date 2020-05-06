@@ -27,7 +27,6 @@
         <td><%= game.ingredient %></td>
         <td><%= game.product %></td>
         <td><%= link_to (0..1000).include?(game.money) ? 'Continue' : 'Show', game %></td>
-        <td><%= link_to 'Edit', edit_game_path(game) %></td>
       </tr>
     <% end %>
   </tbody>
