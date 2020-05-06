@@ -4,6 +4,8 @@ Rails.application.routes.draw do
       get 'new_storages'
       post 'create_storages'
     end
+
+    resources :factories
   end
 
   resources :players

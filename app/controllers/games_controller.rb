@@ -1,5 +1,7 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: [:show, :edit, :update, :destroy, :new_storages, :create_storages]
+  before_action :set_game, only: [
+    :show, :edit, :update, :destroy, :new_storages, :create_storages
+  ]
 
   # GET /games
   # GET /games.json

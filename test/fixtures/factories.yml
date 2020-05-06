@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  game_id: 1
+  name: MyString
+  junior: 1
+  intermediate: 1
+  senior: 1
+
+two:
+  game_id: 1
+  name: MyString
+  junior: 1
+  intermediate: 1
+  senior: 1

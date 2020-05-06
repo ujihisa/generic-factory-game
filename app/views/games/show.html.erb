@@ -22,7 +22,10 @@
 
 
 <%- if (0..1000).include?(@game.money) %>
-  <%= link_to 'Buy Storage', new_storages_game_path %>
+  <ul>
+    <li><%= link_to 'Buy Storage', new_storages_game_path %>
+    <li><%= link_to 'Buy Factory', new_factory_game_path %>
+  </ul>
 <%- end %>
 
 <br/>
