@@ -160,7 +160,7 @@ class GamesController < ApplicationController
 
     @game.product += production_vol
 
-    # gain sales
+    # Deliver products
     @game.contracts.each do |contract|
       (required_products, fee) = Contract::RULES[contract.name][@game.current_month]
       if required_products <= @game.product

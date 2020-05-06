@@ -27,7 +27,7 @@ class Game < ApplicationRecord
     [
       'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
       'September', 'October', 'November', 'December'
-    ][month + 1 % 12]
+    ][month.succ % 12]
   end
 
   def production
