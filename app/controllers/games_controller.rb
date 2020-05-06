@@ -1,6 +1,7 @@
 class GamesController < ApplicationController
   before_action :set_game, only: [
-    :show, :edit, :update, :destroy, :new_storages, :create_storages
+    :show, :edit, :update, :destroy, :new_storages, :create_storages,
+    :new_employee, :create_employee,
   ]
 
   # GET /games
@@ -31,7 +32,7 @@ class GamesController < ApplicationController
     @players = Player.all
 
     respond_to do |format|
-      if @game.save
+      if @game.save && Factory.create(game_id: @game.id, name: 'idle')
         format.html { redirect_to @game, notice: 'Game was successfully created.' }
         format.json { render :show, status: :created, location: @game }
       else
@@ -67,6 +68,32 @@ class GamesController < ApplicationController
       redirect_to @game, notice: "Successfully Bought #{num * 100}t Storages"
     else
       redirect_to @game, notice: "Failed to buy Storages"
+    end
+  end
+
+  def new_employee
+  end
+
+  def create_employee
+    @game = Game.find(params[:id])
+    @factory = Factory.where(game_id: params[:id], name: 'idle').first
+    raise 'Must not happen' unless @factory
+
+    case params[:type]
+    when 'junior'
+      @factory.junior += 1
+    when 'intermediate'
+      @factory.intermediate += 1
+    when 'senior'
+      @factory.senior += 1
+    else
+      raise 'Must not happen'
+    end
+
+    if @factory.save
+      redirect_to @game, notice: "Successfully hired the #{params[:type]} employee"
+    else
+      redirect_to @game, notice: "Failed to hire the employee"
     end
   end
 

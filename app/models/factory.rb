@@ -1,7 +1,7 @@
 class Factory < ApplicationRecord
   belongs_to :game
   validates :name, inclusion: ['idle', 'manual', 'semi-auto', 'full-auto']
-  validates_uniqueness_of [:game_id, :name]
+  validates_uniqueness_of :name, scope: :game_id
 
   def cost_to_buy
     case name
