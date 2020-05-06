@@ -120,7 +120,7 @@ class GamesController < ApplicationController
       end
 
     if success
-      redirect_to @game, notice: "Successfully dispatched the #{params[:type]} employee to #{params[:to]}"
+      redirect_to new_dispatch_game_path, notice: "Successfully dispatched the #{params[:type]} employee to #{params[:to]}"
     else
       redirect_to @game, notice: "Failed to dispatch the employee"
     end

@@ -50,8 +50,18 @@
     </table>
 
     <ul>
-      <li>Estimated Ingredients Consumption: <%= @game.production * 2 %>t</li>
-      <li>Estimated Product Generation: <%= @game.production %>t</li>
+      <li>
+        Estimated Ingredients Consumption: <%= @game.production * 2 %>t
+        <%- if @game.production != @game.capped_production %>
+          <font color=red>(Capped to <%= @game.capped_production * 2 %>t)</font>
+        <%- end %>
+      </li>
+      <li>
+        Estimated Product Generation: <%= @game.production %>t
+        <%- if @game.production != @game.capped_production %>
+          <font color=red>(Capped to <%= @game.capped_production %>t)</font>
+        <%- end %>
+      </li>
     </ul>
   <%- end %>
 </p>
@@ -63,7 +73,13 @@
       <li>Contract <%= contract.name %> (<%= Contract::DESCRIPTIONS[contract.name] %>)</li>
     <%- end %>
   </ul>
-  Total required products for <%= @game.next_month %>: <%= @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>t
+  <p>
+    <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
+    Total required products for <%= @game.next_month %>: <%= total_required_products %>t
+    <%- if @game.capped_production + @game.product < total_required_products %>
+      <font color=red>(Not enough products!)</font>
+    <%- end %>
+  </p>
 </p>
 
 

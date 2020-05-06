@@ -34,6 +34,10 @@ class Game < ApplicationRecord
     factories.map(&:performance).sum / 2
   end
 
+  def capped_production
+    [production, ingredient / 2].min
+  end
+
   # Similar to save()
   def hire(employee_type)
     factory = Factory.where(game_id: id, name: 'idle').first
