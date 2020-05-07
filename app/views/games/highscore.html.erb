@@ -9,6 +9,7 @@
     <tr>
       <th>Name</th>
       <th>Shortest months to win</th>
+      <th>Victory date</th>
     </tr>
   </thead>
 
@@ -17,12 +18,8 @@
       <%- player = game.player %>
       <tr>
         <td><%= player.name %></td>
-        <td>
-          <%- if player.best_game %>
-            <%= player.best_game.month %> months</td>
-          <%- else %>
-            N/A
-          <%- end %>
+        <td><%= game.month %> months</td>
+        <td><%= game.updated_at.in_time_zone('America/Vancouver').iso8601 %></td>
       </tr>
     <% end %>
   </tbody>

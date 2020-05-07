@@ -28,11 +28,15 @@
                 <h4 class="my-0 font-weight-normal"><%= player.name %></h4>
               </div>
               <div class="card-body">
+                <p>
                 <%- if best_game = player.best_game %>
-                  Best score: <b><%= best_game.month %></b> months
+                  <%= link_to "Best score: #{best_game.month} months", games_highscore_path %>
+                <%- elsif player.games.empty? %>
+                  First time to try!
                 <%- else %>
-                  Not finished yet
+                  <%= link_to 'Working in progress', games_path %>
                 <%- end %>
+                </p>
                 <%= form_with(model: game, local: true) do |form| %>
                   <%= hidden_field_tag :'game[player_id]', player.id %>
                   <%= form.submit "Start", class: 'btn btn-lg btn-block btn-primary' %>
