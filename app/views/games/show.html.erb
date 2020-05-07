@@ -1,182 +1,188 @@
-<p id="notice"><%= notice %></p>
-
 <%- if @game.money < 0 %>
   <font size=7 color=red>GAME OVER</font>
 <%- elsif 1000 <= @game.money %>
   <font size=5>Game Clear!</font>
 <%- end %>
 
-<h2>Current status</h2>
+<div class="row mb-3">
+  <div class="col-md-4 themed-grid-col">
+    <h2>Actions</h2>
 
-<table>
-  <tr>
-    <th><strong>Player</strong></th>
-    <td><%= @game.player.name %></td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <th><strong>Date</strong></th>
-    <td><%= @game.current_month %> <%= 2020 + @game.month / 12 %></td>
-    <td></td>
-  </tr>
-
-
-  <tr>
-    <th><strong>Money</strong></th>
-    <td><%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %></td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <th><strong>Expense</strong></th>
-    <td><%= number_to_currency(@game.storage / 100 + @game.salary, precision: 0, format: '%u%nK') %></td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <th><strong>Storage</strong></th>
-    <td>
-      Size: <%= @game.storage %>t
-      <br>
-      Ingredient: <%= @game.ingredient %>t
-      <br>
-      Product: <%= @game.product %>t
-    </td>
-    <td>
-      <%= link_to '👉', new_storages_game_path if @game.status == :in_progress %>
-      <br>
-      <%= link_to '👉', new_ingredients_game_path if @game.status == :in_progress %>
-      <br>
-      <br>
-    </td>
-  </tr>
-
-  <tr>
-    <th><strong>Idle Employees</strong></th>
-    <td>
-      <%- @game.idle_factory.junior.times do %>
-        <img src='/images/employee-junior.png' width=16 title=junior>
-      <%- end %>
-      <%- @game.idle_factory.intermediate.times do %>
-        <img src='/images/employee-intermediate.png' width=16 title=intermediate>
-      <%- end %>
-      <%- @game.idle_factory.senior.times do %>
-        <img src='/images/employee-senior.png' width=16 title=senior>
-      <%- end %>
-    </td>
-    <td>
-      <%= link_to '👉', new_employee_game_path if @game.status == :in_progress %>
-    </td>
-  </tr>
-
-  <tr>
-    <th><strong>Factories</strong></th>
-    <td>
-      <%= @game.active_factories.map(&:name).join(', ') %>
-    </td>
-    <td>
-      <%= link_to '👉', new_game_factory_path(@game.id) if @game.status == :in_progress %>
-    </td>
-  </tr>
-
-  <tr>
-    <th><strong>Contracts</strong></th>
-    <td>
-      <%= @game.contracts.map(&:name).join(', ') %>
-    </td>
-    <td>
-      <%= link_to '👉', new_game_contract_path(@game.id) if @game.status == :in_progress %>
-    </td>
-  </tr>
-
-</table>
-
-<p>
-<h3>Factory details:
-  <%= link_to '👉', new_dispatch_game_path if @game.status == :in_progress %>
-</h3>
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Juniors assigned</th>
-    <th>Intermediates assigned</th>
-    <th>Seniors assigned</th>
-  </tr>
-  <%- @game.active_factories.each do |factory| %>
-    <tr>
-      <td><%= factory.name.capitalize %></td>
-      <td>
-        <%- factory.junior.times do %>
-          <img src='/images/employee-junior.png' width=16 title=junior>
-        <%- end %>
-      </td>
-      <td>
-        <%- factory.intermediate.times do %>
-          <img src='/images/employee-intermediate.png' width=16 title=intermediate>
-        <%- end %>
-      </td>
-      <td>
-        <%- factory.senior.times do %>
-          <img src='/images/employee-senior.png' width=16 title=senior>
-        <%- end %>
-      </td>
-    </tr>
-  <%- end %>
-</table>
-
-<ul>
-  <li>
-    Estimated Ingredients Consumption: <%= @game.production * 2 %>t
-    <%- if @game.production != @game.capped_production %>
+    <%- if (0..1000).include?(@game.money) %>
       <ul>
-        <li><font color=red>(Capped to <%= @game.capped_production * 2 %>t, because you don't have much ingredients!)</font>
+        <li><%= link_to 'Buy Storages', new_storages_game_path %> (倉庫購入)
+        <li><%= link_to 'Build a Factory', new_game_factory_path(@game.id) %> (工場建設)
+        <li><%= link_to 'Hire an employee', new_employee_game_path %> (従業員新規雇用)
+        <li><%= link_to 'Dispatch an employee', new_dispatch_game_path %> (従業員の割当)
+        <li><%= link_to 'Buy Ingredients', new_ingredients_game_path %> (原料の購入)
+        <li><%= link_to 'Make a contract', new_game_contract_path(@game.id) %> (新規契約を結ぶ)
       </ul>
+      <%= form_with(url: end_month_game_url, method: 'post') do |form| %>
+        <%= form.submit 'End month' %>
+      <% end %>
     <%- end %>
-  </li>
-  <li>
-    Estimated Product Generation: <%= @game.production %>t
-    <%- if @game.production != @game.capped_production %>
+
+    <hr>
+    <p id="notice"><%= notice %></p>
+  </div>
+  <div class="col-md-8 themed-grid-col">
+    <h2>Current status</h2>
+
+    <table>
+      <tr>
+        <th><strong>Player</strong></th>
+        <td><%= @game.player.name %></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <th><strong>Date</strong></th>
+        <td><%= @game.current_month %> <%= 2020 + @game.month / 12 %></td>
+        <td></td>
+      </tr>
+
+
+      <tr>
+        <th><strong>Money</strong></th>
+        <td><%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <th><strong>Expense</strong></th>
+        <td><%= number_to_currency(@game.storage / 100 + @game.salary, precision: 0, format: '%u%nK') %></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <th><strong>Storage</strong></th>
+        <td>
+          Size: <%= @game.storage %>t
+          <br>
+          Ingredient: <%= @game.ingredient %>t
+          <br>
+          Product: <%= @game.product %>t
+        </td>
+        <td>
+          <%= link_to '👉', new_storages_game_path if @game.status == :in_progress %>
+          <br>
+          <%= link_to '👉', new_ingredients_game_path if @game.status == :in_progress %>
+          <br>
+          <br>
+        </td>
+      </tr>
+
+      <tr>
+        <th><strong>Idle Employees</strong></th>
+        <td>
+          <%- @game.idle_factory.junior.times do %>
+            <img src='/images/employee-junior.png' width=16 title=junior>
+          <%- end %>
+          <%- @game.idle_factory.intermediate.times do %>
+            <img src='/images/employee-intermediate.png' width=16 title=intermediate>
+          <%- end %>
+          <%- @game.idle_factory.senior.times do %>
+            <img src='/images/employee-senior.png' width=16 title=senior>
+          <%- end %>
+        </td>
+        <td>
+          <%= link_to '👉', new_employee_game_path if @game.status == :in_progress %>
+        </td>
+      </tr>
+
+      <tr>
+        <th><strong>Factories</strong></th>
+        <td>
+          <%= @game.active_factories.map(&:name).join(', ') %>
+        </td>
+        <td>
+          <%= link_to '👉', new_game_factory_path(@game.id) if @game.status == :in_progress %>
+        </td>
+      </tr>
+
+      <tr>
+        <th><strong>Contracts</strong></th>
+        <td>
+          <%= @game.contracts.map(&:name).join(', ') %>
+        </td>
+        <td>
+          <%= link_to '👉', new_game_contract_path(@game.id) if @game.status == :in_progress %>
+        </td>
+      </tr>
+
+    </table>
+
+    <p>
+    <h3>Factory details:
+      <%= link_to '👉', new_dispatch_game_path if @game.status == :in_progress %>
+    </h3>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Juniors assigned</th>
+        <th>Intermediates assigned</th>
+        <th>Seniors assigned</th>
+      </tr>
+      <%- @game.active_factories.each do |factory| %>
+        <tr>
+          <td><%= factory.name.capitalize %></td>
+          <td>
+            <%- factory.junior.times do %>
+              <img src='/images/employee-junior.png' width=16 title=junior>
+            <%- end %>
+          </td>
+          <td>
+            <%- factory.intermediate.times do %>
+              <img src='/images/employee-intermediate.png' width=16 title=intermediate>
+            <%- end %>
+          </td>
+          <td>
+            <%- factory.senior.times do %>
+              <img src='/images/employee-senior.png' width=16 title=senior>
+            <%- end %>
+          </td>
+        </tr>
+      <%- end %>
+    </table>
+
+    <ul>
+      <li>
+        Estimated Ingredients Consumption: <%= @game.production * 2 %>t
+        <%- if @game.production != @game.capped_production %>
+          <ul>
+            <li><font color=red>(Capped to <%= @game.capped_production * 2 %>t, because you don't have much ingredients!)</font>
+          </ul>
+        <%- end %>
+      </li>
+      <li>
+        Estimated Product Generation: <%= @game.production %>t
+        <%- if @game.production != @game.capped_production %>
+          <ul>
+            <li><font color=red>(Capped to <%= @game.capped_production %>t, because you don't have much ingredients!)</font>
+          </ul>
+        <%- end %>
+      </li>
+    </ul>
+    </p>
+
+    <p>
+      <strong>Contracts:</strong>
       <ul>
-        <li><font color=red>(Capped to <%= @game.capped_production %>t, because you don't have much ingredients!)</font>
+        <%- @game.contracts.each do |contract| %>
+          <li>Contract <%= contract.name %> (<%= Contract::DESCRIPTIONS[contract.name] %>)</li>
+        <%- end %>
       </ul>
-    <%- end %>
-  </li>
-</ul>
-</p>
+      <p>
+        <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
+        Total required products for <%= @game.next_month %>: <%= total_required_products %>t
+        <%- if @game.capped_production + @game.product < total_required_products %>
+          <font color=red>(Not enough products!)</font>
+        <%- end %>
+      </p>
+    </p>
 
-<p>
-  <strong>Contracts:</strong>
-  <ul>
-    <%- @game.contracts.each do |contract| %>
-      <li>Contract <%= contract.name %> (<%= Contract::DESCRIPTIONS[contract.name] %>)</li>
-    <%- end %>
-  </ul>
-  <p>
-    <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
-    Total required products for <%= @game.next_month %>: <%= total_required_products %>t
-    <%- if @game.capped_production + @game.product < total_required_products %>
-      <font color=red>(Not enough products!)</font>
-    <%- end %>
-  </p>
-</p>
+    <br/>
+  </div>
+</div>
 
-
-<h2>Actions</h2>
-
-<%- if (0..1000).include?(@game.money) %>
-  <ul>
-    <li><%= link_to 'Buy Storages', new_storages_game_path %> (倉庫購入)
-    <li><%= link_to 'Build a Factory', new_game_factory_path(@game.id) %> (工場建設)
-    <li><%= link_to 'Hire an employee', new_employee_game_path %> (従業員新規雇用)
-    <li><%= link_to 'Dispatch an employee', new_dispatch_game_path %> (従業員の割当)
-    <li><%= link_to 'Buy Ingredients', new_ingredients_game_path %> (原料の購入)
-    <li><%= link_to 'Make a contract', new_game_contract_path(@game.id) %> (新規契約を結ぶ)
-  </ul>
-  <%= form_with(url: end_month_game_url, method: 'post') do |form| %>
-    <%= form.submit 'End month' %>
-  <% end %>
-<%- end %>
-
-<br/>
 <%= link_to 'Back', games_path %>
