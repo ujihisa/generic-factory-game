@@ -48,20 +48,20 @@
       <br>
       <%= link_to '👉', new_ingredients_game_path if @game.status == :in_progress %>
       <br>
-      <%= link_to '👉', new_dispatch_game_path if @game.status == :in_progress %>
+      <br>
     </td>
   </tr>
 
   <tr>
-    <th><strong>Employees</strong></th>
+    <th><strong>Idle Employees</strong></th>
     <td>
-      <%- @game.factories.sum(&:junior).times do %>
+      <%- @game.idle_factory.junior.times do %>
         <img src='/images/employee-junior.png' width=16 title=junior>
       <%- end %>
-      <%- @game.factories.sum(&:intermediate).times do %>
+      <%- @game.idle_factory.intermediate.times do %>
         <img src='/images/employee-intermediate.png' width=16 title=intermediate>
       <%- end %>
-      <%- @game.factories.sum(&:senior).times do %>
+      <%- @game.idle_factory.senior.times do %>
         <img src='/images/employee-senior.png' width=16 title=senior>
       <%- end %>
     </td>
@@ -73,7 +73,7 @@
   <tr>
     <th><strong>Factories</strong></th>
     <td>
-      <%= @game.factories.map(&:name).join(', ') %>
+      <%= @game.active_factories.map(&:name).join(', ') %>
     </td>
     <td>
       <%= link_to '👉', new_game_factory_path(@game.id) if @game.status == :in_progress %>
@@ -93,7 +93,9 @@
 </table>
 
 <p>
-<h3>Factory details:</h3>
+<h3>Factory details:
+  <%= link_to '👉', new_dispatch_game_path if @game.status == :in_progress %>
+</h3>
 <table>
   <tr>
     <th>Name</th>
@@ -101,12 +103,24 @@
     <th>Intermediates assigned</th>
     <th>Seniors assigned</th>
   </tr>
-  <%- @game.factories.each do |factory| %>
+  <%- @game.active_factories.each do |factory| %>
     <tr>
       <td><%= factory.name.capitalize %></td>
-      <td><%= factory.junior %></td>
-      <td><%= factory.intermediate %></td>
-      <td><%= factory.senior %></td>
+      <td>
+        <%- factory.junior.times do %>
+          <img src='/images/employee-junior.png' width=16 title=junior>
+        <%- end %>
+      </td>
+      <td>
+        <%- factory.intermediate.times do %>
+          <img src='/images/employee-intermediate.png' width=16 title=intermediate>
+        <%- end %>
+      </td>
+      <td>
+        <%- factory.senior.times do %>
+          <img src='/images/employee-senior.png' width=16 title=senior>
+        <%- end %>
+      </td>
     </tr>
   <%- end %>
 </table>

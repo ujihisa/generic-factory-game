@@ -38,9 +38,17 @@ class Game < ApplicationRecord
     [production, ingredient / 2].min
   end
 
+  def idle_factory
+    Factory.where(game_id: id, name: 'idle').first or raise 'Must not happen'
+  end
+
+  def active_factories
+    Factory.where(game_id: id).where.not(name: 'idle').all
+  end
+
   # Similar to save()
   def hire(employee_type)
-    factory = Factory.where(game_id: id, name: 'idle').first
+    factory = idle_factory()
     raise 'Must not happen' unless factory
 
     raise 'Must not happen' unless Employee::RECRUITING_FEES[employee_type]

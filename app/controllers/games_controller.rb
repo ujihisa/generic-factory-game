@@ -80,7 +80,7 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
 
     if @game.hire(params[:type].to_sym)
-      redirect_to new_dispatch_game_path, notice: "Successfully hired the #{params[:type]} employee"
+      redirect_to @game, notice: "Successfully hired the #{params[:type]} employee"
     else
       redirect_to @game, notice: "Failed to hire the employee"
     end
@@ -102,19 +102,19 @@ class GamesController < ApplicationController
     success =
       case params[:type]
       when 'junior'
-        if 0 < from.junior
+        if num <= from.junior
           from.junior -= num
           to.junior += num
           from.save && to.save
         end
       when 'intermediate'
-        if 0 < from.intermediate
+        if num <= from.intermediate
           from.intermediate -= num
           to.intermediate += num
           from.save && to.save
         end
       when 'senior'
-        if 0 < from.senior
+        if num <= from.senior
           from.senior -= num
           to.senior += num
           from.save && to.save
