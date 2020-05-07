@@ -8,7 +8,7 @@ Current money: <%= number_to_currency(@game.money, precision: 0, format: '%u%nK'
 一度この工場を建設すれば(無料)、ここに何人でも割り当てることができる。
 <br>
 具体的にはこの工場にいる全従業員の能力和がそのまま生産力。例えば中級従業員(能力40)が5人なら生産力は200。
-これによって原料を400t消費して、200t分の生産物を得る。
+これによって原料を200t消費して、100t分の生産物を得る。
 </p>
 
 <h3>Semi-auto factory <%= @game.factories.map(&:name).include?('semi-auto') ? '(所有済み)' : '($90K)' %></h3>
@@ -17,7 +17,7 @@ Manualと後述のFull-autoの間で、従業員の能力差がそこそこ生�
 一度$90K払ってこの工場を建設すれば、ここに何人でも割り当てることができる。
 <br>
 具体的には、この工場にいる各従業員の人数*30と、能力和の1/2が生産力。例えば中級従業員(能力40)が5人なら生産力は150+100 = 250。
-これによって原料を500t消費して、250t分の生産物を得る。
+これによって原料を250t消費して、125t分の生産物を得る。
 </p>
 
 <h3>Full-auto factory <%= @game.factories.map(&:name).include?('full-auto') ? '(所有済み)' : '($200K)' %></h3>
@@ -26,7 +26,7 @@ Manualと後述のFull-autoの間で、従業員の能力差がそこそこ生�
 一度$200K払ってこの工場を建設すれば、ここに何人でも割り当てることができる。
 <br>
 具体的には、この工場にいる各従業員の人数*70が生産力。例えば中級従業員(能力40)が5人なら生産力は350。
-これによって原料を700t消費して、350t分の生産物を得る。
+これによって原料を350t消費して、175t分の生産物を得る。
 </p>
 
 <h3>Idle (所有済み)</h3>
@@ -51,12 +51,17 @@ Manualと後述のFull-autoの間で、従業員の能力差がそこそこ生�
 
   <%= hidden_field_tag :game_id, @game.id %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.select :name, ['manual', 'semi-auto', 'full-auto'] %>
-  </div>
+  <%- unbuilt_factories = ['manual', 'semi-auto', 'full-auto'] - @game.factories.map(&:name) %>
+  <%- if unbuilt_factories.present? %>
+    <div class="field">
+      <%= form.label :name %>
+      <%= form.select :name, unbuilt_factories %>
+    </div>
 
-  <div class="actions">
-    <%= form.submit 'Build Factory' %>
-  </div>
+    <div class="actions">
+      <%= form.submit 'Build New Factory' %>
+    </div>
+  <%- else %>
+    (You already have completed building all the factories!)
+  <%- end %>
 <% end %>
