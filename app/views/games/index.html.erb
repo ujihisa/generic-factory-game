@@ -15,6 +15,7 @@
       <th>Ingredient</th>
       <th>Product</th>
       <th>Status</th>
+      <th>Last update</th>
     </tr>
   </thead>
 
@@ -33,6 +34,7 @@
         <td><%= game.ingredient %></td>
         <td><%= game.product %></td>
         <td><%= link_to game.status.to_s.capitalize, game %></td>
+        <td><%= game.updated_at.in_time_zone('America/Vancouver').iso8601 %></td>
       </tr>
     <% end %>
   </tbody>
