@@ -7,9 +7,9 @@ class Game < ApplicationRecord
     case money
     when (...0)
       :game_over
-    when 0..1000
+    when 0...1000
       :in_progress
-    when (1001..)
+    when (1000..)
       :completed
     else
       raise 'Must not happen'
