@@ -28,15 +28,21 @@
       <li>
         Due <b><%= @game.next_month %></b>
         <ul>
-          <li>Pay <b><%= number_to_currency(@game.salary, precision: 0, format: '%u%nK') %></b> salary.</li>
-          <li>Pay <b><%= number_to_currency(@game.storage / 100, precision: 0, format: '%u%nK') %></b> storage fee.</li>
-          <li>
-            <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
-            Deliver <b><%= total_required_products %>t</b> products.
-            <%- if @game.capped_production + @game.product < total_required_products %>
-              ⚠️
-            <%- end %>
-          </li>
+          <%- if 0 < @game.salary %>
+            <li>Pay <b><%= number_to_currency(@game.salary, precision: 0, format: '%u%nK') %></b> salary.</li>
+          <%- end %>
+          <%- if 0 < @game.storage %>
+            <li>Pay <b><%= number_to_currency(@game.storage / 100, precision: 0, format: '%u%nK') %></b> storage fee.</li>
+          <%- end %>
+          <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
+          <%- if 0 < total_required_products %>
+            <li>
+              Deliver <b><%= total_required_products %>t</b> products.
+              <%- if @game.capped_production + @game.product < total_required_products %>
+                ⚠️
+              <%- end %>
+            </li>
+          <%- end %>
         </ul>
       </li>
     </ul>

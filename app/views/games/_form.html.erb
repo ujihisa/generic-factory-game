@@ -13,8 +13,8 @@
 
 <div class="field">
   <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style='max-width: 700px'>
-    <h1 class="display-4">ここに</h1>
-    <p class="lead">なんかかっこいいこと書きたい</p>
+    <h1 class="display-4">🏭</h1>
+    <p class="lead">GenericFactoryGame VERSION <%= GenericFactoryGame::VERSION %></p>
   </div>
 
   <div class="container" style='max-width: 960px;'>
@@ -28,6 +28,11 @@
                 <h4 class="my-0 font-weight-normal"><%= player.name %></h4>
               </div>
               <div class="card-body">
+                <%- if best_game = player.best_game %>
+                  Best score: <b><%= best_game.month %></b> months
+                <%- else %>
+                  Not finished yet
+                <%- end %>
                 <%= form_with(model: game, local: true) do |form| %>
                   <%= hidden_field_tag :'game[player_id]', player.id %>
                   <%= form.submit "Start", class: 'btn btn-lg btn-block btn-primary' %>
