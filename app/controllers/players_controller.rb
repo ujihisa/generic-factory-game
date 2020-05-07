@@ -4,7 +4,7 @@ class PlayersController < ApplicationController
   # GET /players
   # GET /players.json
   def index
-    @players = Player.all
+    redirect_to games_highscore_path # TODO remove this
   end
 
   # GET /players/1

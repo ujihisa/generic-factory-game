@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'games/highscore'
+
   resources :games do
     member do
       get 'new_storages'

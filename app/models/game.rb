@@ -72,4 +72,11 @@ class Game < ApplicationRecord
       factory.junior * 3 + factory.intermediate * 5 + factory.senior * 9
     }.sum
   end
+
+  def self.best_games(game_version)
+    Game.
+      includes(:player).
+      where('version = ? AND 1000 <= money', game_version).
+      order(month: :asc)
+  end
 end

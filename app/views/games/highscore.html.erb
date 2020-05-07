@@ -13,7 +13,8 @@
   </thead>
 
   <tbody>
-    <% @players.each do |player| %>
+    <% @games.each do |game| %>
+      <%- player = game.player %>
       <tr>
         <td><%= player.name %></td>
         <td>
@@ -40,7 +41,8 @@
   </thead>
 
   <tbody>
-    <% @players.each do |player| %>
+    <% @old_games.each do |game| %>
+      <%- player = game.player %>
       <tr>
         <td><%= player.name %></td>
         <td>

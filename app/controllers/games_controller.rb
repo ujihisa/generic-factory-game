@@ -12,6 +12,11 @@ class GamesController < ApplicationController
     @archived_games = Game.where.not(version: GenericFactoryGame::VERSION).order('version ASC, updated_at ASC')
   end
 
+  def highscore
+    @games = Game.best_games(GenericFactoryGame::VERSION)
+    @old_games = Game.best_games(GenericFactoryGame::PREVIOUS_VERSION)
+  end
+
   # GET /games/1
   # GET /games/1.json
   def show
