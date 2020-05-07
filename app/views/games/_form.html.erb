@@ -1,22 +1,43 @@
-  <% if game.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(game.errors.count, "error") %> prohibited this game from being saved:</h2>
+<% if game.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(game.errors.count, "error") %> prohibited this game from being saved:</h2>
 
-      <ul>
-        <% game.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%- @players.each do |player| %>
-      <p>
-      <%= form_with(model: game, local: true) do |form| %>
-        <%= hidden_field_tag :'game[player_id]', player.id %>
-        <%= form.submit "Play as #{player.name}" %>
+    <ul>
+      <% game.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
       <% end %>
-      </p>
-    <%- end %>
+    </ul>
   </div>
+<% end %>
+
+
+<div class="field">
+  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style='max-width: 700px'>
+    <h1 class="display-4">ここに</h1>
+    <p class="lead">なんかかっこいいこと書きたい</p>
+  </div>
+
+  <div class="container" style='max-width: 960px;'>
+    <div class="card-deck mb-3 text-center">
+      <%- @players.each_slice(3).each do |players| %>
+        <%- players[2] ||= nil # To expand always to 3 %>
+        <%- players.each do |player| %>
+          <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
+            <%- if player %>
+              <div class="card-header">
+                <h4 class="my-0 font-weight-normal"><%= player.name %></h4>
+              </div>
+              <div class="card-body">
+                <%= form_with(model: game, local: true) do |form| %>
+                  <%= hidden_field_tag :'game[player_id]', player.id %>
+                  <%= form.submit "Start", class: 'btn btn-lg btn-block btn-primary' %>
+                <% end %>
+              </div>
+            <%- end %>
+          </div>
+        <%- end %>
+        <br/>
+      <%- end %>
+    </div>
+  </div>
+</div>

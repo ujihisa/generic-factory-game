@@ -1,4 +1,6 @@
-<%= form_with(model: player, local: true) do |form| %>
+<%= form_with(model: player, local: true, class: 'form-signin') do |form| %>
+  <h1 class="h3 mb-3 font-weight-normal">Create a new player</h1>
+
   <% if player.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(player.errors.count, "error") %> prohibited this player from being saved:</h2>
@@ -12,11 +14,10 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, class: 'form-control', placeholder: 'Your name', required: true, autofocus: true %>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit class: 'btn btn-lg btn-primary btn-block' %>
   </div>
 <% end %>

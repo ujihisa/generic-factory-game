@@ -4,8 +4,37 @@
   <font size=5>Game Clear!</font>
 <%- end %>
 
+<b><%= @game.player.name %></b>'s game <b><%= @game.id %></b> / month <b><%= @game.month %></b> / <%= @game.status %> / VERSION <%= @game.version %>
+<hr>
+
 <div class="row mb-3">
   <div class="col-md-4 themed-grid-col">
+    <h2>Schedule</h2>
+
+    <ul>
+      <li>
+        Done in <b><%= @game.current_month %></b>
+        <ul>
+          <li>NOT IMPLEMENTED YET
+        </ul>
+      </li>
+
+      <li>
+        Due <b><%= @game.next_month %></b>
+        <ul>
+          <li>Pay <b><%= number_to_currency(@game.salary, precision: 0, format: '%u%nK') %></b> salary.</li>
+          <li>Pay <b><%= number_to_currency(@game.storage / 100, precision: 0, format: '%u%nK') %></b> storage fee.</li>
+          <li>
+            <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
+            Deliver <b><%= total_required_products %>t</b> products.
+            <%- if @game.capped_production + @game.product < total_required_products %>
+              ⚠️
+            <%- end %>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
     <h2>Actions</h2>
 
     <%- if (0..1000).include?(@game.money) %>
@@ -30,12 +59,6 @@
 
     <table>
       <tr>
-        <th><strong>Player</strong></th>
-        <td><%= @game.player.name %></td>
-        <td></td>
-      </tr>
-
-      <tr>
         <th><strong>Date</strong></th>
         <td><%= @game.current_month %> <%= 2020 + @game.month / 12 %></td>
         <td></td>
@@ -45,12 +68,6 @@
       <tr>
         <th><strong>Money</strong></th>
         <td><%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %></td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <th><strong>Expense</strong></th>
-        <td><%= number_to_currency(@game.storage / 100 + @game.salary, precision: 0, format: '%u%nK') %></td>
         <td></td>
       </tr>
 
@@ -164,7 +181,6 @@
       </li>
     </ul>
     </p>
-
     <p>
       <strong>Contracts:</strong>
       <ul>
@@ -172,13 +188,6 @@
           <li>Contract <%= contract.name %> (<%= Contract::DESCRIPTIONS[contract.name] %>)</li>
         <%- end %>
       </ul>
-      <p>
-        <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
-        Total required products for <%= @game.next_month %>: <%= total_required_products %>t
-        <%- if @game.capped_production + @game.product < total_required_products %>
-          <font color=red>(Not enough products!)</font>
-        <%- end %>
-      </p>
     </p>
 
     <br/>
