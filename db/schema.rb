@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_06_204747) do
+ActiveRecord::Schema.define(version: 2020_05_08_022904) do
 
   create_table "contracts", force: :cascade do |t|
     t.integer "game_id", null: false
