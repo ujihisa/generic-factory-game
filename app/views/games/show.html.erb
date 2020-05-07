@@ -1,7 +1,13 @@
 <%- if @game.money < 0 %>
-  <font size=7 color=red>GAME OVER</font>
+  <h1 class='display-3 jumbotron'>
+    <font color=red>
+      💸💀💸 GAME OVER
+    </font>
+  </h1>
 <%- elsif 1000 <= @game.money %>
-  <font size=5>Game Clear!</font>
+  <h1 class='display-3 jumbotron'>
+    🎉 Game Clear!
+  </h1>
 <%- end %>
 
 <b><%= @game.player.name %></b>'s game <b><%= @game.id %></b> / month <b><%= @game.month %></b> / <%= @game.status %> / VERSION <%= @game.version %>
@@ -39,12 +45,12 @@
 
     <%- if (0..1000).include?(@game.money) %>
       <ul>
-        <li><%= link_to 'Buy Storages', new_storages_game_path %> (倉庫購入)
-        <li><%= link_to 'Build a Factory', new_game_factory_path(@game.id) %> (工場建設)
-        <li><%= link_to 'Hire an employee', new_employee_game_path %> (従業員新規雇用)
-        <li><%= link_to 'Dispatch an employee', new_dispatch_game_path %> (従業員の割当)
-        <li><%= link_to 'Buy Ingredients', new_ingredients_game_path %> (原料の購入)
-        <li><%= link_to 'Make a contract', new_game_contract_path(@game.id) %> (新規契約を結ぶ)
+        <li>🗄️ <%= link_to 'Buy Storages', new_storages_game_path %> (倉庫購入)
+        <li>🏭 <%= link_to 'Build a Factory', new_game_factory_path(@game.id) %> (工場建設)
+        <li>💼 <%= link_to 'Hire an employee', new_employee_game_path %> (従業員新規雇用)
+        <li>➡️ <%= link_to 'Dispatch an employee', new_dispatch_game_path %> (従業員の割当)
+        <li>📦 <%= link_to 'Buy Ingredients', new_ingredients_game_path %> (原料の購入)
+        <li>📜 <%= link_to 'Make a contract', new_game_contract_path(@game.id) %> (新規契約を結ぶ)
       </ul>
       <%= form_with(url: end_month_game_url, method: 'post') do |form| %>
         <%= form.submit 'End month' %>
@@ -52,7 +58,12 @@
     <%- end %>
 
     <hr>
-    <p id="notice"><%= notice %></p>
+    <%- if notice %>
+      <p id="notice">
+      🆕
+      <%= notice %>
+      </p>
+    <%- end %>
   </div>
   <div class="col-md-8 themed-grid-col">
     <h2>Current status</h2>
@@ -81,9 +92,9 @@
           Product: <%= @game.product %>t
         </td>
         <td>
-          <%= link_to '👉', new_storages_game_path if @game.status == :in_progress %>
+          <%= link_to '🗄️', new_storages_game_path if @game.status == :in_progress %>
           <br>
-          <%= link_to '👉', new_ingredients_game_path if @game.status == :in_progress %>
+          <%= link_to '📦', new_ingredients_game_path if @game.status == :in_progress %>
           <br>
           <br>
         </td>
@@ -103,7 +114,7 @@
           <%- end %>
         </td>
         <td>
-          <%= link_to '👉', new_employee_game_path if @game.status == :in_progress %>
+          <%= link_to '💼', new_employee_game_path if @game.status == :in_progress %>
         </td>
       </tr>
 
@@ -113,7 +124,7 @@
           <%= @game.active_factories.map(&:name).join(', ') %>
         </td>
         <td>
-          <%= link_to '👉', new_game_factory_path(@game.id) if @game.status == :in_progress %>
+          <%= link_to '🏭', new_game_factory_path(@game.id) if @game.status == :in_progress %>
         </td>
       </tr>
 
@@ -123,16 +134,14 @@
           <%= @game.contracts.map(&:name).join(', ') %>
         </td>
         <td>
-          <%= link_to '👉', new_game_contract_path(@game.id) if @game.status == :in_progress %>
+          <%= link_to '📜', new_game_contract_path(@game.id) if @game.status == :in_progress %>
         </td>
       </tr>
 
     </table>
 
     <p>
-    <h3>Factory details:
-      <%= link_to '👉', new_dispatch_game_path if @game.status == :in_progress %>
-    </h3>
+    <h3>Factory</h3>
     <table>
       <tr>
         <th>Name</th>
@@ -161,6 +170,9 @@
         </tr>
       <%- end %>
     </table>
+    <div style='text-align: right'>
+      <%= link_to '➡️', new_dispatch_game_path if @game.status == :in_progress %>
+    </div>
 
     <ul>
       <li>
