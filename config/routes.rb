@@ -16,6 +16,8 @@ Rails.application.routes.draw do
       post 'create_ingredients'
 
       post 'end_month'
+
+      post 'borrow_money'
     end
     resources :factories
     resources :contracts

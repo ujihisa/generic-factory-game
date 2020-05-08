@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   before_action :set_game, only: [
     :show, :edit, :update, :destroy, :new_storages, :create_storages,
     :new_employee, :create_employee, :new_dispatch, :create_dispatch,
-    :new_ingredients, :create_ingredients, :end_month,
+    :new_ingredients, :create_ingredients, :end_month, :borrow_money,
   ]
 
   # GET /games
@@ -205,6 +205,10 @@ class GamesController < ApplicationController
     else
       redirect_to @game, notice: 'Hmm. something was wrong...'
     end
+  end
+
+  def borrow_money
+    redirect_to @game, notice: 'Awesome'
   end
 
   private

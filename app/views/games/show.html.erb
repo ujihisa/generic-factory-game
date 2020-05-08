@@ -51,6 +51,11 @@
 
     <%- if (0..1000).include?(@game.money) %>
       <ul>
+        <li>
+          <%= form_with(url: borrow_money_game_url, method: 'post') do |form| %>
+            <%= form.submit '🏦 Borrow money  (借金)' %>
+          <% end %>
+        </li>
         <li>🗄️ <%= link_to 'Buy Storages', new_storages_game_path %> (倉庫購入)
         <li>🏭 <%= link_to 'Build a Factory', new_game_factory_path(@game.id) %> (工場建設)
         <li>💼 <%= link_to 'Hire an employee', new_employee_game_path %> (従業員新規雇用)
@@ -77,14 +82,29 @@
     <table>
       <tr>
         <th><strong>Date</strong></th>
-        <td><%= @game.current_month %> <%= 2020 + @game.month / 12 %></td>
+        <td>
+          <%= @game.current_month %> <%= 2020 + @game.month / 12 %>
+        </td>
         <td></td>
       </tr>
 
 
       <tr>
         <th><strong>Money</strong></th>
-        <td><%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %></td>
+        <td>
+          <%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %>
+          <% if 0 < @game.debt %>
+            <br>
+            -
+            <%= number_to_currency(@game.debt, precision: 0, format: '%u%nK') %>
+          <% end %>
+        </td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <th><strong>Credit</strong></th>
+        <td><%= @game.credit %></td>
         <td></td>
       </tr>
 

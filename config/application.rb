@@ -7,9 +7,9 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 module GenericFactoryGame
-  RELEASE_DATE = Date.parse('2020-05-06')
-  VERSION = '0.2.0'
-  PREVIOUS_VERSION = '0.1.0'
+  RELEASE_DATE = Date.parse('2020-05-09')
+  VERSION = '0.3.0'
+  PREVIOUS_VERSION = '0.2.0'
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

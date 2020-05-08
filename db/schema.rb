@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_08_022904) do
+ActiveRecord::Schema.define(version: 2020_05_08_024115) do
 
   create_table "contracts", force: :cascade do |t|
     t.integer "game_id", null: false
@@ -41,6 +41,8 @@ ActiveRecord::Schema.define(version: 2020_05_08_022904) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "version", null: false
+    t.integer "credit", default: 20, null: false
+    t.integer "debt", default: 0, null: false
     t.index ["player_id", "money", "month"], name: "index_games_on_player_id_and_money_and_month"
     t.index ["updated_at"], name: "index_games_on_updated_at"
     t.index ["version"], name: "index_games_on_version"
