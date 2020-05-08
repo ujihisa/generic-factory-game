@@ -1,10 +1,11 @@
-<%- if @game.money < 0 %>
+<%- case @game.status %>
+<%- when :game_over %>
   <h1 class='display-3 jumbotron'>
     <font color=red>
       💸💀💸 GAME OVER
     </font>
   </h1>
-<%- elsif 1000 <= @game.money %>
+<%- when :completed %>
   <h1 class='display-3 jumbotron'>
     🎉 Game Clear!
   </h1>
@@ -34,6 +35,9 @@
           <%- if 0 < @game.storage %>
             <li>Pay <b><%= number_to_currency(@game.storage / 100, precision: 0, format: '%u%nK') %></b> storage fee.</li>
           <%- end %>
+          <%- if @game.debt != 0 %>
+            <li>Pay <b><%= number_to_currency(@game.interest, precision: 0, format: '%u%nK') %></b> interest.</li>
+          <%- end %>
           <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
           <%- if 0 < total_required_products %>
             <li>
@@ -49,13 +53,54 @@
 
     <h2>Actions</h2>
 
-    <%- if (0..1000).include?(@game.money) %>
+    <%- if @game.status == :in_progress %>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        🏦 Borrow money  (借金)
+      </button>
+
+      <!-- Modal -->
+      <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <%= form_with(url: borrow_money_game_url, method: 'post') do |form| %>
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">🏦 Borrow money  (借金)</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <ul>
+                <li>You can borrow money as much as possible.</li>
+                <li>However if your credit is 0 or less, you can't.</li>
+                <li>The monthly interest rate is <code>10 - credit/10 %</code>, with rounding up.
+                  <ul>
+                    <li>When your credit changes, the interest rate also changes. It only use the current latest credit.</li>
+                    <li>For example if your credit is 75, the rate is <code>10 - 7.5 = 3%</code></li>
+                    <li>If you borrow $100K, you must pay $102K in the next month, or $105 in 2 months.</li>
+                  </ul>
+              </ul>
+
+              Credit:
+              <b><%= @game.credit %></b><br>
+
+              Monthly interest rate:
+              <b><%= (10 - @game.credit / 10.0).ceil %>%</b><br>
+
+              <%= form.number_field :borrow, class: 'form-control', id: 'recipient-name', required: true %>
+
+              Input negative number to pay debt back.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <%= form.submit 'Borrow/Pay', class: 'btn btn-primary' %>
+            </div>
+              <% end %>
+          </div>
+        </div>
+      </div>
+
       <ul>
-        <li>
-          <%= form_with(url: borrow_money_game_url, method: 'post') do |form| %>
-            <%= form.submit '🏦 Borrow money  (借金)' %>
-          <% end %>
-        </li>
         <li>🗄️ <%= link_to 'Buy Storages', new_storages_game_path %> (倉庫購入)
         <li>🏭 <%= link_to 'Build a Factory', new_game_factory_path(@game.id) %> (工場建設)
         <li>💼 <%= link_to 'Hire an employee', new_employee_game_path %> (従業員新規雇用)
@@ -67,31 +112,6 @@
         <%= form.submit 'End month' %>
       <% end %>
     <%- end %>
-
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-      Launch demo modal
-    </button>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            ...
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <hr>
     <%- if notice %>
@@ -117,11 +137,17 @@
       <tr>
         <th><strong>Money</strong></th>
         <td>
-          <%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %>
-          <% if 0 < @game.debt %>
+          <% if @game.debt == 0 %>
+            <b><%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %></b>
+          <% else %>
+            Cash:
+            <b><%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %></b>
             <br>
-            -
-            <%= number_to_currency(@game.debt, precision: 0, format: '%u%nK') %>
+            Debt:
+            <b><%= number_to_currency(@game.debt, precision: 0, format: '%u%nK') %></b>
+            <br>
+            Total:
+            <b><%= number_to_currency(@game.money - @game.debt, precision: 0, format: '%u%nK') %></b>
           <% end %>
         </td>
         <td></td>

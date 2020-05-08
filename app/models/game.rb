@@ -4,7 +4,7 @@ class Game < ApplicationRecord
   has_many :contracts
 
   def status
-    case money
+    case money - debt
     when (...0)
       :game_over
     when 0...1000
@@ -71,6 +71,10 @@ class Game < ApplicationRecord
     factories.map {|factory|
       factory.junior * 3 + factory.intermediate * 5 + factory.senior * 9
     }.sum
+  end
+
+  def interest
+    ((10 - credit / 10.0) * 0.01 * debt).ceil
   end
 
   def self.best_games(game_version)

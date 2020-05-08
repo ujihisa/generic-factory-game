@@ -191,6 +191,9 @@ class GamesController < ApplicationController
     @game.money -= @game.salary
     messages << "Paid $#{@game.salary}K for employees salary"
 
+    @game.money -= @game.interest
+    messages << "Paid $#{@game.interest}K for interest"
+
     if @game.save
       if @game.money < 0
         messages << 'Game over!'
@@ -208,7 +211,23 @@ class GamesController < ApplicationController
   end
 
   def borrow_money
-    redirect_to @game, notice: 'Awesome'
+    borrow = params[:borrow].to_i
+    if @game.credit <= 0 && 0 < borrow
+      return redirect_to @game, notice: "[ERROR] You can't borrow money when your credit is 0"
+    end
+
+    @game.debt += borrow
+    @game.money += borrow
+
+    if @game.money < 0
+      return redirect_to @game, notice: "[ERROR] Out of money"
+    end
+
+    if @game.save
+      redirect_to @game, notice: 'Borrow/Pay succeeded'
+    else
+      redirect_to @game, notice: '[ERROR] Borrow/Pay failed'
+    end
   end
 
   private
