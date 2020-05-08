@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   before_action :set_game, only: [
     :show, :edit, :update, :destroy, :new_storages, :create_storages,
     :new_employee, :create_employee, :new_dispatch, :create_dispatch,
-    :new_ingredients, :create_ingredients, :end_month, :borrow_money,
+    :create_ingredients, :end_month, :borrow_money,
   ]
 
   # GET /games
@@ -135,16 +135,13 @@ class GamesController < ApplicationController
     end
   end
 
-  def new_ingredients
-  end
-
   def create_ingredients
-    num = params[:num].to_i
+    vol = params[:vol].to_i
     @game = Game.find(params[:id])
-    @game.money -= num
-    @game.ingredient += num * 20
+    @game.money -= vol / 20
+    @game.ingredient += vol
     if 0 <= @game.money && @game.save
-      redirect_to @game, notice: "Successfully Bought #{num * 20}t Ingredients"
+      redirect_to @game, notice: "Successfully Bought #{vol}t Ingredients"
     else
       redirect_to @game, notice: "Failed to buy Ingredients"
     end

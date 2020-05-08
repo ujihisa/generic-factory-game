@@ -112,9 +112,37 @@
       ➡️ <%= link_to 'Dispatch an employee', new_dispatch_game_path %> (従業員の割当)
       <br/><br/>
 
-      <button onclick="location.href='<%= new_ingredients_game_path %>'" type="button" class="btn btn-secondary">
-        📦 Ingredients
+      <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ingredientModal">
+        📦 Ingredient
       </button>
+
+      <!-- Modal -->
+      <div class="modal" id="ingredientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <%= form_with(url: create_ingredients_game_url, method: 'post') do |form| %>
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">📦 Ingredient</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <ul>
+                  <li>$1K per 20t</li>
+                  <li>倉庫の容量の限界まで購入可能。原料に消費期限はないし、維持費も不要 (倉庫は維持費が必要)。</li>
+                  <li>もし原料が足りなければ、その原料によって生産されるはずであった生産物は得られない。</li>
+                </ul>
+
+                <%= react_component('Ingredient', { cash: @game.money, storage: @game.storage, ingredient: @game.ingredient, product: @game.product }) %>
+              </div>
+              <div class="modal-footer">
+                <%= form.submit 'Buy', class: 'btn btn-primary' %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
       <br/><br/>
 
       📜 <%= link_to 'Make a contract', new_game_contract_path(@game.id) %> (新規契約を結ぶ)
