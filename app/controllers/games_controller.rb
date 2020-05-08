@@ -211,13 +211,13 @@ class GamesController < ApplicationController
   end
 
   def borrow_money
-    borrow = params[:borrow].to_i
-    if @game.credit <= 0 && 0 < borrow
-      return redirect_to @game, notice: "[ERROR] You can't borrow money when your credit is 0"
+    new_debt = params[:debt].to_i
+    if @game.credit * 10 < new_debt
+      return redirect_to @game, notice: "[ERROR] You can't borrow money more than your credit * 10"
     end
 
-    @game.debt += borrow
-    @game.money += borrow
+    @game.money += new_debt - @game.debt
+    @game.debt = new_debt
 
     if @game.money < 0
       return redirect_to @game, notice: "[ERROR] Out of money"

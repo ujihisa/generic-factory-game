@@ -4,7 +4,7 @@ class Game < ApplicationRecord
   has_many :contracts
 
   def status
-    case money - debt
+    case money
     when (...0)
       :game_over
     when 0...1000

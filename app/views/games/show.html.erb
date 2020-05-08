@@ -71,8 +71,7 @@
             </div>
             <div class="modal-body">
               <ul>
-                <li>You can borrow money as much as possible.</li>
-                <li>However if your credit is 0 or less, you can't.</li>
+                <li>You can borrow money up to $<code>credit * 10</code>K.</li>
                 <li>The monthly interest rate is <code>10 - credit/10 %</code>, with rounding up.
                   <ul>
                     <li>When your credit changes, the interest rate also changes. It only use the current latest credit.</li>
@@ -87,9 +86,14 @@
               Monthly interest rate:
               <b><%= (10 - @game.credit / 10.0).ceil %>%</b><br>
 
-              <%= form.number_field :borrow, class: 'form-control', id: 'recipient-name', required: true %>
+              Debt limit: <%= number_to_currency(@game.credit * 10, precision: 0, format: '%u%nK') %><br>
 
-              Input negative number to pay debt back.
+              Current debt: <%= number_to_currency(@game.debt, precision: 0, format: '%u%nK') %><br>
+
+              New debt:
+              <%= form.number_field :debt, value: @game.debt, class: 'form-control', id: 'form-number-borrow-debt', required: true, 'aria-describedby': 'debtHelp' %>
+              <small id="debtHelp" class="form-text text-muted">Cash you pay: $XXXK</small>
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

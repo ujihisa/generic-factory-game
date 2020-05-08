@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_024115) do
   create_table "games", force: :cascade do |t|
     t.integer "player_id", null: false
     t.integer "month", default: 0, null: false
-    t.integer "money", default: 100, null: false
+    t.integer "money", default: 30, null: false
     t.integer "storage", default: 0, null: false
     t.integer "ingredient", default: 0, null: false
     t.integer "product", default: 0, null: false
