@@ -137,17 +137,13 @@ class GamesController < ApplicationController
 
   def create_ingredients
     vol = params[:vol].to_i
-    delay = params[:delay].to_i
-    cost = vol * IngredientDelivery::COST_PER_VOL.fetch(delay)
-
     @game = Game.find(params[:id])
-    @game.money -= cost
-    @game.ingredient_deliveries.new(arrival_month: @game.month + delay, volume: vol)
-
+    @game.money -= vol / 20
+    @game.ingredient += vol
     if 0 <= @game.money && @game.save
       redirect_to @game, notice: "Successfully Bought #{vol}t Ingredients"
     else
-      redirect_to @game, notice: "Failed to buy Ingredients #{@game.errors.full_messages}"
+      redirect_to @game, notice: "Failed to buy Ingredients"
     end
   end
 
@@ -155,18 +151,6 @@ class GamesController < ApplicationController
     messages = []
 
     @game.month += 1
-
-    # receive ingredients
-    @game.ingredient_deliveries.where(arrival_month: @game.month).each do |ig|
-      @game.ingredient += ig.volume
-      ig.destroy!
-    end
-    # overflow
-    if @game.storage < @game.ingredient + @game.production
-      diff = @game.ingredient - (@game.storage - @game.production)
-      messages << "[ERROR] Received ingredients more than you can handle, so trashed #{diff}t ingredients"
-      @game.ingredient -= diff
-    end
 
     # produce
     production_vol = @game.capped_production

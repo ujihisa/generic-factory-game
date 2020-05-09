@@ -2,7 +2,6 @@ class Game < ApplicationRecord
   belongs_to :player
   has_many :factories
   has_many :contracts
-  has_many :ingredient_deliveries
 
   def status
     case money
