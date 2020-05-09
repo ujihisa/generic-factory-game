@@ -20,7 +20,7 @@ Senior
 </pre>
 
 <%- [:junior, :intermediate, :senior].each do |type| %>
-  <%- next if @game.money < Employee::RECRUITING_FEES[type] %>
+  <%- next if @game.cash < Employee::RECRUITING_FEES[type] %>
   <p>
   <%= form_with(url: create_employee_game_url, method: 'post') do |form| %>
     <%= hidden_field_tag 'type', type %>

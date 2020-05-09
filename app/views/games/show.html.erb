@@ -22,7 +22,7 @@
       <li>
         Done in <b><%= @game.current_month %></b>
         <ul>
-          <%- @game.history["#{@game.month}"]&.each do |message| %>
+          <%- @game.history["#{@game.month}"]&.[]('messages')&.each do |message| %>
             <li /><%= message %>
           <%- end %>
         </ul>
@@ -201,98 +201,19 @@
   <div class="col-md-8 themed-grid-col">
     <h2>Current status</h2>
 
-    <table>
-      <tr>
-        <th><strong>Date</strong></th>
-        <td>
-          <%= @game.current_month %> <%= 2020 + @game.month / 12 %>
-        </td>
-        <td></td>
-      </tr>
-
-
-      <tr>
-        <th><strong>Money</strong></th>
-        <td>
-          <% if @game.debt == 0 %>
-            <b><%= number_to_currency(@game.cash, precision: 0, format: '%u%nK') %></b>
-          <% else %>
-            Cash:
-            <b><%= number_to_currency(@game.cash, precision: 0, format: '%u%nK') %></b>
-            <br>
-            Debt:
-            <b><%= number_to_currency(@game.debt, precision: 0, format: '%u%nK') %></b>
-            <br>
-            Total:
-            <b><%= number_to_currency(@game.cash - @game.debt, precision: 0, format: '%u%nK') %></b>
-          <% end %>
-        </td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <th><strong>Credit</strong></th>
-        <td><%= @game.credit %></td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <th><strong>Storage</strong></th>
-        <td>
-          Size: <%= @game.storage %>t
-          <br>
-          Ingredient: <%= @game.ingredient %>t (+ <%= @game.ingredient_subscription %>t)
-          <br>
-          Product: <%= @game.product %>t
-        </td>
-        <td>
-          <%= link_to '🗄️', new_storages_game_path if @game.status == :in_progress %>
-          <br>
-          📦
-          <br>
-          <br>
-        </td>
-      </tr>
-
-      <tr>
-        <th><strong>Idle Employees</strong></th>
-        <td>
-          <%- @game.idle_factory.junior.times do %>
-            <img src='/images/employee-junior.png' width=16 title=junior>
-          <%- end %>
-          <%- @game.idle_factory.intermediate.times do %>
-            <img src='/images/employee-intermediate.png' width=16 title=intermediate>
-          <%- end %>
-          <%- @game.idle_factory.senior.times do %>
-            <img src='/images/employee-senior.png' width=16 title=senior>
-          <%- end %>
-        </td>
-        <td>
-          <%= link_to '💼', new_employee_game_path if @game.status == :in_progress %>
-        </td>
-      </tr>
-
-      <tr>
-        <th><strong>Factories</strong></th>
-        <td>
-          <%= @game.active_factories.map(&:name).join(', ') %>
-        </td>
-        <td>
-          <%= link_to '🏭', new_game_factory_path(@game.id) if @game.status == :in_progress %>
-        </td>
-      </tr>
-
-      <tr>
-        <th><strong>Contracts</strong></th>
-        <td>
-          <%= @game.contracts.map(&:name).join(', ') %>
-        </td>
-        <td>
-          <%= link_to '📜', new_game_contract_path(@game.id) if @game.status == :in_progress %>
-        </td>
-      </tr>
-
-    </table>
+    <%= react_component('CurrentStatus', {
+      month: @game.month,
+      cash: @game.cash,
+      debt: @game.debt,
+      credit: @game.credit,
+      storage: @game.storage,
+      ingredient: @game.ingredient,
+      ingredientSubscription: @game.ingredient_subscription,
+      product: @game.product,
+      idleFactory: @game.idle_factory,
+      factoryNames: @game.factories.map(&:name),
+      contractNames: @game.contracts.map(&:name),
+    }) %>
 
     <p>
     <h3>Factory</h3>

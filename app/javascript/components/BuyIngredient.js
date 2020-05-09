@@ -1,5 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
+import GFG from '../gfg'
+
 class BuyIngredient extends React.Component {
   constructor(props) {
     super(props);
@@ -15,12 +17,7 @@ class BuyIngredient extends React.Component {
   }
 
   readableDate(month) {
-    const readableMonth =
-      [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-        'September', 'October', 'November', 'December'
-      ][month % 12];
-    return `${readableMonth} ${Math.floor(2020 + month / 12)}`;
+    return `${GFG.currentMonth(month)} ${Math.floor(2020 + month / 12)}`;
   }
 
   render () {
