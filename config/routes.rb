@@ -12,8 +12,8 @@ Rails.application.routes.draw do
       get 'new_dispatch'
       post 'create_dispatch'
 
-      get 'new_ingredients'
-      post 'create_ingredients'
+      post 'buy_ingredients'
+      post 'subscribe_ingredients'
 
       post 'end_month'
 

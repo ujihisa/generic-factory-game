@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   before_action :set_game, only: [
     :show, :edit, :update, :destroy, :new_storages, :create_storages,
     :new_employee, :create_employee, :new_dispatch, :create_dispatch,
-    :create_ingredients, :end_month, :borrow_money,
+    :buy_ingredients, :end_month, :borrow_money, :subscribe_ingredients,
   ]
 
   # GET /games
@@ -35,7 +35,10 @@ class GamesController < ApplicationController
   # POST /games
   # POST /games.json
   def create
-    @game = Game.new(version: GenericFactoryGame::VERSION, **game_params)
+    @game = Game.new(
+      version: GenericFactoryGame::VERSION,
+      ingredient_subscription: 0,
+      **game_params)
     @players = Player.all
 
     respond_to do |format|
@@ -135,15 +138,34 @@ class GamesController < ApplicationController
     end
   end
 
-  def create_ingredients
+  def buy_ingredients
     vol = params[:vol].to_i
     @game = Game.find(params[:id])
-    @game.money -= vol / 20
+    @game.money -= vol * 0.5
     @game.ingredient += vol
     if 0 <= @game.money && @game.save
       redirect_to @game, notice: "Successfully Bought #{vol}t Ingredients"
     else
       redirect_to @game, notice: "Failed to buy Ingredients"
+    end
+  end
+
+  def subscribe_ingredients
+    before = @game.ingredient_subscription.to_i
+    after = params[:ingredient_subscription].to_i
+
+    change_fee = [(after - before) * 0.05, 0].max
+    @game.money -= change_fee
+    @game.ingredient_subscription = after
+
+    if 0 <= @game.money && @game.save
+      if 0 < before
+        redirect_to @game, notice: "Successfully changed subscription to #{after - before}t Ingredients"
+      else
+        redirect_to @game, notice: "Successfully Subscribed #{after}t Ingredients"
+      end
+    else
+      redirect_to @game, notice: "Failed to Subscribed Ingredients"
     end
   end
 
@@ -190,6 +212,18 @@ class GamesController < ApplicationController
 
     @game.money -= @game.interest
     messages << "Paid $#{@game.interest}K for interest"
+
+    # receive ingredients
+    @game.ingredient += @game.ingredient_subscription
+    @game.money -= @game.ingredient_subscription * 0.05
+    messages << "Paid $#{@game.ingredient_subscription * 0.05}K for ingredient subscription" if 0 < @game.ingredient_subscription
+
+    # overflow
+    if @game.storage < @game.ingredient + @game.production
+      diff = @game.ingredient - (@game.storage - @game.production)
+      messages << "[ERROR] Received ingredients more than you can handle, so trashed #{diff}t ingredients"
+      @game.ingredient -= diff
+    end
 
     if @game.save
       if @game.money < 0
