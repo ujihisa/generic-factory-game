@@ -174,6 +174,7 @@ class GamesController < ApplicationController
 
   def end_month
     messages = @game.settlement()
+    @game.set_history(@game.month, messages)
 
     if @game.save
       if @game.cash < 0

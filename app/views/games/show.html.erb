@@ -22,7 +22,9 @@
       <li>
         Done in <b><%= @game.current_month %></b>
         <ul>
-          <li>NOT IMPLEMENTED YET
+          <%- @game.history["#{@game.month}"]&.each do |message| %>
+            <li /><%= message %>
+          <%- end %>
         </ul>
       </li>
 

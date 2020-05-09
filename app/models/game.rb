@@ -3,6 +3,14 @@ class Game < ApplicationRecord
   has_many :factories
   has_many :contracts
 
+  def history
+    history_encoded ? JSON.parse(history_encoded).freeze : {}.freeze
+  end
+
+  def set_history(key, value)
+    self.history_encoded = history.merge(key => value).to_json
+  end
+
   def status
     if cash < 0
       :game_over
