@@ -20,6 +20,9 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
+    @estimate = Game.find(@game.id).tap do |game|
+      game.settlement()
+    end
   end
 
   # GET /games/new
@@ -170,60 +173,7 @@ class GamesController < ApplicationController
   end
 
   def end_month
-    messages = []
-
-    @game.month += 1
-
-    # produce
-    production_vol = @game.capped_production
-    @game.ingredient -= production_vol * 2
-
-    # if @game.ingredient + @game.product + production_vol <= @game.storage
-    #   # good
-    # else
-    #   # pay penalty
-    #   @game.money -= 10 * (@game.ingredient + @game.product + production_vol - @game.storage)
-    #   production_vol = @game.storage - @game.product - @game.ingredient
-    # end
-
-    @game.product += production_vol
-
-    # Deliver products
-    @game.contracts.each do |contract|
-      (required_products, sales) = Contract::RULES[contract.name][@game.current_month]
-      if required_products <= @game.product
-        # good
-        @game.product -= required_products
-        @game.money += sales
-      else
-        # penalty
-        @game.money -= sales * 10
-
-        messages << "[PENALTY] Paid $#{sales * 10}K for contract #{contract.name}"
-      end
-    end
-
-    # pay fees
-    @game.money -= @game.storage / 100
-    messages << "Paid $#{@game.storage / 100}K for storage maintenance"
-
-    @game.money -= @game.salary
-    messages << "Paid $#{@game.salary}K for employees salary"
-
-    @game.money -= @game.interest
-    messages << "Paid $#{@game.interest}K for interest"
-
-    # receive ingredients
-    @game.ingredient += @game.ingredient_subscription
-    @game.money -= @game.ingredient_subscription * 0.05
-    messages << "Paid $#{@game.ingredient_subscription * 0.05}K for ingredient subscription" if 0 < @game.ingredient_subscription
-
-    # overflow
-    if @game.storage < @game.ingredient + @game.production
-      diff = @game.ingredient - (@game.storage - @game.production)
-      messages << "[ERROR] Received ingredients more than you can handle, so trashed #{diff}t ingredients"
-      @game.ingredient -= diff
-    end
+    messages = @game.settlement()
 
     if @game.save
       if @game.money < 0

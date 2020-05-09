@@ -180,7 +180,11 @@
       <br/><br/>
 
       <%= form_with(url: end_month_game_url, method: 'post') do |form| %>
-        <%= form.submit 'End month', class: "btn btn-primary btn-lg" %>
+        <small>
+          Estimated new cash: <b>$<%= @estimate.money %>K</b>
+        </small>
+        <br/>
+        <%= form.submit 'End month', class: "btn btn-lg #{ {in_progress: 'btn-primary', game_over: 'btn-danger', completed: 'btn-success'}[@estimate.status]}" %>
         <small class="form-text text-muted">
           You employees work to produce product, and you deliver the accumulated product to your customers until they're satisfied.
         </small>
@@ -348,5 +352,3 @@
     <br/>
   </div>
 </div>
-
-<%= link_to 'Back', games_path %>

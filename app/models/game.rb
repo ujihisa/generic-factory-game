@@ -77,6 +77,65 @@ class Game < ApplicationRecord
     ((10 - credit / 10.0) * 0.01 * debt).ceil
   end
 
+  def settlement
+    messages = []
+
+    self.month += 1
+
+    # produce
+    production_vol = self.capped_production
+    self.ingredient -= production_vol * 2
+
+    # if self.ingredient + self.product + production_vol <= self.storage
+    #   # good
+    # else
+    #   # pay penalty
+    #   self.money -= 10 * (self.ingredient + self.product + production_vol - self.storage)
+    #   production_vol = self.storage - self.product - self.ingredient
+    # end
+
+    self.product += production_vol
+
+    # Deliver products
+    self.contracts.each do |contract|
+      (required_products, sales) = Contract::RULES[contract.name][self.current_month]
+      if required_products <= self.product
+        # good
+        self.product -= required_products
+        self.money += sales
+      else
+        # penalty
+        self.money -= sales * 10
+
+        messages << "[PENALTY] Paid $#{sales * 10}K for contract #{contract.name}"
+      end
+    end
+
+    # pay fees
+    self.money -= self.storage / 100
+    messages << "Paid $#{self.storage / 100}K for storage maintenance"
+
+    self.money -= self.salary
+    messages << "Paid $#{self.salary}K for employees salary"
+
+    self.money -= self.interest
+    messages << "Paid $#{self.interest}K for interest"
+
+    # receive ingredients
+    self.ingredient += self.ingredient_subscription
+    self.money -= self.ingredient_subscription * 0.05
+    messages << "Paid $#{self.ingredient_subscription * 0.05}K for ingredient subscription" if 0 < self.ingredient_subscription
+
+    # overflow
+    if self.storage < self.ingredient + self.production
+      diff = self.ingredient - (self.storage - self.production)
+      messages << "[ERROR] Received ingredients more than you can handle, so trashed #{diff}t ingredients"
+      self.ingredient -= diff
+    end
+
+    messages
+  end
+
   def self.best_games(game_version)
     Game.
       includes(:player).
