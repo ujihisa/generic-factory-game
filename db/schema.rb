@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_08_024115) do
+ActiveRecord::Schema.define(version: 2020_05_09_002648) do
 
   create_table "contracts", force: :cascade do |t|
     t.integer "game_id", null: false
@@ -48,10 +48,20 @@ ActiveRecord::Schema.define(version: 2020_05_08_024115) do
     t.index ["version"], name: "index_games_on_version"
   end
 
+  create_table "ingredient_deliveries", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.integer "arrival_month", null: false
+    t.integer "volume", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["game_id"], name: "index_ingredient_deliveries_on_game_id"
+  end
+
   create_table "players", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "ingredient_deliveries", "games"
 end

@@ -29,6 +29,14 @@
       <li>
         Due <b><%= @game.next_month %></b>
         <ul>
+          <li>
+            Receive <b><%= @game.ingredient_deliveries.where(arrival_month: @game.month + 1).pluck(:volume).sum %>t</b> ingredients
+          </li>
+          <%- if 0 < @game.production %>
+            <li>Consume ingredients up to <b><%= @game.production * 2 %>t</b> to produce</li>
+          <%- else %>
+            <li>Produce nothing</li>
+          <%- end %>
           <%- if 0 < @game.salary %>
             <li>Pay <b><%= number_to_currency(@game.salary, precision: 0, format: '%u%nK') %></b> salary.</li>
           <%- end %>
@@ -50,6 +58,13 @@
         </ul>
       </li>
     </ul>
+
+    <%- if notice %>
+      <p id="notice">
+      🆕
+      <%= notice %>
+      </p>
+    <%- end %>
 
     <h2>Actions</h2>
 
@@ -113,7 +128,7 @@
       <br/><br/>
 
       <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ingredientModal">
-        📦 Ingredient
+        📦 Ingredient Delivery
       </button>
 
       <!-- Modal -->
@@ -122,23 +137,18 @@
           <div class="modal-content">
             <%= form_with(url: create_ingredients_game_url, method: 'post') do |form| %>
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">📦 Ingredient</h5>
+                <h5 class="modal-title" id="exampleModalLabel">📦 Ingredient Delivery</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
-                <ul>
-                  <li>$1K per 20t</li>
-                  <li>倉庫の容量の限界まで購入可能。原料に消費期限はないし、維持費も不要 (倉庫は維持費が必要)。</li>
-                  <li>もし原料が足りなければ、その原料によって生産されるはずであった生産物は得られない。</li>
-                </ul>
-
-                <%= react_component('Ingredient', { cash: @game.money, storage: @game.storage, ingredient: @game.ingredient, product: @game.product }) %>
-              </div>
-              <div class="modal-footer">
-                <%= form.submit 'Buy', class: 'btn btn-primary' %>
-              </div>
+              <%= react_component('IngredientDelivery', {
+                month: @game.month,
+                cash: @game.money,
+                storage: @game.storage,
+                ingredient: @game.ingredient,
+                product: @game.product,
+              }) %>
             <% end %>
           </div>
         </div>
@@ -147,18 +157,14 @@
 
       📜 <%= link_to 'Make a contract', new_game_contract_path(@game.id) %> (新規契約を結ぶ)
       <br/><br/>
+      <br/><br/>
 
       <%= form_with(url: end_month_game_url, method: 'post') do |form| %>
         <%= form.submit 'End month', class: "btn btn-primary btn-lg" %>
+        <small class="form-text text-muted">
+          You employees work to produce product, and you deliver the accumulated product to your customers until they're satisfied.
+        </small>
       <% end %>
-    <%- end %>
-
-    <hr>
-    <%- if notice %>
-      <p id="notice">
-      🆕
-      <%= notice %>
-      </p>
     <%- end %>
   </div>
   <div class="col-md-8 themed-grid-col">
@@ -322,5 +328,3 @@
     <br/>
   </div>
 </div>
-
-<%= link_to 'Back', games_path %>
