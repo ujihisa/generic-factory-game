@@ -64,49 +64,16 @@
       </p>
     <%- end %>
 
-    <h2>Actions</h2>
+    <%= react_component('ActionMenu', {
+      status: @game.status,
+      cash: @game.cash,
+      debt: @game.debt,
+      credit: @game.credit,
+      action: borrow_money_game_url,
+      formAuthenticityToken: form_authenticity_token,
+    }) %>
 
     <%- if @game.status == :in_progress %>
-      <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
-        🏦 Bank
-      </button>
-
-      <!-- Modal -->
-      <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <%= form_with(url: borrow_money_game_url, method: 'post') do |form| %>
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">🏦 Bank</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <ul>
-                  <li>You can borrow cash up to $<code>10 * credit</code>K</li>
-                  <li>The monthly interest rate is <code>10 - credit/10 %</code></li>
-                  <li>Interest rounds up after the decimal point</li>
-                  <ul>
-                    <li>For example if your credit is 75, the rate is <code>10 - 7.5 = 2.5%</code></li>
-                    <li>If you borrow $100K, you must pay $3K every month</li>
-                  </ul>
-                  <li>When your credit changes, it updates the interest rate immediately</li>
-                  <li>You must keep paying the interest until you wipe away the debt</li>
-                </ul>
-
-                <%= react_component('Bank', { debt: @game.debt, cash: @game.cash, credit: @game.credit }) %>
-              </div>
-              <div class="modal-footer">
-                <%= form.submit 'Borrow/Pay', class: 'btn btn-primary' %>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
-
-      <br/><br/>
-
       <!--
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" href="<%= new_storages_game_path %>">
       -->

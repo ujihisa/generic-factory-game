@@ -121,10 +121,10 @@ class Game < ApplicationRecord
     messages << "Paid $#{self.storage / 100}K for storage maintenance"
 
     self.cash -= self.salary
-    messages << "Paid $#{self.salary}K for employees salary"
+    messages << "Paid $#{self.salary}K for employees salary" if 0 < salary
 
     self.cash -= self.interest
-    messages << "Paid $#{self.interest}K for interest"
+    messages << "Paid $#{self.interest}K for interest" if 0 < interest
 
     # receive ingredients
     self.ingredient += self.ingredient_subscription

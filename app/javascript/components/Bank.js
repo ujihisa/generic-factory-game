@@ -27,7 +27,7 @@ class Bank extends React.Component {
       <span className="input-group-text" id="validationTooltipUsernamePrepend">$</span>
       </div>
       <input type="number" name="debt" value={this.state.debt} className="form-control" id="form-number-borrow-debt" required aria-describedby="debtHelp" min="0" onChange={(event) =>
-        this.setState({debt: Math.min(event.target.value, upper_limit)})
+          this.setState({debt: event.target.value == "" ? "" : Math.min(event.target.value, upper_limit)})
       }/>
       <div className="input-group-append">
       <span className="input-group-text" id="validationTooltipUsernamePrepend">K</span>
