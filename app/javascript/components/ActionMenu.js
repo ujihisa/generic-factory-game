@@ -1,8 +1,18 @@
 import React from "react"
 import PropTypes from "prop-types"
 import Bank from "./Bank"
+import GFG from '../gfg'
 
 class ActionMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      debt: props.debt,
+      credit: props.credit,
+      cash: props.cash,
+    };
+  }
+
   render () {
     if (this.props.status != 'in_progress')
       return null
@@ -25,24 +35,9 @@ class ActionMenu extends React.Component {
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div className="modal-body">
-                  <ul>
-                    <li>You can borrow cash up to $<code>10 * credit</code>K</li>
-                    <li>The monthly interest rate is <code>10 - credit/10 %</code></li>
-                    <li>Interest rounds up after the decimal point</li>
-                    <ul>
-                      <li>For example if your credit is 75, the rate is <code>10 - 7.5 = 2.5%</code></li>
-                      <li>If you borrow $100K, you must pay $3K every month</li>
-                    </ul>
-                    <li>When your credit changes, it updates the interest rate immediately</li>
-                    <li>You must keep paying the interest until you wipe away the debt</li>
-                  </ul>
-
-                  <Bank debt={this.props.debt} cash={this.props.cash} credit={this.props.credit} />
-                </div>
-                <div className="modal-footer">
-                  <input type="submit" value="Borrow/Pay" className="btn btn-primary" />
-                </div>
+                <GFG.ThemeContext.Provider value={this.state}>
+                  <Bank />
+                </GFG.ThemeContext.Provider>
               </form>
             </div>
           </div>

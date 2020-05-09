@@ -44,7 +44,6 @@ ActiveRecord::Schema.define(version: 2020_05_09_163704) do
     t.integer "credit", default: 20, null: false
     t.integer "debt", default: 0, null: false
     t.integer "ingredient_subscription", null: false
-    t.text "history"
     t.text "history_encoded"
     t.index ["player_id", "cash", "month"], name: "index_games_on_player_id_and_cash_and_month"
     t.index ["updated_at"], name: "index_games_on_updated_at"

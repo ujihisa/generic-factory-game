@@ -118,7 +118,7 @@ class Game < ApplicationRecord
 
     # pay fees
     self.cash -= self.storage / 100
-    messages << "Paid $#{self.storage / 100}K for storage maintenance"
+    messages << "Paid $#{self.storage / 100}K for storage maintenance" if 0 < storage
 
     self.cash -= self.salary
     messages << "Paid $#{self.salary}K for employees salary" if 0 < salary

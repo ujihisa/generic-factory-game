@@ -1,4 +1,8 @@
+import React from "react"
+
 const GFG = {
+  ThemeContext: React.createContext(),
+
   currentMonth(month) {
     return [
       'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
