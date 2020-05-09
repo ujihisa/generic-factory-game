@@ -4,15 +4,12 @@ class Game < ApplicationRecord
   has_many :contracts
 
   def status
-    case money
-    when (...0)
+    if cash < 0
       :game_over
-    when 0...1000
-      :in_progress
-    when (1000..)
+    elsif 1000 <= cash - debt
       :completed
     else
-      raise 'Must not happen'
+      :in_progress
     end
   end
 
@@ -52,7 +49,7 @@ class Game < ApplicationRecord
     raise 'Must not happen' unless factory
 
     raise 'Must not happen' unless Employee::RECRUITING_FEES[employee_type]
-    self.money -= Employee::RECRUITING_FEES[employee_type]
+    self.cash -= Employee::RECRUITING_FEES[employee_type]
 
     case employee_type
     when :junior
@@ -90,7 +87,7 @@ class Game < ApplicationRecord
     #   # good
     # else
     #   # pay penalty
-    #   self.money -= 10 * (self.ingredient + self.product + production_vol - self.storage)
+    #   self.cash -= 10 * (self.ingredient + self.product + production_vol - self.storage)
     #   production_vol = self.storage - self.product - self.ingredient
     # end
 
@@ -102,28 +99,28 @@ class Game < ApplicationRecord
       if required_products <= self.product
         # good
         self.product -= required_products
-        self.money += sales
+        self.cash += sales
       else
         # penalty
-        self.money -= sales * 10
+        self.cash -= sales * 10
 
         messages << "[PENALTY] Paid $#{sales * 10}K for contract #{contract.name}"
       end
     end
 
     # pay fees
-    self.money -= self.storage / 100
+    self.cash -= self.storage / 100
     messages << "Paid $#{self.storage / 100}K for storage maintenance"
 
-    self.money -= self.salary
+    self.cash -= self.salary
     messages << "Paid $#{self.salary}K for employees salary"
 
-    self.money -= self.interest
+    self.cash -= self.interest
     messages << "Paid $#{self.interest}K for interest"
 
     # receive ingredients
     self.ingredient += self.ingredient_subscription
-    self.money -= self.ingredient_subscription * 0.05
+    self.cash -= self.ingredient_subscription * 0.05
     messages << "Paid $#{self.ingredient_subscription * 0.05}K for ingredient subscription" if 0 < self.ingredient_subscription
 
     # overflow
@@ -139,7 +136,7 @@ class Game < ApplicationRecord
   def self.best_games(game_version)
     Game.
       includes(:player).
-      where('version = ? AND 1000 <= money', game_version).
+      where('version = ? AND 1000 <= cash', game_version).
       order(month: :asc)
   end
 end

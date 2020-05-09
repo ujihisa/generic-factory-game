@@ -82,7 +82,7 @@
               </div>
               <div class="modal-body">
                 <ul>
-                  <li>You can borrow money up to $<code>10 * credit</code>K</li>
+                  <li>You can borrow cash up to $<code>10 * credit</code>K</li>
                   <li>The monthly interest rate is <code>10 - credit/10 %</code></li>
                   <li>Interest rounds up after the decimal point</li>
                   <ul>
@@ -93,7 +93,7 @@
                   <li>You must keep paying the interest until you wipe away the debt</li>
                 </ul>
 
-                <%= react_component('Bank', { debt: @game.debt, cash: @game.money, credit: @game.credit }) %>
+                <%= react_component('Bank', { debt: @game.debt, cash: @game.cash, credit: @game.credit }) %>
               </div>
               <div class="modal-footer">
                 <%= form.submit 'Borrow/Pay', class: 'btn btn-primary' %>
@@ -140,7 +140,7 @@
               </div>
               <%= react_component('BuyIngredient', {
                 month: @game.month,
-                cash: @game.money,
+                cash: @game.cash,
                 storage: @game.storage,
                 ingredient: @game.ingredient,
                 product: @game.product
@@ -167,7 +167,7 @@
                 </button>
               </div>
               <%= react_component('SubscribeIngredient', {
-                cash: @game.money,
+                cash: @game.cash,
                 ingredientSubscription: @game.ingredient_subscription.to_i,
               }) %>
             <% end %>
@@ -181,9 +181,14 @@
 
       <%= form_with(url: end_month_game_url, method: 'post') do |form| %>
         <small>
-          Estimated new cash: <b>$<%= @estimate.money %>K</b>
+          Estimated new cash: <b>$<%= @estimate.cash %>K</b>
         </small>
         <br/>
+        <%- if @estimate.status == :game_over %>
+          <div class="alert alert-danger" role="alert">
+            Your cash will run out! Try borrowing some cash to survive.
+          </div>
+        <%- end %>
         <%= form.submit 'End month', class: "btn btn-lg #{ {in_progress: 'btn-primary', game_over: 'btn-danger', completed: 'btn-success'}[@estimate.status]}" %>
         <small class="form-text text-muted">
           You employees work to produce product, and you deliver the accumulated product to your customers until they're satisfied.
@@ -208,16 +213,16 @@
         <th><strong>Money</strong></th>
         <td>
           <% if @game.debt == 0 %>
-            <b><%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %></b>
+            <b><%= number_to_currency(@game.cash, precision: 0, format: '%u%nK') %></b>
           <% else %>
             Cash:
-            <b><%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %></b>
+            <b><%= number_to_currency(@game.cash, precision: 0, format: '%u%nK') %></b>
             <br>
             Debt:
             <b><%= number_to_currency(@game.debt, precision: 0, format: '%u%nK') %></b>
             <br>
             Total:
-            <b><%= number_to_currency(@game.money - @game.debt, precision: 0, format: '%u%nK') %></b>
+            <b><%= number_to_currency(@game.cash - @game.debt, precision: 0, format: '%u%nK') %></b>
           <% end %>
         </td>
         <td></td>

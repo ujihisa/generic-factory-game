@@ -7,17 +7,17 @@
 </ul>
 
 <div class="field">
-  <%- if 1 <= @game.money %>
-    <%- (1..@game.money).each do |num| %>
+  <%- if 1 <= @game.cash %>
+    <%- (1..@game.cash).each do |num| %>
       <%= form_with(url: create_storages_game_url, method: 'post') do |form| %>
         <%= hidden_field_tag 'num', num %>
         <%= form.submit "Buy #{num}" %>
         <%= 100 * num %>t
-        (Money: <%= number_to_currency(@game.money, precision: 0, format: '%u%nK')%> → <%= number_to_currency(@game.money - num, precision: 0, format: '%u%nK')%>)
+        (Cash: <%= number_to_currency(@game.cash, precision: 0, format: '%u%nK')%> → <%= number_to_currency(@game.cash - num, precision: 0, format: '%u%nK')%>)
       <% end %>
     <%- end %>
   <%- else %>
-    <font color=red>You don't have enough money to buy storages</font>
+    <font color=red>You don't have enough cash to buy storages</font>
   <%- end %>
 </div>
 

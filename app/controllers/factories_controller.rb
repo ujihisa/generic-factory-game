@@ -12,16 +12,16 @@ class FactoriesController < ApplicationController
     @game = Game.find(params[:game_id])
 
     @game = Game.find(params[:game_id])
-    @game.money -= Factory::COST_TO_BUY[@factory.name.to_sym]
+    @game.cash -= Factory::COST_TO_BUY[@factory.name.to_sym]
 
-    if (0..1000).include?(@game.money)
+    if 0 <= @game.cash
       if @factory.save && @game.save
         redirect_to @game, notice: "Successfully built #{@factory.name.capitalize} Factory!"
       else
         render :new
       end
     else
-      redirect_to @game, notice: "Not enough money to build #{@factory.name.capitalize} Factory!"
+      redirect_to @game, notice: "Not enough cash to build #{@factory.name.capitalize} Factory!"
     end
   end
 

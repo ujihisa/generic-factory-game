@@ -5,7 +5,7 @@ class Player < ApplicationRecord
 
   def best_game
     Game.
-      where('version = ? AND player_id = ? AND 1000 <= money', GenericFactoryGame::VERSION, id).
+      where('version = ? AND player_id = ? AND 1000 <= cash', GenericFactoryGame::VERSION, id).
       order(month: :asc).
       limit(1).
       first
@@ -13,7 +13,7 @@ class Player < ApplicationRecord
 
   def previous_best_game
     Game.
-      where('version = ? AND player_id = ? AND 1000 <= money', GenericFactoryGame::PREVIOUS_VERSION, id).
+      where('version = ? AND player_id = ? AND 1000 <= cash', GenericFactoryGame::PREVIOUS_VERSION, id).
       order(month: :asc).
       limit(1).
       first

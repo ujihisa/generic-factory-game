@@ -1,5 +1,5 @@
 <p>
-Current money: <%= number_to_currency(@game.money, precision: 0, format: '%u%nK') %>
+Current cash: <%= number_to_currency(@game.cash, precision: 0, format: '%u%nK') %>
 </p>
 
 <h3>Manual factory <%= @game.factories.map(&:name).include?('manual') ? '(所有済み)' : '($0)' %></h3>

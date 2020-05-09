@@ -75,9 +75,9 @@ class GamesController < ApplicationController
   def create_storages
     num = params[:num].to_i
     @game = Game.find(params[:id])
-    @game.money -= num
+    @game.cash -= num
     @game.storage += 100 * num
-    if 0 <= @game.money && @game.save
+    if 0 <= @game.cash && @game.save
       redirect_to @game, notice: "Successfully Bought #{num * 100}t Storages"
     else
       redirect_to @game, notice: "Failed to buy Storages"
@@ -144,9 +144,9 @@ class GamesController < ApplicationController
   def buy_ingredients
     vol = params[:vol].to_i
     @game = Game.find(params[:id])
-    @game.money -= vol * 0.5
+    @game.cash -= vol * 0.5
     @game.ingredient += vol
-    if 0 <= @game.money && @game.save
+    if 0 <= @game.cash && @game.save
       redirect_to @game, notice: "Successfully Bought #{vol}t Ingredients"
     else
       redirect_to @game, notice: "Failed to buy Ingredients"
@@ -158,10 +158,10 @@ class GamesController < ApplicationController
     after = params[:ingredient_subscription].to_i
 
     change_fee = [(after - before) * 0.05, 0].max
-    @game.money -= change_fee
+    @game.cash -= change_fee
     @game.ingredient_subscription = after
 
-    if 0 <= @game.money && @game.save
+    if 0 <= @game.cash && @game.save
       if 0 < before
         redirect_to @game, notice: "Successfully changed subscription to #{after - before}t Ingredients"
       else
@@ -176,10 +176,10 @@ class GamesController < ApplicationController
     messages = @game.settlement()
 
     if @game.save
-      if @game.money < 0
+      if @game.cash < 0
         messages << 'Game over!'
         redirect_to @game, notice: messages.join(",\n")
-      elsif 1000 <= @game.money
+      elsif 1000 <= @game.cash
         messages << 'Game clear!'
         redirect_to @game, notice: messages.join(",\n")
       else
@@ -194,14 +194,14 @@ class GamesController < ApplicationController
   def borrow_money
     new_debt = params[:debt].to_i
     if @game.credit * 10 < new_debt
-      return redirect_to @game, notice: "[ERROR] You can't borrow money more than your credit * 10"
+      return redirect_to @game, notice: "[ERROR] You can't borrow cash more than your credit * 10"
     end
 
-    @game.money += new_debt - @game.debt
+    @game.cash += new_debt - @game.debt
     @game.debt = new_debt
 
-    if @game.money < 0
-      return redirect_to @game, notice: "[ERROR] Out of money"
+    if @game.cash < 0
+      return redirect_to @game, notice: "[ERROR] Not enough cash"
     end
 
     if @game.save
