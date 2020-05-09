@@ -9,7 +9,7 @@ class Bank extends React.Component {
   }
 
   render () {
-    let upper_limit = this.props.credit * 10;
+    const upper_limit = this.props.credit * 10;
     let interest_rate = 10 - this.props.credit / 10;
     let interest = Math.ceil(this.state.debt * interest_rate / 100);
 
@@ -26,8 +26,8 @@ class Bank extends React.Component {
       <div className="input-group-prepend">
       <span className="input-group-text" id="validationTooltipUsernamePrepend">$</span>
       </div>
-      <input type="number" name="debt" defaultValue={upper_limit} className="form-control" id="form-number-borrow-debt" required aria-describedby="debtHelp" min="0" onChange={(event) =>
-        this.setState({debt: event.target.value})
+      <input type="number" name="debt" value={this.state.debt} className="form-control" id="form-number-borrow-debt" required aria-describedby="debtHelp" min="0" onChange={(event) =>
+        this.setState({debt: Math.min(event.target.value, upper_limit)})
       }/>
       <div className="input-group-append">
       <span className="input-group-text" id="validationTooltipUsernamePrepend">K</span>

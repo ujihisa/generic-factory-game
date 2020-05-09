@@ -21,7 +21,7 @@ class SubscribeIngredient extends React.Component {
 
           <input
           type="range" className="custom-range" id="form-range-subscribe-ingredient"
-          name="ingredient_subscription" defaultValue={this.state.ingredientSubscription}
+          name="ingredient_subscription" value={this.state.ingredientSubscription}
           min="0" max={maxVol} step="20"
           onChange={(event) =>
             this.setState({ingredientSubscription: event.target.value})

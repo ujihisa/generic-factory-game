@@ -5,11 +5,11 @@ class BuyIngredient extends React.Component {
     super(props);
     this.spaceLeft = this.props.storage - this.props.ingredient - this.props.product;
     this.spaceLeftTruncated = this.spaceLeft - (this.spaceLeft % 20);
-    this.suggestedVol = Math.min(
+    this.max = Math.min(
       Math.floor(this.props.cash / 0.5 / 20) * 20,
       this.spaceLeftTruncated);
     this.state = {
-      vol: this.suggestedVol,
+      vol: this.max,
       delay: 1,
     };
   }
@@ -73,8 +73,8 @@ class BuyIngredient extends React.Component {
 
           <input
           type="range" className="custom-range" id="form-range-buy-ingredient"
-          name="vol" defaultValue={this.suggestedVol}
-          min="20" max={this.suggestedVol} step="20"
+          name="vol" value={this.state.vol}
+          min="20" max={this.max} step="20"
           onChange={(event) =>
             this.setState({vol: event.target.value})
           }/>
