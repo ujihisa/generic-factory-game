@@ -82,6 +82,7 @@ class Game < ApplicationRecord
     ((10 - credit / 10.0) * 0.01 * debt).ceil
   end
 
+  # Like update(), it doesn't save.
   def settlement
     messages = []
 
@@ -90,6 +91,7 @@ class Game < ApplicationRecord
     # produce
     production_vol = self.capped_production
     self.ingredient -= production_vol * 2
+    messages << "🏭 Consume #{production_vol * 2}t ingredient" if 0 < production_vol
 
     # if self.ingredient + self.product + production_vol <= self.storage
     #   # good
@@ -102,39 +104,47 @@ class Game < ApplicationRecord
     self.product += production_vol
 
     # Deliver products
+    (delivery_total, sales_total) = [0, 0]
     self.contracts.each do |contract|
       (required_products, sales) = Contract::RULES[contract.name][self.current_month]
       if required_products <= self.product
         # good
         self.product -= required_products
         self.cash += sales
+
+        delivery_total += required_products; sales_total += sales
       else
         # penalty
         self.cash -= sales * 10
 
-        messages << "[PENALTY] Paid $#{sales * 10}K for contract #{contract.name}"
+        messages << "💸 Pay $#{sales * 10}K penalty for contract #{contract.name}"
       end
+    end
+    if 0 < delivery_total
+      messages << "📜 Deliver #{delivery_total}t products"
+      messages << "📜 Gain $#{sales_total}K sales"
     end
 
     # pay fees
     self.cash -= self.storage / 100
-    messages << "Paid $#{self.storage / 100}K for storage maintenance" if 0 < storage
+    messages << "🗄️ Pay $#{self.storage / 100}K for storage" if 0 < storage
 
     self.cash -= self.salary
-    messages << "Paid $#{self.salary}K for employees salary" if 0 < salary
+    messages << "💼 Pay $#{self.salary}K for salary" if 0 < salary
 
     self.cash -= self.interest
-    messages << "Paid $#{self.interest}K for interest" if 0 < interest
+    messages << "🏦 Pay $#{self.interest}K for interest" if 0 < interest
 
     # receive ingredients
     self.ingredient += self.ingredient_subscription
     self.cash -= self.ingredient_subscription * 0.05
-    messages << "Paid $#{self.ingredient_subscription * 0.05}K for ingredient subscription" if 0 < self.ingredient_subscription
+    messages << "📦 Receive #{self.ingredient_subscription}t ingredient" if 0 < self.ingredient_subscription
+    messages << "📦 Pay $#{self.ingredient_subscription * 0.05}K for subscription" if 0 < self.ingredient_subscription
 
     # overflow
     if self.storage < self.ingredient + self.production
       diff = self.ingredient - (self.storage - self.production)
-      messages << "[ERROR] Received ingredients more than you can handle, so trashed #{diff}t ingredients"
+      messages << "🗑️ Dispose #{diff}t ingredient due to overflow"
       self.ingredient -= diff
     end
 

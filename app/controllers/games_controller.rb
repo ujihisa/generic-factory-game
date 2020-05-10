@@ -21,7 +21,8 @@ class GamesController < ApplicationController
   # GET /games/1.json
   def show
     @estimate = Game.find(@game.id).tap do |game|
-      game.settlement()
+      messages = game.settlement()
+      game.set_history(game.month, { cash: game.cash, messages: messages })
     end
   end
 

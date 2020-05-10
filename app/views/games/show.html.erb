@@ -68,12 +68,20 @@
   </div>
 
   <div class="col-md-3 themed-grid-col">
-  <h2>Schedule</h2>
+  <h2>Calendar</h2>
     <ul>
       <li>
-        Done in <b><%= @game.current_month %></b>
+        <b><%= @game.current_month %> <%= 2020 + @game.month / 12 %></b> result
         <ul>
           <%- @game.history["#{@game.month}"]&.[]('messages')&.each do |message| %>
+            <li /><%= message %>
+          <%- end %>
+        </ul>
+      </li>
+      <li>
+        <b><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %></b> planning
+        <ul>
+          <%- @estimate.history["#{@estimate.month}"]&.[]('messages')&.each do |message| %>
             <li /><%= message %>
           <%- end %>
         </ul>
