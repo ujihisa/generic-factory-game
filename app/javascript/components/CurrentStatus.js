@@ -26,15 +26,28 @@ class CurrentStatus extends React.Component {
                     : <span>
                       Cash: <b>{ GFG.numberToCurrency(this.props.cash) }</b><br/>
                       Debt: <b>{ GFG.numberToCurrency(this.props.debt) }</b><br/>
-                      Total: <b>{ GFG.numberToCurrency(this.props.cash + this.props.debt) }</b>
+                      Total: <b>{ GFG.numberToCurrency(this.props.cash - this.props.debt) }</b>
                     </span>
                 }
+                <div className="progress">
+                  <div className="progress-bar" role="progressbar" style={{width: `${(this.props.cash - this.props.debt) / 10}%`}} aria-valuemin="0" aria-valuemax="100"
+                    aria-valuenow={(this.props.cash - this.props.debt) / 10} />
+                  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${this.props.debt / 10}%`}} aria-valuemin="0" aria-valuemax="100"
+                    aria-valuenow={this.props.debt / 10} />
+                </div>
               </td>
               <td></td>
             </tr>
             <tr>
               <th><strong>Credit</strong></th>
-              <td>{ this.props.credit }</td>
+              <td>
+                { this.props.credit }
+                <div className="progress">
+                  <div className="progress-bar bg-secondary" role="progressbar" style={{width: `${this.props.credit}%`}} aria-valuemin="0" aria-valuemax="100"
+                    aria-valuenow={this.props.credit}>
+                  </div>
+                </div>
+              </td>
               <td></td>
             </tr>
             <tr>
@@ -45,6 +58,22 @@ class CurrentStatus extends React.Component {
                 Ingredient: { this.props.ingredient }t (+ { this.props.ingredientSubscription }t)
                 <br/>
                 Product: { this.props.product }t
+
+                {
+                  (() => {
+                    const pProduct = 100 * this.props.product / this.props.storage
+                    const pIngredient = 100 * this.props.ingredient / this.props.storage
+                    const pIngredientSubscription = 100 * this.props.ingredientSubscription / this.props.storage
+                    return <div className="progress">
+                      <div className="progress-bar bg-primary" role="progressbar" style={{width: `${pProduct}%`}} aria-valuemin="0" aria-valuemax="100"
+                        aria-valuenow={pProduct} />
+                      <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredient}%`}} aria-valuemin="0" aria-valuemax="100"
+                        aria-valuenow={pIngredient} />
+                      <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredientSubscription}%`, height: "1px"}} aria-valuemin="0" aria-valuemax="100"
+                        aria-valuenow={pIngredientSubscription} />
+                    </div>
+                  })()
+                }
               </td>
               <td>
                 🗄️

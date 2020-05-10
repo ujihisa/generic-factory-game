@@ -12,7 +12,8 @@ class SubscribeIngredient extends React.Component {
     const volBefore = this.props.ingredientSubscription
     const volAfter = this.state.ingredientSubscription
     const changeFee = Math.max((volAfter - volBefore) * 0.05, 0)
-    const maxVol = volBefore + this.props.cash / 0.05
+    // const maxVol = volBefore + this.props.cash / 0.05
+    const maxVol = this.props.storage
 
     return (
       <React.Fragment>
@@ -41,5 +42,6 @@ class SubscribeIngredient extends React.Component {
 SubscribeIngredient.propTypes = {
   cash: PropTypes.number,
   ingredientSubscription: PropTypes.number,
+  storage: PropTypes.number,
 };
 export default SubscribeIngredient

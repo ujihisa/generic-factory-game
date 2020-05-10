@@ -11,6 +11,7 @@ class ActionMenu extends React.Component {
       debt: props.debt,
       credit: props.credit,
       cash: props.cash,
+      storage: props.storage,
       ingredientSubscription: props.ingredientSubscription,
       subscribe_ingredients_game_url: props.subscribe_ingredients_game_url,
     };
@@ -72,7 +73,7 @@ class ActionMenu extends React.Component {
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <SubscribeIngredient cash={this.state.cash} ingredientSubscription={this.state.ingredientSubscription} />
+                <SubscribeIngredient cash={this.state.cash} ingredientSubscription={this.state.ingredientSubscription} storage={this.state.storage} />
               </form>
             </div>
           </div>
@@ -110,6 +111,7 @@ ActionMenu.propTypes = {
   cash: PropTypes.number,
   debt: PropTypes.number,
   credit: PropTypes.number,
+  storage: PropTypes.number,
   ingredientSubscription: PropTypes.number,
   action: PropTypes.string,
   formAuthenticityToken: PropTypes.string,

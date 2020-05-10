@@ -75,6 +75,7 @@
       cash: @game.cash,
       debt: @game.debt,
       credit: @game.credit,
+      storage: @game.storage,
       ingredientSubscription: @game.ingredient_subscription,
       action: borrow_money_game_url,
       formAuthenticityToken: form_authenticity_token,
@@ -85,7 +86,7 @@
     }) %>
 
   </div>
-  <div class="col-md-4 themed-grid-col">
+  <div class="col-md-5 themed-grid-col">
     <h2>Current status</h2>
 
     <%= react_component('CurrentStatus', {
@@ -166,7 +167,7 @@
 
     <br/>
   </div>
-  <div class="col-md-4 themed-grid-col">
+  <div class="col-md-3 themed-grid-col">
     <h2>Schedule</h2>
 
     <ul>
