@@ -125,14 +125,11 @@ class GamePane extends React.Component {
           <br/><br/>
 
           <form action={this.props.end_month_game_url} acceptCharset="UTF-8" data-remote="true" method="post">
-            <small>
-              Estimated new cash: <b>{ GFG.numberToCurrency(this.props.estimate_cash) }</b>
-            </small>
             <br/>
             {
               (this.props.estimate_status == 'game_over') &&
                 <div className="alert alert-danger" role="alert">
-                  Your cash will run out! Try borrowing some cash to survive.
+                  Are you sure? {(this.props.debt < this.props.credit * 10) ? "Try borrowing more cash" : "Find what you can do to survive!"}
                 </div>
             }
             <input type="submit" name="commit" value="End month"  data-disable-with="End month"
@@ -184,7 +181,6 @@ GamePane.propTypes = {
   formAuthenticityToken: PropTypes.string,
   subscribe_ingredients_game_url: PropTypes.string,
   end_month_game_url: PropTypes.string,
-  estimate_cash: PropTypes.number,
   create_storages_game_url: PropTypes.string,
   month: PropTypes.number,
   ingredient: PropTypes.number,

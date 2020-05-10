@@ -91,7 +91,8 @@ class Game < ApplicationRecord
     # produce
     production_vol = self.capped_production
     self.ingredient -= production_vol * 2
-    messages << "🏭 Consume #{production_vol * 2}t ingredient" if 0 < production_vol
+    messages << "🏭 Consume #{production_vol * 2}t ingredients" if 0 < production_vol
+    messages << "🏭 Produce #{production_vol}t products" if 0 < production_vol
 
     # if self.ingredient + self.product + production_vol <= self.storage
     #   # good
@@ -104,7 +105,7 @@ class Game < ApplicationRecord
     self.product += production_vol
 
     # Deliver products
-    (delivery_total, sales_total) = [0, 0]
+    (delivery_total, sales_total, credit_total) = [0, 0, 0]
     self.contracts.each do |contract|
       (required_products, sales) = Contract::RULES[contract.name][self.current_month]
       if required_products <= self.product
@@ -113,16 +114,22 @@ class Game < ApplicationRecord
         self.cash += sales
 
         delivery_total += required_products; sales_total += sales
+        credit_total += 1
       else
         # penalty
         self.cash -= sales * 10
+        credit_total -= 10
 
+        messages << "⚠️ Products not enough"
         messages << "💸 Pay $#{sales * 10}K penalty for contract #{contract.name}"
       end
     end
     if 0 < delivery_total
       messages << "📜 Deliver #{delivery_total}t products"
       messages << "📜 Gain $#{sales_total}K sales"
+
+      self.credit = self.class.normalize_credit(self.credit + credit_total)
+      messages << "❤️ #{"++-"[credit_total <=> 0]}#{credit_total.abs} credit"
     end
 
     # pay fees
@@ -147,8 +154,14 @@ class Game < ApplicationRecord
       messages << "🗑️ Dispose #{diff}t ingredient due to overflow"
       self.ingredient -= diff
     end
+    messages << "💵 Cash balance $#{self.cash}K"
 
     messages
+  end
+
+  # Always between 0 to 100
+  def self.normalize_credit(credit)
+    [[0, credit].max, 100].min
   end
 
   def self.best_games(game_version)
