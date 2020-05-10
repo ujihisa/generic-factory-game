@@ -212,14 +212,20 @@ class GamesController < ApplicationController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_game
+  if Rails.env.development?
+    def force_change
       @game = Game.find(params[:id])
+      @game.update(params.permit(:cash, :debt, :credit, :storage, :product, :ingredient))
+      @game.save!
+      redirect_to @game, notice: 'GOOD GOOD'
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def game_params
-      params.require(:game).permit(:player_id)
-    end
+  private def set_game
+    @game = Game.find(params[:id])
+  end
+
+  private def game_params
+    params.require(:game).permit(:player_id)
+  end
 end

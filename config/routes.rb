@@ -18,6 +18,8 @@ Rails.application.routes.draw do
       post 'end_month'
 
       post 'borrow_money'
+
+      post 'force_change' if Rails.env.development?
     end
     resources :factories
     resources :contracts

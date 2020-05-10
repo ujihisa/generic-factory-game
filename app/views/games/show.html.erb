@@ -247,3 +247,15 @@
     <br/>
   </div>
 </div>
+<%- if Rails.env.development? %>
+  <h2>DEVELOPMENT</h2>
+  <%= form_with(url: force_change_game_url, method: 'post') do |form| %>
+    Cash: <%= form.text_field :cash, value: @game.cash %><br/>
+    Debt: <%= form.text_field :debt, value: @game.debt %><br/>
+    Credit: <%= form.text_field :credit, value: @game.credit %><br/>
+    Storage: <%= form.text_field :storage, value: @game.storage %><br/>
+    Product: <%= form.text_field :product, value: @game.product %><br/>
+    Ingredient: <%= form.text_field :ingredient, value: @game.ingredient %><br/>
+  <%= form.submit %>
+  <%- end %>
+<%- end %>
