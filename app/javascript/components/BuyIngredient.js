@@ -59,10 +59,10 @@ class BuyIngredient extends React.Component {
 
           <input type="number"
             value={this.state.inputNumberVol}
-            className={(this.state.inputNumberVol % 20 == 0) ? "form-control" : "form-control is-invalid"}
+            className={(this.state.inputNumberVol == this.state.vol) ? "form-control" : "form-control is-invalid"}
             onChange={(e) => {
               this.setState({inputNumberVol: e.target.value});
-              (e.target.value % 20 == 0) && this.setState({vol: e.target.value})
+              (e.target.value % 20 == 0) && (20 <= e.target.value) && (e.target.value <= this.max) && this.setState({vol: e.target.value})
             }}/>
 
           <input

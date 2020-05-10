@@ -11,6 +11,7 @@ class ActionMenu extends React.Component {
     this.state = {
       cash: this.props.cash,
       storage: this.props.storage,
+      inputNumberStorage: this.props.storage,
     };
   }
 
@@ -19,6 +20,8 @@ class ActionMenu extends React.Component {
   }
 
   render () {
+    const min = this.props.storage;
+    const max = this.props.cash * 100;
     return (
       <React.Fragment>
         {
@@ -56,14 +59,23 @@ class ActionMenu extends React.Component {
                       <li>The overflow will be simply discarded</li>
                     </ul>
                   </ul>
+
+                  <input type="number" value={this.state.inputNumberStorage}
+                    className={(this.state.inputNumberStorage == this.state.storage) ? "form-control" : "form-control is-invalid"}
+                    onChange={(e) => {
+                      this.setState({inputNumberStorage: e.target.value});
+                      (e.target.value % 100 == 0) && (min <= e.target.value) && (e.target.value <= max) && this.setState({storage: e.target.value})
+                    }}/>
+
                   <input
                     type="range" className="custom-range" id="form-range-storage"
                     name="storage" value={this.state.storage}
-                    min={this.props.storage} max={this.props.cash * 100} step="100"
-                    onChange={(event) => {
+                    min={min} max={max} step="100"
+                    onChange={(e) => {
                       this.setState({
-                        storage: event.target.value,
-                        cash: this.props.cash - (parseInt(event.target.value, 10) - this.props.storage) / 100,
+                        storage: e.target.value,
+                        cash: this.props.cash - (parseInt(e.target.value, 10) - this.props.storage) / 100,
+                        inputNumberStorage: e.target.value,
                       })
                     }
                     }/>
