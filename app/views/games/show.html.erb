@@ -20,15 +20,6 @@
     <h2>Actions</h2>
 
     <%- if @game.status == :in_progress %>
-      <!--
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" href="<%= new_storages_game_path %>">
-      -->
-      <button onclick="location.href='<%= new_storages_game_path %>'" type="button" class="btn btn-secondary">
-        🗄️ Storage
-      </button>
-
-      <br/><br/>
-
       🏭 <%= link_to 'Build a Factory', new_game_factory_path(@game.id) %> (工場建設)
       <br/><br/>
 
@@ -70,7 +61,7 @@
       <br/><br/>
     <%- end %>
 
-    <%= react_component('ActionMenu', {
+    <%= react_component('GamePane', {
       status: @game.status,
       cash: @game.cash,
       debt: @game.debt,
@@ -83,6 +74,13 @@
       end_month_game_url: end_month_game_url,
       estimate_cash: @estimate.cash,
       estimate_status: @estimate.status,
+      create_storages_game_url: create_storages_game_url,
+      month: @game.month,
+      ingredient: @game.ingredient,
+      product: @game.product,
+      idleFactory: @game.idle_factory,
+      factoryNames: @game.factories.map(&:name),
+      contractNames: @game.contracts.map(&:name),
     }) %>
 
   </div>
@@ -218,14 +216,17 @@
   </div>
 </div>
 <%- if Rails.env.development? %>
-  <h2>DEVELOPMENT</h2>
-  <%= form_with(url: force_change_game_url, method: 'post') do |form| %>
-    Cash: <%= form.text_field :cash, value: @game.cash %><br/>
-    Debt: <%= form.text_field :debt, value: @game.debt %><br/>
-    Credit: <%= form.text_field :credit, value: @game.credit %><br/>
-    Storage: <%= form.text_field :storage, value: @game.storage %><br/>
-    Product: <%= form.text_field :product, value: @game.product %><br/>
-    Ingredient: <%= form.text_field :ingredient, value: @game.ingredient %><br/>
-  <%= form.submit %>
-  <%- end %>
+  <hr>
+  <div align="right">
+    <h2>DEVELOPMENT</h2>
+    <%= form_with(url: force_change_game_url, method: 'post') do |form| %>
+      Cash: <%= form.text_field :cash, value: @game.cash %><br/>
+      Debt: <%= form.text_field :debt, value: @game.debt %><br/>
+      Credit: <%= form.text_field :credit, value: @game.credit %><br/>
+      Storage: <%= form.text_field :storage, value: @game.storage %><br/>
+      Product: <%= form.text_field :product, value: @game.product %><br/>
+      Ingredient: <%= form.text_field :ingredient, value: @game.ingredient %><br/>
+      <%= form.submit %>
+    <%- end %>
+  </div>
 <%- end %>

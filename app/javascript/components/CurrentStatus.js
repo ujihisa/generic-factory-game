@@ -4,6 +4,12 @@ import PropTypes from "prop-types"
 import GFG from '../gfg'
 
 class CurrentStatus extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+  }
+
   render () {
     const moneyCol = (this.props.dept == 0) ? this.props.cash : 123
     return (

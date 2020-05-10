@@ -3,7 +3,6 @@ Rails.application.routes.draw do
 
   resources :games do
     member do
-      get 'new_storages'
       post 'create_storages'
 
       get 'new_employee'

@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import ActionMenu from "./ActionMenu"
+import GamePane from "./GamePane"
 import GFG from '../gfg'
 
 class Bank extends React.Component {

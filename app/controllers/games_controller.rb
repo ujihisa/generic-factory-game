@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   before_action :set_game, only: [
-    :show, :edit, :update, :destroy, :new_storages, :create_storages,
+    :show, :edit, :update, :destroy, :create_storages,
     :new_employee, :create_employee, :new_dispatch, :create_dispatch,
     :buy_ingredients, :end_month, :borrow_money, :subscribe_ingredients,
   ]
@@ -67,9 +67,6 @@ class GamesController < ApplicationController
         format.json { render json: @game.errors, status: :unprocessable_entity }
       end
     end
-  end
-
-  def new_storages
   end
 
   def create_storages
