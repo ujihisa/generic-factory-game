@@ -3,6 +3,8 @@ class Game < ApplicationRecord
   has_many :factories
   has_many :contracts
 
+  INGREDIENT2PRODUCT = 1
+
   def history
     history_encoded ? JSON.parse(history_encoded).freeze : {}.freeze
   end
@@ -36,11 +38,11 @@ class Game < ApplicationRecord
   end
 
   def production
-    factories.map(&:performance).sum / 2
+    factories.map(&:performance).sum * INGREDIENT2PRODUCT
   end
 
   def capped_production
-    [production, ingredient / 2].min
+    [production, ingredient * INGREDIENT2PRODUCT].min
   end
 
   def idle_factory
@@ -72,6 +74,12 @@ class Game < ApplicationRecord
     save && factory.save
   end
 
+  def num_employees
+    factories.map {|factory|
+      factory.junior + factory.intermediate + factory.senior
+    }.sum
+  end
+
   def salary
     factories.map {|factory|
       factory.junior * 3 + factory.intermediate * 5 + factory.senior * 9
@@ -87,11 +95,12 @@ class Game < ApplicationRecord
     messages = []
 
     self.month += 1
+    credit_diff = 0
 
     # produce
     production_vol = self.capped_production
-    self.ingredient -= production_vol * 2
-    messages << "🏭 Consume #{production_vol * 2}t ingredients" if 0 < production_vol
+    self.ingredient -= production_vol / INGREDIENT2PRODUCT
+    messages << "🏭 Consume #{production_vol / INGREDIENT2PRODUCT}t ingredients" if 0 < production_vol
     messages << "🏭 Produce #{production_vol}t products" if 0 < production_vol
 
     # if self.ingredient + self.product + production_vol <= self.storage
@@ -105,7 +114,7 @@ class Game < ApplicationRecord
     self.product += production_vol
 
     # Deliver products
-    (delivery_total, sales_total, credit_total) = [0, 0, 0]
+    (delivery_total, sales_total) = [0, 0]
     self.contracts.each do |contract|
       (required_products, sales) = Contract::RULES[contract.name][self.current_month]
       if required_products <= self.product
@@ -114,11 +123,10 @@ class Game < ApplicationRecord
         self.cash += sales
 
         delivery_total += required_products; sales_total += sales
-        credit_total += 1
       else
         # penalty
         self.cash -= sales * 10
-        credit_total -= 10
+        credit_diff -= 10
 
         messages << "⚠️ Products not enough"
         messages << "💸 Pay $#{sales * 10}K penalty for contract #{contract.name}"
@@ -128,8 +136,15 @@ class Game < ApplicationRecord
       messages << "📜 Deliver #{delivery_total}t products"
       messages << "📜 Gain $#{sales_total}K sales"
 
-      self.credit = self.class.normalize_credit(self.credit + credit_total)
-      messages << "❤️ #{"++-"[credit_total <=> 0]}#{credit_total.abs} credit"
+      credit_diff +=
+        case self.credit
+        when (0..19), (20..39)
+          self.contracts.size
+        when (40..59)
+          1
+        else
+          0
+        end
     end
 
     # pay fees
@@ -138,9 +153,32 @@ class Game < ApplicationRecord
 
     self.cash -= self.salary
     messages << "💼 Pay $#{self.salary}K for salary" if 0 < salary
+    credit_diff +=
+      case self.credit
+      when (0..19)
+        self.num_employees
+      else
+        0
+      end
 
     self.cash -= self.interest
     messages << "🏦 Pay $#{self.interest}K for interest" if 0 < interest
+    credit_diff += 1 if
+      case self.credit
+      when (0..19)
+        10 <= self.debt
+      when (20..39)
+        30 <= self.debt
+      when (40..59)
+        50 <= self.debt
+      when (60..79)
+        70 <= self.debt
+      else
+        false
+      end
+
+    self.credit = self.class.normalize_credit(self.credit + credit_diff)
+    messages << "❤️ #{"++-"[credit_diff <=> 0]}#{credit_diff.abs} credit"
 
     # receive ingredients
     self.ingredient += self.ingredient_subscription

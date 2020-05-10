@@ -157,10 +157,10 @@
 
         <ul>
           <li>
-            Estimated Ingredients Consumption: <%= @game.production * 2 %>t
+            Estimated Ingredients Consumption: <%= @game.production / Game::INGREDIENT2PRODUCT %>t
             <%- if @game.production != @game.capped_production %>
               <ul>
-                <li><font color=red>(Capped to <%= @game.capped_production * 2 %>t, because you don't have much ingredients!)</font>
+                <li><font color=red>(Capped to <%= @game.capped_production / Game::INGREDIENT2PRODUCT %>t, because you don't have much ingredients!)</font>
               </ul>
             <%- end %>
           </li>

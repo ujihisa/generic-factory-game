@@ -93,7 +93,7 @@ class GamePane extends React.Component {
           <br/><br/>
 
           {
-            (10 <= this.state.credit || 0 < this.state.ingredientSubscription)
+            (20 <= this.state.credit || 0 < this.state.ingredientSubscription)
               ?  <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#subscribeIngredientModal">
                 📦 Subscribe Ingredient
               </button>

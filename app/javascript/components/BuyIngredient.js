@@ -11,9 +11,9 @@ class BuyIngredient extends React.Component {
       Math.floor(this.props.cash / 0.5 / 20) * 20,
       this.spaceLeftTruncated);
     this.state = {
-      vol: 0,
+      vol: 20,
       delay: 1,
-      inputNumberVol: 0,
+      inputNumberVol: 20,
     };
   }
 
