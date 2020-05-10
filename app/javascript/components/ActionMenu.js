@@ -17,7 +17,14 @@ class ActionMenu extends React.Component {
     };
   }
 
+  componentDidMount() {
+    $('[data-toggle="popover"]').popover()
+  }
+
   render () {
+    $('.example-popover').popover({
+      container: 'body'
+    })
     if (this.props.status != 'in_progress')
       return null
     return (
@@ -27,9 +34,13 @@ class ActionMenu extends React.Component {
             ? <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
               🏦 Bank
             </button>
-            : <button type="button" className="btn btn-secondary" title="You need more credit" disabled>
-              🏦 Bank
-            </button>
+            : <span className="d-inline-block" data-toggle="popover"
+              title="Feature locked"
+              data-content="You need at least 1 credit" >
+              <button type="button" className="btn btn-secondary" data-toggle="popover" disabled style={{pointerEvents: "none"}}>
+                🏦 Bank
+              </button>
+            </span>
         }
 
         <div className="modal" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -58,9 +69,13 @@ class ActionMenu extends React.Component {
             ?  <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#subscribeIngredientModal">
               📦 Subscribe Ingredient
             </button>
-            :  <button type="button" className="btn btn-secondary" title="You need at least 10 credit" disabled>
-              📦 Subscribe Ingredient
-            </button>
+            : <span className="d-inline-block" data-toggle="popover"
+              title="Feature locked"
+              data-content="You need at least 10 credit" >
+              <button type="button" className="btn btn-secondary" data-toggle="popover" disabled style={{pointerEvents: "none"}}>
+                📦 Subscribe Ingredient
+              </button>
+            </span>
         }
 
         <div className="modal" id="subscribeIngredientModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
