@@ -71,12 +71,17 @@ class GamesController < ApplicationController
   end
 
   def create_storages
-    num = params[:num].to_i
+    storage = params[:storage].to_i
     @game = Game.find(params[:id])
-    @game.cash -= num
-    @game.storage += 100 * num
-    if 0 <= @game.cash && @game.save
-      redirect_to @game, notice: "Successfully Bought #{num * 100}t Storages"
+
+    diff = storage - @game.storage
+    @game.cash -= diff / 100
+    @game.storage = storage
+
+    if diff <= 0
+      redirect_to @game, notice: "[ERROR] Missing storage"
+    elsif 0 <= @game.cash && @game.save
+      redirect_to @game, notice: "Successfully Bought #{storage}t Storages"
     else
       redirect_to @game, notice: "Failed to buy Storages"
     end

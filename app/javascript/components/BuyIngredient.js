@@ -11,8 +11,9 @@ class BuyIngredient extends React.Component {
       Math.floor(this.props.cash / 0.5 / 20) * 20,
       this.spaceLeftTruncated);
     this.state = {
-      vol: this.max,
+      vol: 0,
       delay: 1,
+      inputNumberVol: 0,
     };
   }
 
@@ -26,60 +27,64 @@ class BuyIngredient extends React.Component {
     const f = (event) => {
       this.setState({delay: event.target.value})
     };
-    const balance = this.props.cash - cost;
+    const cashBalance =
+      <div className="progress">
+        <div className="progress-bar" role="progressbar" style={{width: `${100 * (this.props.cash - cost) / this.props.cash}%`}} aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow={100 * (this.props.cash - cost) / this.props.cash}>
+          Cash left: {GFG.numberToCurrency(this.props.cash - cost)}
+        </div>
+        <div className="progress-bar bg-secondary" role="progressbar" style={{width: `${100 * cost / this.props.cash}%`}} aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow={100 * cost / this.props.cash}>
+          Cost: {GFG.numberToCurrency(cost)}
+        </div>
+      </div>
+    const storageBalance =
+      <div className="progress">
+        <div className="progress-bar bg-info" role="progressbar" style={{width: `${100 * (this.state.vol) / this.spaceLeft}%`}} aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow={100 * (this.state.vol) / this.spaceLeft}>
+          Vol: {this.state.vol}t
+        </div>
+        <div className="progress-bar bg-secondary" role="progressbar" style={{width: `${100 * (this.spaceLeft - this.state.vol) / this.spaceLeft}%`}} aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow={100 * (this.spaceLeft - this.state.vol) / this.spaceLeft}>
+          Space left: {this.spaceLeft - this.state.vol}t
+        </div>
+      </div>
 
     return (
       <React.Fragment>
         <div className="modal-body">
-          You pay first, and you get later.
-          <ul>
-            <li>Pay <b>$10K</b> per <b>20t</b> if you wish ingredient to be delivered <u>next month</u></li>
-            <li>Pay <b>$2K</b> per <b>20t</b> if you wish ingredient to be delivered in <u>2 month</u></li>
-            <li>Pay <b>$1K</b> per <b>20t</b> if you wish ingredient to be delivered in <u>3 month</u></li>
-            <li>Overflow ingredient will be simply trashed</li>
-          </ul>
+          <p>
+            $10K for every 20t ingredients.
+          </p>
 
-
-          {/*
-          Get delivered due
-          <div className="row">
-            <div className="col">
-              <label className="btn btn-secondary">
-                <input type="radio" name="delay" id="option1" value="1" autoComplete="off" onChange={f} />
-                {this.readableDate(this.props.month + 1)}
-              </label>
-            </div>
-            <div className="col">
-              <label className="btn btn-secondary active">
-                <input type="radio" name="delay" id="option2" value="2" autoComplete="off" defaultChecked onChange={f} />
-                {this.readableDate(this.props.month + 2)}
-              </label>
-            </div>
-            <div className="col">
-              <label className="btn btn-secondary">
-                <input type="radio" name="delay" id="option3" value="3" autoComplete="off" onChange={f} />
-                {this.readableDate(this.props.month + 3)}
-              </label>
-            </div>
-          </div>
-          */}
-
-          <br/> <br/>
-
-          Volume: <b>{this.state.vol}</b>
+          <input type="number"
+            value={this.state.inputNumberVol}
+            className={(this.state.inputNumberVol % 20 == 0) ? "form-control" : "form-control is-invalid"}
+            onChange={(e) => {
+              this.setState({inputNumberVol: e.target.value});
+              (e.target.value % 20 == 0) && this.setState({vol: e.target.value})
+            }}/>
 
           <input
           type="range" className="custom-range" id="form-range-buy-ingredient"
           name="vol" value={this.state.vol}
           min="20" max={this.max} step="20"
-          onChange={(event) =>
-            this.setState({vol: event.target.value})
-          }/>
-          Cash Balance:
-          ${this.props.cash}K - <b>${cost}K</b> = {0 <= balance ? <b>${balance}K</b> : <font color="red">ERROR</font>}<br/>
+          onChange={(e) => {
+            this.setState({inputNumberVol: e.target.value});
+            this.setState({vol: e.target.value})
+          }}/>
+          <br/>
+
+          {cashBalance}
+          <br/>
+          {storageBalance}
         </div>
         <div className="modal-footer">
-          <input type="submit" value="Buy and get now" className="btn btn-primary" />
+          {
+            (this.state.vol == 0)
+              ? <input type="submit" value="Not enough volume to buy" className="btn btn-primary" disabled />
+              : <input type="submit" value={`Pay ${GFG.numberToCurrency(cost)} to get ${this.state.vol}t now`} className="btn btn-primary" />
+          }
         </div>
       </React.Fragment>
     );

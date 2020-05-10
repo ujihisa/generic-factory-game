@@ -79,7 +79,7 @@
         </ul>
       </li>
       <li>
-        <b><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %></b> planning
+        <b><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %></b> estimate
         <ul>
           <%- @estimate.history["#{@estimate.month}"]&.[]('messages')&.each do |message| %>
             <li /><%= message %>

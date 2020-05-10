@@ -57,8 +57,8 @@ class ActionMenu extends React.Component {
                     </ul>
                   </ul>
                   <input
-                    type="range" className="custom-range" id="form-range-subscribe-ingredient"
-                    name="ingredient_subscription" value={this.state.storage}
+                    type="range" className="custom-range" id="form-range-storage"
+                    name="storage" value={this.state.storage}
                     min={this.props.storage} max={this.props.cash * 100} step="100"
                     onChange={(event) => {
                       this.setState({
