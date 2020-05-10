@@ -16,62 +16,8 @@
 
 <div class="row mb-3">
   <div class="col-md-4 themed-grid-col">
-    <h2>Schedule</h2>
 
-    <ul>
-      <li>
-        Done in <b><%= @game.current_month %></b>
-        <ul>
-          <%- @game.history["#{@game.month}"]&.[]('messages')&.each do |message| %>
-            <li /><%= message %>
-          <%- end %>
-        </ul>
-      </li>
-
-      <li>
-        Due <b><%= @game.next_month %></b>
-        <ul>
-          <%- if 0 < @game.salary %>
-            <li>Pay <b><%= number_to_currency(@game.salary, precision: 0, format: '%u%nK') %></b> salary.</li>
-          <%- end %>
-          <%- if 0 < @game.storage %>
-            <li>Pay <b><%= number_to_currency(@game.storage / 100, precision: 0, format: '%u%nK') %></b> storage fee.</li>
-          <%- end %>
-          <%- if @game.debt != 0 %>
-            <li>Pay <b><%= number_to_currency(@game.interest, precision: 0, format: '%u%nK') %></b> interest.</li>
-          <%- end %>
-          <%- if 0 < @game.ingredient_subscription %>
-            <li>Pay <b><%= number_to_currency(@game.ingredient_subscription * 0.05, precision: 0, format: '%u%nK') %></b> ingredient subscription.</li>
-          <%- end %>
-          <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
-          <%- if 0 < total_required_products %>
-            <li>
-              Deliver <b><%= total_required_products %>t</b> products.
-              <%- if @game.capped_production + @game.product < total_required_products %>
-                ⚠️
-              <%- end %>
-            </li>
-          <%- end %>
-        </ul>
-      </li>
-    </ul>
-
-    <hr>
-    <%- if notice %>
-      <p id="notice">
-      🆕
-      <%= notice %>
-      </p>
-    <%- end %>
-
-    <%= react_component('ActionMenu', {
-      status: @game.status,
-      cash: @game.cash,
-      debt: @game.debt,
-      credit: @game.credit,
-      action: borrow_money_game_url,
-      formAuthenticityToken: form_authenticity_token,
-    }) %>
+    <h2>Actions</h2>
 
     <%- if @game.status == :in_progress %>
       <!--
@@ -120,52 +66,26 @@
       </div>
       <br/><br/>
 
-      <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#subscribeIngredientModal">
-        📦 Subscribe Ingredient
-      </button>
-
-      <!-- Modal -->
-      <div class="modal" id="subscribeIngredientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <%= form_with(url: subscribe_ingredients_game_url, method: 'post') do |form| %>
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">📦 Subscribe Ingredient</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <%= react_component('SubscribeIngredient', {
-                cash: @game.cash,
-                ingredientSubscription: @game.ingredient_subscription.to_i,
-              }) %>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <br/><br/>
-
       📜 <%= link_to 'Make a contract', new_game_contract_path(@game.id) %> (新規契約を結ぶ)
       <br/><br/>
-
-      <%= form_with(url: end_month_game_url, method: 'post') do |form| %>
-        <small>
-          Estimated new cash: <b>$<%= @estimate.cash %>K</b>
-        </small>
-        <br/>
-        <%- if @estimate.status == :game_over %>
-          <div class="alert alert-danger" role="alert">
-            Your cash will run out! Try borrowing some cash to survive.
-          </div>
-        <%- end %>
-        <%= form.submit 'End month', class: "btn btn-lg #{ {in_progress: 'btn-primary', game_over: 'btn-danger', completed: 'btn-success'}[@estimate.status]}" %>
-        <small class="form-text text-muted">
-          You employees work to produce product, and you deliver the accumulated product to your customers until they're satisfied.
-        </small>
-      <% end %>
     <%- end %>
+
+    <%= react_component('ActionMenu', {
+      status: @game.status,
+      cash: @game.cash,
+      debt: @game.debt,
+      credit: @game.credit,
+      ingredientSubscription: @game.ingredient_subscription,
+      action: borrow_money_game_url,
+      formAuthenticityToken: form_authenticity_token,
+      subscribe_ingredients_game_url: subscribe_ingredients_game_url,
+      end_month_game_url: end_month_game_url,
+      estimate_cash: @estimate.cash,
+      estimate_status: @estimate.status,
+    }) %>
+
   </div>
-  <div class="col-md-8 themed-grid-col">
+  <div class="col-md-4 themed-grid-col">
     <h2>Current status</h2>
 
     <%= react_component('CurrentStatus', {
@@ -245,6 +165,55 @@
     </p>
 
     <br/>
+  </div>
+  <div class="col-md-4 themed-grid-col">
+    <h2>Schedule</h2>
+
+    <ul>
+      <li>
+        Done in <b><%= @game.current_month %></b>
+        <ul>
+          <%- @game.history["#{@game.month}"]&.[]('messages')&.each do |message| %>
+            <li /><%= message %>
+          <%- end %>
+        </ul>
+      </li>
+
+      <li>
+        Due <b><%= @game.next_month %></b>
+        <ul>
+          <%- if 0 < @game.salary %>
+            <li>Pay <b><%= number_to_currency(@game.salary, precision: 0, format: '%u%nK') %></b> salary.</li>
+          <%- end %>
+          <%- if 0 < @game.storage %>
+            <li>Pay <b><%= number_to_currency(@game.storage / 100, precision: 0, format: '%u%nK') %></b> storage fee.</li>
+          <%- end %>
+          <%- if @game.debt != 0 %>
+            <li>Pay <b><%= number_to_currency(@game.interest, precision: 0, format: '%u%nK') %></b> interest.</li>
+          <%- end %>
+          <%- if 0 < @game.ingredient_subscription %>
+            <li>Pay <b><%= number_to_currency(@game.ingredient_subscription * 0.05, precision: 0, format: '%u%nK') %></b> ingredient subscription.</li>
+          <%- end %>
+          <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
+          <%- if 0 < total_required_products %>
+            <li>
+              Deliver <b><%= total_required_products %>t</b> products.
+              <%- if @game.capped_production + @game.product < total_required_products %>
+                ⚠️
+              <%- end %>
+            </li>
+          <%- end %>
+        </ul>
+      </li>
+    </ul>
+
+    <hr>
+    <%- if notice %>
+      <p id="notice">
+      🆕
+      <%= notice %>
+      </p>
+    <%- end %>
   </div>
 </div>
 <%- if Rails.env.development? %>
