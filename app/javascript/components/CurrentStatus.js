@@ -12,6 +12,20 @@ class CurrentStatus extends React.Component {
 
   render () {
     const moneyCol = (this.props.dept == 0) ? this.props.cash : 123
+
+    const moneyProgressGoal = 2 * this.props.debt + 1000
+    const moneyProgress =
+      <div className="progress">
+        <div className="progress-bar bg-danger" role="progressbar" style={{width: `${100 * this.props.debt / moneyProgressGoal}%`}} aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow={100 * this.props.debt / moneyProgressGoal}>
+          { GFG.numberToCurrency(this.props.debt) }
+        </div>
+        <div className="progress-bar" role="progressbar" style={{width: `${100 * this.props.cash / moneyProgressGoal}%`}} aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow={100 * this.props.cash / moneyProgressGoal}>
+          { GFG.numberToCurrency(this.props.cash) }
+        </div>
+      </div>;
+
     return (
       <React.Fragment>
         <table>
@@ -30,17 +44,12 @@ class CurrentStatus extends React.Component {
                   (this.props.debt == 0)
                     ?  <b>{ GFG.numberToCurrency(this.props.cash) }</b>
                     : <span>
-                      Cash: <b>{ GFG.numberToCurrency(this.props.cash) }</b><br/>
                       Debt: <b>{ GFG.numberToCurrency(this.props.debt) }</b><br/>
+                      Cash: <b>{ GFG.numberToCurrency(this.props.cash) }</b><br/>
                       Total: <b>{ GFG.numberToCurrency(this.props.cash - this.props.debt) }</b>
                     </span>
                 }
-                <div className="progress">
-                  <div className="progress-bar" role="progressbar" style={{width: `${(this.props.cash - this.props.debt) / 10}%`}} aria-valuemin="0" aria-valuemax="100"
-                    aria-valuenow={(this.props.cash - this.props.debt) / 10} />
-                  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${this.props.debt / 10}%`}} aria-valuemin="0" aria-valuemax="100"
-                    aria-valuenow={this.props.debt / 10} />
-                </div>
+                {moneyProgress}
               </td>
               <td></td>
             </tr>
