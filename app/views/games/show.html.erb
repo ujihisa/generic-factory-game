@@ -37,34 +37,38 @@
   </div>
 </div>
 
-<%= react_component('GamePane', {
-  status: @game.status,
-  cash: @game.cash,
-  debt: @game.debt,
-  credit: @game.credit,
-  storage: @game.storage,
-  ingredientSubscription: @game.ingredient_subscription,
-  action: borrow_money_game_url,
-  formAuthenticityToken: form_authenticity_token,
-  subscribe_ingredients_game_url: subscribe_ingredients_game_url,
-  end_month_game_url: end_month_game_url,
-  estimate_cash: @estimate.cash,
-  estimate_status: @estimate.status,
-  create_storages_game_url: create_storages_game_url,
-  month: @game.month,
-  ingredient: @game.ingredient,
-  product: @game.product,
-  idleFactory: @game.idle_factory,
-  factoryNames: @game.factories.map(&:name),
-  contractNames: @game.contracts.map(&:name),
-  new_game_factory_path: new_game_factory_path(@game.id),
-  new_employee_game_path: new_employee_game_path,
-  new_dispatch_game_path: new_dispatch_game_path,
-  new_game_contract_path: new_game_contract_path(@game.id),
-  history: @game.history.map { [_1, _2.to_a] },
-}) %>
-<div>
-  <h2>Legacy schedule</h2>
+<div class="row">
+  <div class="col-md-9 themed-grid-col">
+    <%= react_component('GamePane', {
+      status: @game.status,
+      cash: @game.cash,
+      debt: @game.debt,
+      credit: @game.credit,
+      storage: @game.storage,
+      ingredientSubscription: @game.ingredient_subscription,
+      action: borrow_money_game_url,
+      formAuthenticityToken: form_authenticity_token,
+      subscribe_ingredients_game_url: subscribe_ingredients_game_url,
+      end_month_game_url: end_month_game_url,
+      estimate_cash: @estimate.cash,
+      estimate_status: @estimate.status,
+      create_storages_game_url: create_storages_game_url,
+      month: @game.month,
+      ingredient: @game.ingredient,
+      product: @game.product,
+      idleFactory: @game.idle_factory,
+      factoryNames: @game.factories.map(&:name),
+      contractNames: @game.contracts.map(&:name),
+      new_game_factory_path: new_game_factory_path(@game.id),
+      new_employee_game_path: new_employee_game_path,
+      new_dispatch_game_path: new_dispatch_game_path,
+      new_game_contract_path: new_game_contract_path(@game.id),
+      history: @game.history.map { [_1, _2.to_a] },
+    }) %>
+  </div>
+
+  <div class="col-md-3 themed-grid-col">
+  <h2>Schedule</h2>
     <ul>
       <li>
         Done in <b><%= @game.current_month %></b>

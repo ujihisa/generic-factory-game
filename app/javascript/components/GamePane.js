@@ -148,11 +148,11 @@ class GamePane extends React.Component {
       );
     return (
       <div className="row">
-        <div className="col-md-4 themed-grid-col">
+        <div className="col-md-5 themed-grid-col">
           <h2>Actions</h2>
           {actions}
         </div>
-        <div className="col-md-5 themed-grid-col">
+        <div className="col-md-6 themed-grid-col">
           <h2>Current status</h2>
           <CurrentStatus
             month={this.props.month}
@@ -168,13 +168,8 @@ class GamePane extends React.Component {
             contractNames={this.props.contractNames}
           />
         </div>
-        <div>
-          <div className="col-md-3 themed-grid-col">
-            <h2>Schedule</h2>
-            WIP
-          </div>
-        </div>
-      </div>);
+      </div>
+    );
   }
 }
 
