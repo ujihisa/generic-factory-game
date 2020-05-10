@@ -94,6 +94,7 @@ class ActionMenu extends React.Component {
             </div>
           </div>
         </div>
+        <br/><br/>
       </React.Fragment>
     );
   }

@@ -14,160 +14,57 @@
 <b><%= @game.player.name %></b>'s game <b><%= @game.id %></b> / month <b><%= @game.month %></b> / <%= @game.status %> / VERSION <%= @game.version %>
 <hr>
 
-<div class="row mb-3">
-  <div class="col-md-4 themed-grid-col">
-
-    <h2>Actions</h2>
-
-    <%- if @game.status == :in_progress %>
-      🏭 <%= link_to 'Build a Factory', new_game_factory_path(@game.id) %> (工場建設)
-      <br/><br/>
-
-      💼 <%= link_to 'Hire an employee', new_employee_game_path %> (従業員新規雇用)
-      <br/><br/>
-
-      ➡️ <%= link_to 'Dispatch an employee', new_dispatch_game_path %> (従業員の割当)
-      <br/><br/>
-
-      <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#buyIngredientModal">
-        📦 Buy Ingredient
-      </button>
-
-      <!-- Modal -->
-      <div class="modal" id="buyIngredientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <%= form_with(url: buy_ingredients_game_url, method: 'post') do |form| %>
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">📦 Buy Ingredient</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <%= react_component('BuyIngredient', {
-                month: @game.month,
-                cash: @game.cash,
-                storage: @game.storage,
-                ingredient: @game.ingredient,
-                product: @game.product
-              }) %>
-            <% end %>
-          </div>
+<!-- Modal -->
+<div class="modal" id="buyIngredientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <%= form_with(url: buy_ingredients_game_url, method: 'post') do |form| %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">📦 Buy Ingredient</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-      </div>
-      <br/><br/>
-
-      📜 <%= link_to 'Make a contract', new_game_contract_path(@game.id) %> (新規契約を結ぶ)
-      <br/><br/>
-    <%- end %>
-
-    <%= react_component('GamePane', {
-      status: @game.status,
-      cash: @game.cash,
-      debt: @game.debt,
-      credit: @game.credit,
-      storage: @game.storage,
-      ingredientSubscription: @game.ingredient_subscription,
-      action: borrow_money_game_url,
-      formAuthenticityToken: form_authenticity_token,
-      subscribe_ingredients_game_url: subscribe_ingredients_game_url,
-      end_month_game_url: end_month_game_url,
-      estimate_cash: @estimate.cash,
-      estimate_status: @estimate.status,
-      create_storages_game_url: create_storages_game_url,
-      month: @game.month,
-      ingredient: @game.ingredient,
-      product: @game.product,
-      idleFactory: @game.idle_factory,
-      factoryNames: @game.factories.map(&:name),
-      contractNames: @game.contracts.map(&:name),
-    }) %>
-
-  </div>
-  <div class="col-md-5 themed-grid-col">
-    <h2>Current status</h2>
-
-    <%= react_component('CurrentStatus', {
-      month: @game.month,
-      cash: @game.cash,
-      debt: @game.debt,
-      credit: @game.credit,
-      storage: @game.storage,
-      ingredient: @game.ingredient,
-      ingredientSubscription: @game.ingredient_subscription,
-      product: @game.product,
-      idleFactory: @game.idle_factory,
-      factoryNames: @game.factories.map(&:name),
-      contractNames: @game.contracts.map(&:name),
-    }) %>
-
-    <p>
-    <h3>Factory</h3>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Juniors assigned</th>
-        <th>Intermediates assigned</th>
-        <th>Seniors assigned</th>
-      </tr>
-      <%- @game.active_factories.each do |factory| %>
-        <tr>
-          <td><%= factory.name.capitalize %></td>
-          <td>
-            <%- factory.junior.times do %>
-              <img src='/images/employee-junior.png' width=16 title=junior>
-            <%- end %>
-          </td>
-          <td>
-            <%- factory.intermediate.times do %>
-              <img src='/images/employee-intermediate.png' width=16 title=intermediate>
-            <%- end %>
-          </td>
-          <td>
-            <%- factory.senior.times do %>
-              <img src='/images/employee-senior.png' width=16 title=senior>
-            <%- end %>
-          </td>
-        </tr>
-      <%- end %>
-    </table>
-    <div style='text-align: right'>
-      <%= link_to '➡️', new_dispatch_game_path if @game.status == :in_progress %>
+        <%= react_component('BuyIngredient', {
+          month: @game.month,
+          cash: @game.cash,
+          storage: @game.storage,
+          ingredient: @game.ingredient,
+          product: @game.product
+        }) %>
+    <% end %>
     </div>
-
-    <ul>
-      <li>
-        Estimated Ingredients Consumption: <%= @game.production * 2 %>t
-        <%- if @game.production != @game.capped_production %>
-          <ul>
-            <li><font color=red>(Capped to <%= @game.capped_production * 2 %>t, because you don't have much ingredients!)</font>
-          </ul>
-        <%- end %>
-      </li>
-      <li>
-        Estimated Product Generation: <%= @game.production %>t
-        <%- if @game.production != @game.capped_production %>
-          <ul>
-            <li><font color=red>(Capped to <%= @game.capped_production %>t, because you don't have much ingredients!)</font>
-          </ul>
-        <%- end %>
-      </li>
-    </ul>
-    </p>
-    <p>
-      <strong>Contracts:</strong>
-      <ul>
-        <%- @game.contracts.each do |contract| %>
-          <li>Contract <%= contract.name %> (<%= Contract::DESCRIPTIONS[contract.name] %>)</li>
-        <%- end %>
-      </ul>
-    </p>
-
-    <br/>
   </div>
-  <div class="col-md-3 themed-grid-col">
-    <h2>Schedule</h2>
+</div>
 
+<%= react_component('GamePane', {
+  status: @game.status,
+  cash: @game.cash,
+  debt: @game.debt,
+  credit: @game.credit,
+  storage: @game.storage,
+  ingredientSubscription: @game.ingredient_subscription,
+  action: borrow_money_game_url,
+  formAuthenticityToken: form_authenticity_token,
+  subscribe_ingredients_game_url: subscribe_ingredients_game_url,
+  end_month_game_url: end_month_game_url,
+  estimate_cash: @estimate.cash,
+  estimate_status: @estimate.status,
+  create_storages_game_url: create_storages_game_url,
+  month: @game.month,
+  ingredient: @game.ingredient,
+  product: @game.product,
+  idleFactory: @game.idle_factory,
+  factoryNames: @game.factories.map(&:name),
+  contractNames: @game.contracts.map(&:name),
+  new_game_factory_path: new_game_factory_path(@game.id),
+  new_employee_game_path: new_employee_game_path,
+  new_dispatch_game_path: new_dispatch_game_path,
+  new_game_contract_path: new_game_contract_path(@game.id),
+  history: @game.history.map { [_1, _2.to_a] },
+}) %>
+<div>
+  <h2>Legacy schedule</h2>
     <ul>
       <li>
         Done in <b><%= @game.current_month %></b>
@@ -213,6 +110,69 @@
       <%= notice %>
       </p>
     <%- end %>
+
+      <h3>Factory</h3>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Juniors assigned</th>
+            <th>Intermediates assigned</th>
+            <th>Seniors assigned</th>
+          </tr>
+          <%- @game.active_factories.each do |factory| %>
+            <tr>
+              <td><%= factory.name.capitalize %></td>
+              <td>
+                <%- factory.junior.times do %>
+                  <img src='/images/employee-junior.png' width=16 title=junior>
+                <%- end %>
+              </td>
+              <td>
+                <%- factory.intermediate.times do %>
+                  <img src='/images/employee-intermediate.png' width=16 title=intermediate>
+                <%- end %>
+              </td>
+              <td>
+                <%- factory.senior.times do %>
+                  <img src='/images/employee-senior.png' width=16 title=senior>
+                <%- end %>
+              </td>
+            </tr>
+          <%- end %>
+        </table>
+        <div style='text-align: right'>
+          <%= link_to '➡️', new_dispatch_game_path if @game.status == :in_progress %>
+        </div>
+
+        <ul>
+          <li>
+            Estimated Ingredients Consumption: <%= @game.production * 2 %>t
+            <%- if @game.production != @game.capped_production %>
+              <ul>
+                <li><font color=red>(Capped to <%= @game.capped_production * 2 %>t, because you don't have much ingredients!)</font>
+              </ul>
+            <%- end %>
+          </li>
+          <li>
+            Estimated Product Generation: <%= @game.production %>t
+            <%- if @game.production != @game.capped_production %>
+              <ul>
+                <li><font color=red>(Capped to <%= @game.capped_production %>t, because you don't have much ingredients!)</font>
+              </ul>
+            <%- end %>
+          </li>
+        </ul>
+        </p>
+        <p>
+          <strong>Contracts:</strong>
+          <ul>
+            <%- @game.contracts.each do |contract| %>
+              <li>Contract <%= contract.name %> (<%= Contract::DESCRIPTIONS[contract.name] %>)</li>
+            <%- end %>
+          </ul>
+        </p>
+
+        <br/>
   </div>
 </div>
 <%- if Rails.env.development? %>
