@@ -18,6 +18,10 @@ class SubscribeIngredient extends React.Component {
     return (
       <React.Fragment>
         <div className="modal-body">
+          <p>
+            $1K for every 20t ingredients.
+          </p>
+
           Current subscription: {this.props.ingredientSubscription}t ${this.props.ingredientSubscription * 0.05}K<br/>
 
           <input

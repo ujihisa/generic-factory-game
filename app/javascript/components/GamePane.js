@@ -99,7 +99,7 @@ class GamePane extends React.Component {
               </button>
               : <span className="d-inline-block" data-toggle="popover"
                 title="Feature locked"
-                data-content="You need at least 10 credit" >
+                data-content="You need at least 20 credit" >
                 <button type="button" className="btn btn-secondary" data-toggle="popover" disabled style={{pointerEvents: "none"}}>
                   📦 Subscribe Ingredient
                 </button>

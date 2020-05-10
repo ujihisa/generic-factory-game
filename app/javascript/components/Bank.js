@@ -21,8 +21,22 @@ class Bank extends React.Component {
 
   render () {
     const upper_limit = this.context.credit * 10;
-    let interest_rate = 10 - this.context.credit / 10;
-    let interest = Math.ceil(this.state.debt * interest_rate / 100);
+    const interest_rate = 10 - this.context.credit / 10;
+    const interest = Math.ceil(this.state.debt * interest_rate / 100);
+
+    const bankProgressGoal = upper_limit;
+    const bankProgress =
+      <div className="progress">
+        <div className="progress-bar bg-danger" role="progressbar" style={{width: `${100 * Math.min(this.context.debt, this.state.debt) / bankProgressGoal}%`}} aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow={100 * Math.min(this.context.debt, this.state.debt) / bankProgressGoal}>
+          { GFG.numberToCurrency(Math.min(this.context.debt, this.state.debt)) }
+        </div>
+        <div className={`progress-bar ${(this.state.debt < this.context.debt) && "bg-secondary"}`} role="progressbar" style={{width: `${100 * Math.abs(this.state.debt - this.context.debt) / bankProgressGoal}%`}} aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow={100 * Math.abs(this.state.debt - this.context.debt) / bankProgressGoal}>
+          { this.state.debt } - { this.context.debt } =
+          { GFG.numberToCurrency(this.state.debt - this.context.debt) }
+        </div>
+      </div>;
 
     return (
       <React.Fragment>
@@ -59,18 +73,29 @@ class Bank extends React.Component {
                 </div>
               </div>
               <small id="debtHelp" className="form-text text-muted">
-                New debt, up to ${upper_limit}K
+                New debt
               </small>
             </div>
           </div>
+          <br/>
+
+          <input
+          type="range" className="custom-range" id="form-range-subscribe-ingredient"
+          name="ingredient_subscription" value={this.state.debt}
+          min="0" max={upper_limit}
+          onChange={(event) =>
+            this.setState({debt: event.target.value})
+          }/>
+          <br/>
+
+          {bankProgress}
 
           <small id="debtHelp" className="form-text text-muted">
             {
               (0 <= this.state.debt && this.state.debt <= upper_limit)
                 ? (
                   <div align="right">
-                    Cash you gain: <b>${this.state.debt - this.context.debt}K</b><br/>
-                    Monthly interest: <b>${interest}</b>
+                    Monthly interest: <b>{GFG.numberToCurrency(interest)}</b>
                     &nbsp;
                     (<b>{(10 - this.context.credit / 10)}%</b>)
                   </div>
@@ -84,9 +109,9 @@ class Bank extends React.Component {
             (this.context.debt == this.state.debt)
               ? <input type="submit" value="No change" className="btn btn-primary" disabled />
               : (this.context.debt < this.state.debt)
-                ? <input type="submit" value="Borrow" className="btn btn-primary" />
+                ? <input type="submit" value={`Borrow ${GFG.numberToCurrency(this.state.debt - this.context.debt)}`} className="btn btn-primary" />
                 : (-this.state.debt + this.context.debt <= this.context.cash)
-                  ? <input type="submit" value="Pay" className="btn btn-primary" />
+                  ? <input type="submit" value={`Pay ${GFG.numberToCurrency(this.context.debt - this.state.debt)}`} className="btn btn-primary" />
                   : <input type="submit" value="Not enough cash" className="btn btn-primary" disabled />
           }
         </div>

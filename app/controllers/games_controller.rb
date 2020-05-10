@@ -157,6 +157,10 @@ class GamesController < ApplicationController
   end
 
   def subscribe_ingredients
+    if @game.credit < 20
+      return redirect_to @game, notice: '[ERROR] Not enough credit!'
+    end
+
     before = @game.ingredient_subscription.to_i
     after = params[:ingredient_subscription].to_i
 
