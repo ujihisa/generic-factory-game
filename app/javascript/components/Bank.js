@@ -29,7 +29,7 @@ class Bank extends React.Component {
         <div className="modal-body">
           <ul>
             <li>You can borrow cash up to $<code>10 * credit</code>K</li>
-            <li>The monthly interest rate is <code>10 - credit/10 %</code></li>
+            <li>The monthly interest rate is <code>(100 - credit)/10 %</code></li>
             <li>Interest rounds up after the decimal point</li>
             <ul>
               <li>For example if your credit is 75, the rate is <code>10 - 7.5 = 2.5%</code></li>
@@ -39,11 +39,13 @@ class Bank extends React.Component {
             <li>You must keep paying the interest until you wipe away the debt</li>
           </ul>
           <div className="row">
-            <div className="col">
-              <input type="text" className="form-control" value={this.context.debt} readOnly />
+            <div className="col-3">
+              <input type="text" className="form-control" value={GFG.numberToCurrency(this.context.debt)} readOnly />
               <small id="debtHelp" className="form-text text-muted">Current debt</small>
             </div>
-
+            <div className="col-1">
+              →
+            </div>
             <div className="col-8">
               <div className="input-group">
                 <div className="input-group-prepend">
@@ -66,12 +68,12 @@ class Bank extends React.Component {
             {
               (0 <= this.state.debt && this.state.debt <= upper_limit)
                 ? (
-                  <span>
+                  <div align="right">
                     Cash you gain: <b>${this.state.debt - this.context.debt}K</b><br/>
                     Monthly interest: <b>${interest}</b>
                     &nbsp;
                     (<b>{(10 - this.context.credit / 10)}%</b>)
-                  </span>
+                  </div>
                 )
                 : (<span>ERROR</span>)
             }

@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 2020_05_09_163704) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "version", null: false
-    t.integer "credit", default: 20, null: false
+    t.integer "credit", default: 0, null: false
     t.integer "debt", default: 0, null: false
     t.integer "ingredient_subscription", null: false
     t.text "history_encoded"

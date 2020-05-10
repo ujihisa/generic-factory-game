@@ -20,9 +20,15 @@ class ActionMenu extends React.Component {
       <React.Fragment>
         <h2>Actions</h2>
 
-        <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
-          🏦 Bank
-        </button>
+        {
+          (0 < this.state.credit || 0 < this.state.debt)
+            ? <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
+              🏦 Bank
+            </button>
+            : <button type="button" className="btn btn-secondary" title="You need more credit" disabled>
+              🏦 Bank
+            </button>
+        }
 
         <div className="modal" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
