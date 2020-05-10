@@ -85,9 +85,9 @@ class Bank extends React.Component {
               ? <input type="submit" value="No change" className="btn btn-primary" disabled />
               : (this.context.debt < this.state.debt)
                 ? <input type="submit" value="Borrow" className="btn btn-primary" />
-                : (this.context.cash - this.state.debt < 0)
+                : (-this.state.debt + this.context.debt <= this.context.cash)
                   ? <input type="submit" value="Pay" className="btn btn-primary" />
-                  : <input type="submit" value="Now enough cash" className="btn btn-primary" disabled />
+                  : <input type="submit" value="Not enough cash" className="btn btn-primary" disabled />
           }
         </div>
 
