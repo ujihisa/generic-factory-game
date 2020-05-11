@@ -82,7 +82,7 @@ class GamesController < ApplicationController
     if diff <= 0
       redirect_to @game, notice: "[ERROR] Missing storage"
     elsif 0 <= @game.cash && @game.save
-      redirect_to @game, notice: "Successfully Bought #{storage}t Storages"
+      redirect_to @game, notice: "Successfully Bought #{diff}t Storages"
     else
       redirect_to @game, notice: "Failed to buy Storages"
     end

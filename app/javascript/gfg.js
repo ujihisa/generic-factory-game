@@ -1,7 +1,7 @@
 import React from "react"
 
 const GFG = {
-  ThemeContext: React.createContext(),
+  GameContext: React.createContext(),
 
   currentMonth(month) {
     return [

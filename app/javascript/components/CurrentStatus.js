@@ -81,11 +81,16 @@ class CurrentStatus extends React.Component {
                     const pIngredientSubscription = 100 * this.props.ingredientSubscription / this.props.storage
                     return <div className="progress">
                       <div className="progress-bar bg-primary" role="progressbar" style={{width: `${pProduct}%`}} aria-valuemin="0" aria-valuemax="100"
-                        aria-valuenow={pProduct} />
+                        aria-valuenow={pProduct}>
+                        P
+                      </div>
                       <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredient}%`}} aria-valuemin="0" aria-valuemax="100"
-                        aria-valuenow={pIngredient} />
-                      <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredientSubscription}%`, height: "1px"}} aria-valuemin="0" aria-valuemax="100"
-                        aria-valuenow={pIngredientSubscription} />
+                        aria-valuenow={pIngredient}>
+                        I
+                      </div>
+                      <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredientSubscription}%`, height: "2px"}} aria-valuemin="0" aria-valuemax="100"
+                        aria-valuenow={pIngredientSubscription}>
+                      </div>
                     </div>
                   })()
                 }

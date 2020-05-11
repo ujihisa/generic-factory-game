@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Game < ApplicationRecord
   belongs_to :player
   has_many :factories
@@ -5,6 +7,11 @@ class Game < ApplicationRecord
 
   latest_columns = column_names.map(&:to_sym) - [:messages_raw, :portfolios_raw]
   scope :latest, -> { select(latest_columns) }
+
+  MONTHS = [
+    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December'
+  ].freeze
 
   INGREDIENT2PRODUCT = 1
 
@@ -43,17 +50,11 @@ class Game < ApplicationRecord
   end
 
   def current_month
-    [
-      'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-      'September', 'October', 'November', 'December'
-    ][month % 12]
+    MONTHS[month % 12]
   end
 
   def next_month
-    [
-      'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-      'September', 'October', 'November', 'December'
-    ][month.succ % 12]
+    MONTHS[month.succ % 12]
   end
 
   def production
@@ -135,20 +136,20 @@ class Game < ApplicationRecord
     # Deliver products
     (delivery_total, sales_total) = [0, 0]
     self.contracts.each do |contract|
-      (required_products, sales) = Contract::RULES[contract.name][self.current_month]
-      if required_products <= self.product
+      trade = Contract::ALL[contract.name][self.current_month]
+      if trade.required_products <= self.product
         # good
-        self.product -= required_products
-        self.cash += sales
+        self.product -= trade.required_products
+        self.cash += trade.sales
 
-        delivery_total += required_products; sales_total += sales
+        delivery_total += trade.required_products; sales_total += trade.sales
       else
         # penalty
-        self.cash -= sales * 10
+        self.cash -= trade.sales * 10
         credit_diff -= 10
 
         messages << "⚠️ Products not enough"
-        messages << "💸 Pay $#{sales * 10}K penalty for contract #{contract.name}"
+        messages << "💸 Pay $#{trade.sales * 10}K penalty for contract #{contract.name}"
       end
     end
     if 0 < delivery_total
@@ -196,8 +197,10 @@ class Game < ApplicationRecord
         false
       end
 
-    self.credit = self.class.normalize_credit(self.credit + credit_diff)
-    messages << "❤️ #{"++-"[credit_diff <=> 0]}#{credit_diff.abs} credit"
+    if credit_diff != 0
+      self.credit = self.class.normalize_credit(self.credit + credit_diff)
+      messages << "❤️ #{"++-"[credit_diff <=> 0]}#{credit_diff.abs} credit"
+    end
 
     # receive ingredients
     self.ingredient += self.ingredient_subscription

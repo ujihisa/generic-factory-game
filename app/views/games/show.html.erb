@@ -67,51 +67,18 @@
 
   <div class="col-md-3 themed-grid-col">
   <h2>Calendar</h2>
-    <ul>
-      <li>
-        <b><%= @game.current_month %> <%= 2020 + @game.month / 12 %></b> result
-        <ul>
-          <%- @game.messages.each do |message| %>
-            <li /><%= message %>
-          <%- end %>
-        </ul>
-      </li>
-      <li>
-        <b><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %></b> estimate
-        <ul>
-          <%- @estimate.messages.each do |message| %>
-            <li /><%= message %>
-          <%- end %>
-        </ul>
-      </li>
-
-      <li>
-        Due <b><%= @game.next_month %></b>
-        <ul>
-          <%- if 0 < @game.salary %>
-            <li>Pay <b><%= number_to_currency(@game.salary, precision: 0, format: '%u%nK') %></b> salary.</li>
-          <%- end %>
-          <%- if 0 < @game.storage %>
-            <li>Pay <b><%= number_to_currency(@game.storage / 100, precision: 0, format: '%u%nK') %></b> storage fee.</li>
-          <%- end %>
-          <%- if @game.debt != 0 %>
-            <li>Pay <b><%= number_to_currency(@game.interest, precision: 0, format: '%u%nK') %></b> interest.</li>
-          <%- end %>
-          <%- if 0 < @game.ingredient_subscription %>
-            <li>Pay <b><%= number_to_currency(@game.ingredient_subscription * 0.05, precision: 0, format: '%u%nK') %></b> ingredient subscription.</li>
-          <%- end %>
-          <%- total_required_products = @game.contracts.map(&:name).map { Contract::RULES[_1][@game.next_month][0] }.sum %>
-          <%- if 0 < total_required_products %>
-            <li>
-              Deliver <b><%= total_required_products %>t</b> products.
-              <%- if @game.capped_production + @game.product < total_required_products %>
-                ⚠️
-              <%- end %>
-            </li>
-          <%- end %>
-        </ul>
-      </li>
-    </ul>
+  <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %> result</h5>
+  <ul>
+    <%- @game.messages.each do |message| %>
+      <li /><%= message %>
+    <%- end %>
+  </ul>
+  <h5><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %> estimate</h5>
+  <ul>
+    <%- @estimate.messages.each do |message| %>
+      <li class="text-muted"/><%= message %>
+    <%- end %>
+  </ul>
 
     <hr>
     <%- if notice %>
@@ -177,7 +144,7 @@
           <strong>Contracts:</strong>
           <ul>
             <%- @game.contracts.each do |contract| %>
-              <li>Contract <%= contract.name %> (<%= Contract::DESCRIPTIONS[contract.name] %>)</li>
+              <li>Contract <%= contract.name %> (<%= Contract::ALL[contract.name].describe %>)</li>
             <%- end %>
           </ul>
         </p>

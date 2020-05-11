@@ -6,7 +6,7 @@
   <li>特定の月は、生産物の量と報酬の額が変動する。具体的にどの月にどう変わるかは、結ぶ契約による。</li>
 </ul>
 
-<%- Contract::DESCRIPTIONS.each do |name, description| %>
+<%- Contract::ALL.map { [_1, _2.describe] }.each do |name, description| %>
   <h3>Contract <%= name %><%= @game.contracts.map(&:name).include?(name) ? ' (契約済み)' : '' %></h3>
   <pre><%= description %></pre>
 <%- end %>
@@ -26,7 +26,7 @@
 
   <div class="field">
     <%= form.label :name %>
-    <%= form.select :name, Contract::RULES.keys %>
+    <%= form.select :name, Contract::ALL.keys %>
   </div>
 
   <div class="actions">

@@ -10,12 +10,6 @@ class GamePane extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      debt: props.debt,
-      credit: props.credit,
-      cash: props.cash,
-      storage: props.storage,
-      ingredientSubscription: props.ingredientSubscription,
-      subscribe_ingredients_game_url: props.subscribe_ingredients_game_url,
     };
   }
 
@@ -33,12 +27,23 @@ class GamePane extends React.Component {
       :
       (
         <React.Fragment>
-          <ActionMenu
-            parent={this.props}
-            cash={this.state.cash}
-            storage={this.state.storage}
-            formAuthenticityToken={this.props.formAuthenticityToken}
-            create_storages_game_url={this.props.create_storages_game_url} />
+          <GFG.GameContext.Provider value={{
+            month: this.props.month,
+            cash: this.props.cash,
+            debt: this.props.debt,
+            credit: this.props.credit,
+            storage: this.props.storage,
+            ingredient: this.props.ingredient,
+            ingredientSubscription: this.props.ingredientSubscription,
+            product: this.props.product,
+            idleFactory: this.props.idleFactory,
+            factoryNames: this.props.factoryNames,
+            contractNames: this.props.contractNames,
+            formAuthenticityToken: this.props.formAuthenticityToken,
+          }}>
+            <ActionMenu
+              create_storages_game_url={this.props.create_storages_game_url} />
+          </GFG.GameContext.Provider>
 
           <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#buyIngredientModal">
             📦 Buy Ingredient
@@ -58,7 +63,7 @@ class GamePane extends React.Component {
           <br/><br/>
 
           {
-            (0 < this.state.credit || 0 < this.state.debt)
+            (0 < this.props.credit || 0 < this.props.debt)
               ? <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
                 🏦 Bank
               </button>
@@ -82,9 +87,9 @@ class GamePane extends React.Component {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <GFG.ThemeContext.Provider value={this.state}>
+                  <GFG.GameContext.Provider value={this.props}>
                     <Bank />
-                  </GFG.ThemeContext.Provider>
+                  </GFG.GameContext.Provider>
                 </form>
               </div>
             </div>
@@ -93,7 +98,7 @@ class GamePane extends React.Component {
           <br/><br/>
 
           {
-            (20 <= this.state.credit || 0 < this.state.ingredientSubscription)
+            (20 <= this.props.credit || 0 < this.props.ingredientSubscription)
               ?  <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#subscribeIngredientModal">
                 📦 Subscribe Ingredient
               </button>
@@ -116,7 +121,7 @@ class GamePane extends React.Component {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <SubscribeIngredient cash={this.state.cash} ingredientSubscription={this.state.ingredientSubscription} storage={this.state.storage} />
+                  <SubscribeIngredient cash={this.props.cash} ingredientSubscription={this.props.ingredientSubscription} storage={this.props.storage} />
                 </form>
               </div>
             </div>

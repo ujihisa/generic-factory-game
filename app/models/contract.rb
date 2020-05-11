@@ -1,62 +1,80 @@
 # frozen_string_literal: true
 
 class Contract < ApplicationRecord
-  # [volume, fee]
-  RULES = {
-    'A' => Hash.new([20, 10]).tap {|h|
-      h['November'] = [40, 20]
-    }.freeze,
-    'B' => Hash.new([30, 15]),
-    'C' => Hash.new([40, 20]).tap {|h|
-      h['February'] = [0, 0]
-    }.freeze,
-    'D' => Hash.new([60, 32]).tap {|h|
-      h['July'] = [100, 50]
-      h['August'] = [100, 50]
-    }.freeze,
-    'E' => Hash.new([80, 38]).tap {|h|
-      h['December'] = [160, 80]
-    }.freeze,
-    'F' => Hash.new([100, 50]).tap {|h|
-      h['December'] = [200, 100]
-    }.freeze,
-    'G' => Hash.new([0, 0]).tap {|h|
-      h['January'] = [100, 100]
-      h['June'] = [100, 100]
-    }.freeze,
+  Trade = Struct.new(:required_products, :sales)
+  private_constant :Trade
+
+  Rule = Struct.new(:default, :January, keyword_init: true) do
+    alias orig_at []
+    def [](month_str)
+      raise ArgumentError unless %w[January].include?(month_str)
+      orig_at(month.to_sym) || orig_at(:default)
+    end
+  end
+  private_constant :Rule
+
+  Contract = Struct.new(:name, :required_credit, :description, :trades) do
+    def [](month_str)
+      case month_str
+      when *Game::MONTHS
+        trades[month_str.to_sym] || trades[:default]
+      else
+        raise ArgumentError, "#{month_str.inspect} is not a valid month name"
+      end
+    end
+
+    def describe
+      trades.map {|k, v|
+        case k
+        when :default
+          "#{v.required_products}t for $#{v.sales}K"
+        else
+          "#{v.required_products}t for $#{v.sales}K in #{k}"
+        end
+      }.join(",\n")
+    end
+  end
+  private_constant :Contract
+
+  ALL = {
+    'A' => Contract.new('A', 0, 'They have a big sale in Nov.', {
+      default: Trade.new(20, 10),
+      November: Trade.new(40, 20),
+    }),
+
+    'B' => Contract.new('B', 0, 'Their business is constant', {
+      default: Trade.new(30, 15),
+    }),
+
+    'C' => Contract.new('C', 0, 'They have a vacation in Feb.', {
+      default: Trade.new(40, 20),
+      February: Trade.new(0, 0),
+    }),
+
+    'D' => Contract.new('D', 0, 'Summer is their battlefield', {
+      default: Trade.new(60, 32),
+      July: Trade.new(100, 50),
+      August: Trade.new(100, 50),
+    }),
+
+    'E' => Contract.new('E', 0, 'They have a big sale in Dec. Also they are a little bit stingy.', {
+      default: Trade.new(80, 38),
+      December: Trade.new(160, 80),
+    }),
+
+    'F' => Contract.new('F', 0, 'They have a big sale in Dec.', {
+      default: Trade.new(100, 50),
+      December: Trade.new(200, 100),
+    }),
+
+    'G' => Contract.new('G', 0, 'They only sell twice a year, but both of them are vital to their business', {
+      default: Trade.new(0, 0),
+      January: Trade.new(100, 100),
+      June: Trade.new(100, 100),
+    }),
   }.freeze
 
   belongs_to :game
-  validates :name, inclusion: RULES.keys
+  validates :name, inclusion: ALL.keys
   validates_uniqueness_of :name, scope: :game_id
-
-  DESCRIPTIONS = {
-    'A' => <<~EOS.chomp,
-        20t for $10K,
-        40t for $20K in November
-      EOS
-    'B' => <<~EOS.chomp,
-        30t for $15K
-      EOS
-    'C' => <<~EOS.chomp,
-        40t for $20K,
-        0t for $0K in February
-      EOS
-    'D' => <<~EOS.chomp,
-        60t for $32K,
-        100t for $50K in July and August
-      EOS
-    'E' => <<~EOS.chomp,
-        80t for $38K,
-        160t for $80K in December
-      EOS
-    'F' => <<~EOS.chomp,
-        100t for $50K,
-        200t for $100K in December
-      EOS
-    'G' => <<~EOS.chomp,
-        0t for $0K,
-        100t for $100K in January and June
-      EOS
-  }
 end

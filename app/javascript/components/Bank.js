@@ -4,7 +4,7 @@ import GamePane from "./GamePane"
 import GFG from '../gfg'
 
 class Bank extends React.Component {
-  static contextType = GFG.ThemeContext;
+  static contextType = GFG.GameContext;
 
   constructor(props) {
     super(props);
