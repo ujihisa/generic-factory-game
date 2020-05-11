@@ -62,6 +62,9 @@
       new_employee_game_path: new_employee_game_path,
       new_dispatch_game_path: new_dispatch_game_path,
       new_game_contract_path: new_game_contract_path(@game.id),
+      createContractUrl: game_contracts_path(@game.id),
+      contractAll: Contract::ALL.to_h,
+      signedContracts: @game.signed_contracts,
     }) %>
   </div>
 

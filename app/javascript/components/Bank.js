@@ -80,8 +80,8 @@ class Bank extends React.Component {
           <br/>
 
           <input
-          type="range" className="custom-range" id="form-range-subscribe-ingredient"
-          name="ingredient_subscription" value={this.state.debt}
+          type="range" className="custom-range" id="form-range-bank"
+          name="debt" value={this.state.debt}
           min="0" max={upper_limit}
           onChange={(event) =>
             this.setState({debt: event.target.value})

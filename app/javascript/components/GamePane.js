@@ -5,6 +5,7 @@ import SubscribeIngredient from "./SubscribeIngredient"
 import ActionMenu from "./ActionMenu"
 import GFG from '../gfg'
 import CurrentStatus from './CurrentStatus'
+import Contracts from './Contracts'
 
 class GamePane extends React.Component {
   constructor(props) {
@@ -28,10 +29,14 @@ class GamePane extends React.Component {
       (
         <React.Fragment>
           <GFG.GameContext.Provider value={{
+            signedContracts: this.props.signedContracts,
+            credit: this.props.credit,
+            formAuthenticityToken: this.props.formAuthenticityToken,
+          }}>
+          <GFG.GameContext.Provider value={{
             month: this.props.month,
             cash: this.props.cash,
             debt: this.props.debt,
-            credit: this.props.credit,
             storage: this.props.storage,
             ingredient: this.props.ingredient,
             ingredientSubscription: this.props.ingredientSubscription,
@@ -39,7 +44,6 @@ class GamePane extends React.Component {
             idleFactory: this.props.idleFactory,
             factoryNames: this.props.factoryNames,
             contractNames: this.props.contractNames,
-            formAuthenticityToken: this.props.formAuthenticityToken,
           }}>
             <ActionMenu
               create_storages_game_url={this.props.create_storages_game_url} />
@@ -59,8 +63,8 @@ class GamePane extends React.Component {
           ➡️ <a href={this.props.new_dispatch_game_path}>Dispatch an employee</a> (従業員の割当)
           <br/><br/>
 
-          📜 <a href={this.props.new_game_contract_path}>Make a contract</a> (新規契約を結ぶ)
-          <br/><br/>
+          <Contracts contractAll={this.props.contractAll} createContractUrl={this.props.createContractUrl} />
+          </GFG.GameContext.Provider>
 
           {
             (0 < this.props.credit || 0 < this.props.debt)
@@ -193,5 +197,8 @@ GamePane.propTypes = {
   idleFactory: PropTypes.object,
   factoryNames: PropTypes.array,
   contractNames: PropTypes.array,
+  createContractUrl: PropTypes.string,
+  contractAll: PropTypes.object,
+  signedContracts: PropTypes.array,
 };
 export default GamePane

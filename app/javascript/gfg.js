@@ -2,12 +2,13 @@ import React from "react"
 
 const GFG = {
   GameContext: React.createContext(),
+  MONTHS: [
+    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December'
+  ],
 
   currentMonth(month) {
-    return [
-      'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-      'September', 'October', 'November', 'December'
-    ][month % 12]
+    return this.MONTHS[month % 12]
   },
 
   numberToCurrency(n) {

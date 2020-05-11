@@ -39,6 +39,14 @@ class Game < ApplicationRecord
     pf = keys.zip(self.attributes.values_at(*keys)).to_h
   end
 
+  def signed_contracts
+    JSON.parse(signed_contracts_raw)
+  end
+
+  def signed_contracts=(x)
+    self.signed_contracts_raw = x.to_json
+  end
+
   def status
     if cash < 0
       :game_over
@@ -135,8 +143,8 @@ class Game < ApplicationRecord
 
     # Deliver products
     (delivery_total, sales_total) = [0, 0]
-    self.contracts.each do |contract|
-      trade = Contract::ALL[contract.name][self.current_month]
+    self.signed_contracts.each do |contract_name|
+      trade = Contract::ALL[contract_name][self.current_month]
       if trade.required_products <= self.product
         # good
         self.product -= trade.required_products
@@ -149,7 +157,7 @@ class Game < ApplicationRecord
         credit_diff -= 10
 
         messages << "⚠️ Products not enough"
-        messages << "💸 Pay $#{trade.sales * 10}K penalty for contract #{contract.name}"
+        messages << "💸 Pay $#{trade.sales * 10}K penalty for contract #{contract_name}"
       end
     end
     if 0 < delivery_total
@@ -159,7 +167,7 @@ class Game < ApplicationRecord
       credit_diff +=
         case self.credit
         when (0..19), (20..39)
-          self.contracts.size
+          self.signed_contracts.size
         when (40..59)
           1
         else

@@ -7,6 +7,7 @@ class GameMore < ActiveRecord::Migration[6.0]
       # A. Sqlite3 does not have that. Also the app always needs the whole body.
       t.text :messages_raw, null: false, default: '[]'
       t.text :portfolios_raw, null: false, default: '[]'
+      t.text :signed_contracts_raw, null: false, default: '[]'
     end
   end
 end
