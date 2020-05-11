@@ -3,14 +3,33 @@ class Game < ApplicationRecord
   has_many :factories
   has_many :contracts
 
+  latest_columns = column_names.map(&:to_sym) - [:messages_raw, :portfolios_raw]
+  scope :latest, -> { select(latest_columns) }
+
   INGREDIENT2PRODUCT = 1
 
-  def history
-    history_encoded ? JSON.parse(history_encoded).freeze : {}.freeze
+  def messages
+    JSON.parse(messages_raw).freeze
   end
 
-  def set_history(key, value)
-    self.history_encoded = history.merge(key => value).to_json
+  def messages=(value)
+    self.messages_raw = value.to_json
+  end
+
+  def portfolios
+    JSON.parse(portfolios_raw).freeze
+  end
+
+  def portfolios=(value)
+    self.portfolios_raw = value.to_json
+  end
+
+  def portfolio
+    keys = [
+      'month', 'cash', 'storage', 'ingredient', 'product', 'credit', 'debt',
+      'ingredient_subscription',
+    ]
+    pf = keys.zip(self.attributes.values_at(*keys)).to_h
   end
 
   def status
@@ -193,6 +212,7 @@ class Game < ApplicationRecord
       self.ingredient -= diff
     end
     messages << "💵 Cash balance $#{self.cash}K"
+    self.portfolios += [self.portfolio]
 
     messages
   end
@@ -204,6 +224,7 @@ class Game < ApplicationRecord
 
   def self.best_games(game_version)
     Game.
+      latest.
       includes(:player).
       where('version = ? AND 1000 <= cash', game_version).
       order(month: :asc)

@@ -62,7 +62,6 @@
       new_employee_game_path: new_employee_game_path,
       new_dispatch_game_path: new_dispatch_game_path,
       new_game_contract_path: new_game_contract_path(@game.id),
-      history: @game.history.map { [_1, _2.to_a] },
     }) %>
   </div>
 
@@ -72,7 +71,7 @@
       <li>
         <b><%= @game.current_month %> <%= 2020 + @game.month / 12 %></b> result
         <ul>
-          <%- @game.history["#{@game.month}"]&.[]('messages')&.each do |message| %>
+          <%- @game.messages.each do |message| %>
             <li /><%= message %>
           <%- end %>
         </ul>
@@ -80,7 +79,7 @@
       <li>
         <b><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %></b> estimate
         <ul>
-          <%- @estimate.history["#{@estimate.month}"]&.[]('messages')&.each do |message| %>
+          <%- @estimate.messages.each do |message| %>
             <li /><%= message %>
           <%- end %>
         </ul>

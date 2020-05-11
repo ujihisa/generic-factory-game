@@ -1,15 +1,15 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: [
-    :show, :edit, :update, :destroy, :create_storages,
+  before_action :set_latest_game, only: [
+    :edit, :update, :destroy, :create_storages,
     :new_employee, :create_employee, :new_dispatch, :create_dispatch,
-    :buy_ingredients, :end_month, :borrow_money, :subscribe_ingredients,
+    :buy_ingredients, :borrow_money, :subscribe_ingredients,
   ]
 
   # GET /games
   # GET /games.json
   def index
-    @current_games = Game.where(version: GenericFactoryGame::VERSION).order(updated_at: :desc)
-    @archived_games = Game.where.not(version: GenericFactoryGame::VERSION).order(version: :desc, updated_at: :desc)
+    @current_games = Game.latest.where(version: GenericFactoryGame::VERSION).order(updated_at: :desc)
+    @archived_games = Game.latest.where.not(version: GenericFactoryGame::VERSION).order(version: :desc, updated_at: :desc)
   end
 
   def highscore
@@ -20,9 +20,10 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
-    @estimate = Game.find(@game.id).tap do |game|
+    @game = Game.find(params[:id])
+    @estimate = Game.find(params[:id]).tap do |game|
       messages = game.settlement()
-      game.set_history(game.month, { cash: game.cash, messages: messages })
+      game.messages = messages
     end
   end
 
@@ -180,8 +181,10 @@ class GamesController < ApplicationController
   end
 
   def end_month
+    @game = Game.find(params[:id])
+
     messages = @game.settlement()
-    @game.set_history(@game.month, { cash: @game.cash, messages: messages })
+    @game.messages = messages
 
     if @game.save
       if @game.cash < 0
@@ -228,8 +231,8 @@ class GamesController < ApplicationController
     end
   end
 
-  private def set_game
-    @game = Game.find(params[:id])
+  private def set_latest_game
+    @game = Game.latest.find(params[:id])
   end
 
   private def game_params

@@ -1,7 +1,12 @@
 class GameMore < ActiveRecord::Migration[6.0]
   def change
-    rename_column :games, :money, :cash
+    change_table :games do |t|
+      t.rename :money, :cash
 
-    add_column :games, :history_encoded, :text
+      # Q. Why not PostgreSQL Array?
+      # A. Sqlite3 does not have that. Also the app always needs the whole body.
+      t.text :messages_raw, null: false, default: '[]'
+      t.text :portfolios_raw, null: false, default: '[]'
+    end
   end
 end
