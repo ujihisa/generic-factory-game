@@ -89,7 +89,7 @@ class GamePane extends React.Component {
           ➡️ <a href={this.props.new_dispatch_game_path}>Dispatch an employee</a> (従業員の割当)
           <br/><br/>
 
-          <Contracts contractAll={this.props.contractAll} createContractUrl={this.props.createContractUrl} />
+          <Contracts contractDump={this.props.contractDump} createContractUrl={this.props.createContractUrl} />
           </GFG.GameContext.Provider>
 
           {
@@ -226,7 +226,7 @@ GamePane.propTypes = {
   idleFactory: PropTypes.object,
   factoryNames: PropTypes.array,
   createContractUrl: PropTypes.string,
-  contractAll: PropTypes.object,
+  contractDump: PropTypes.object,
   signedContracts: PropTypes.array,
   notice: PropTypes.string,
 };

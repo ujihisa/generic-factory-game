@@ -143,7 +143,7 @@ class Game < ApplicationRecord
     # Deliver products
     (delivery_total, sales_total) = [0, 0]
     self.signed_contracts.each do |contract_name|
-      trade = Contract::ALL[contract_name][self.current_month]
+      trade = Contract.find(name: contract_name)[self.current_month]
       if trade.required_products <= self.product
         # good
         self.product -= trade.required_products

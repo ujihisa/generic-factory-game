@@ -6,9 +6,9 @@ class ContractsController < ApplicationController
     # TODO: Move them into model validation
     if @game.signed_contracts.include?(params[:name])
       return redirect_to(@game, notice: '[ERROR] You already have that contract')
-    elsif !Contract::ALL[params[:name]]
+    elsif !Contract.find(name: params[:name])
       return redirect_to(@game, notice: '[ERROR] Invalid contract name')
-    elsif @game.credit < Contract::ALL[params[:name]].required_credit
+    elsif @game.credit < Contract.find(name: params[:name]).required_credit
       return redirect_to(@game, notice: '[ERROR] Not enough credit')
     end
     @game.signed_contracts += [params[:name]]
