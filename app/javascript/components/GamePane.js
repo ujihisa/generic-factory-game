@@ -6,6 +6,7 @@ import Storage from "./Storage"
 import GFG from '../gfg'
 import CurrentStatus from './CurrentStatus'
 import Contracts from './Contracts'
+import BuyIngredient from './BuyIngredient'
 
 class GamePane extends React.Component {
   constructor(props) {
@@ -16,9 +17,29 @@ class GamePane extends React.Component {
 
   componentDidMount() {
     $('[data-toggle="popover"]').popover()
+
+    if (this.props.notice) {
+      $('#noticeModal').modal('show')
+      $('#noticeModaldalOk').trigger('focus')
+    }
+
   }
 
   render () {
+    const noticeModal = this.props.notice &&
+      <div className="modal" id="noticeModal" tabIndex="-1" role="dialog">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-body">
+              <p>{this.props.notice}</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" id="noticeModaldalOk" className="btn" data-dismiss="modal" autofocus>Ok</button>
+            </div>
+          </div>
+        </div>
+      </div>;
+
     $('.example-popover').popover({
       container: 'body'
     })
@@ -28,9 +49,11 @@ class GamePane extends React.Component {
       :
       (
         <React.Fragment>
+          { noticeModal }
           <GFG.GameContext.Provider value={{
             signedContracts: this.props.signedContracts,
             credit: this.props.credit,
+            cash: this.props.cash,
             formAuthenticityToken: this.props.formAuthenticityToken,
           }}>
           <GFG.GameContext.Provider value={{
@@ -48,9 +71,13 @@ class GamePane extends React.Component {
               create_storages_game_url={this.props.create_storages_game_url} />
           </GFG.GameContext.Provider>
 
-          <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#buyIngredientModal">
-            📦 Buy Ingredient
-          </button>
+          <BuyIngredient 
+            storage={this.props.storage}
+            ingredient={this.props.ingredient}
+            product={this.props.product}
+            buy_ingredients_game_url={this.props.buy_ingredients_game_url}
+          />
+
           <br/><br/>
 
           🏭 <a href={this.props.new_game_factory_path}>Build a Factory</a> (工場建設)
@@ -201,5 +228,6 @@ GamePane.propTypes = {
   createContractUrl: PropTypes.string,
   contractAll: PropTypes.object,
   signedContracts: PropTypes.array,
+  notice: PropTypes.string,
 };
 export default GamePane

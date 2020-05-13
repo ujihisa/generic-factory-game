@@ -3,38 +3,32 @@ import PropTypes from "prop-types"
 import GFG from '../gfg'
 
 class BuyIngredient extends React.Component {
-  constructor(props) {
-    super(props);
+  static contextType = GFG.GameContext;
+
+  constructor(props, context) {
+    super(props, context);
     this.spaceLeft = this.props.storage - this.props.ingredient - this.props.product;
     this.spaceLeftTruncated = this.spaceLeft - (this.spaceLeft % 20);
     this.max = Math.min(
-      Math.floor(this.props.cash / 0.5 / 20) * 20,
+      Math.floor(context.cash / 0.5 / 20) * 20,
       this.spaceLeftTruncated);
     this.state = {
-      vol: 20,
-      delay: 1,
-      inputNumberVol: 20,
+      vol: Math.min(20, this.spaceLeftTruncated),
+      inputNumberVol: Math.min(20, this.spaceLeftTruncated),
     };
-  }
-
-  readableDate(month) {
-    return `${GFG.currentMonth(month)} ${Math.floor(2020 + month / 12)}`;
   }
 
   render () {
-    const costPerVol = {1: 0.5, 2: 0.1, 3: 0.05}[this.state.delay];
+    const costPerVol = 0.5;
     const cost = costPerVol * this.state.vol;
-    const f = (event) => {
-      this.setState({delay: event.target.value})
-    };
     const cashBalance =
       <div className="progress">
-        <div className="progress-bar" role="progressbar" style={{width: `${100 * (this.props.cash - cost) / this.props.cash}%`}} aria-valuemin="0" aria-valuemax="100"
-          aria-valuenow={100 * (this.props.cash - cost) / this.props.cash}>
-          Cash left: {GFG.numberToCurrency(this.props.cash - cost)}
+        <div className="progress-bar" role="progressbar" style={{width: `${100 * (this.context.cash - cost) / this.context.cash}%`}} aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow={100 * (this.context.cash - cost) / this.context.cash}>
+          Cash left: {GFG.numberToCurrency(this.context.cash - cost)}
         </div>
-        <div className="progress-bar bg-secondary" role="progressbar" style={{width: `${100 * cost / this.props.cash}%`}} aria-valuemin="0" aria-valuemax="100"
-          aria-valuenow={100 * cost / this.props.cash}>
+        <div className="progress-bar bg-secondary" role="progressbar" style={{width: `${100 * cost / this.context.cash}%`}} aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow={100 * cost / this.context.cash}>
           Cost: {GFG.numberToCurrency(cost)}
         </div>
       </div>
@@ -50,52 +44,77 @@ class BuyIngredient extends React.Component {
         </div>
       </div>
 
-    return (
-      <React.Fragment>
-        <div className="modal-body">
-          <p>
-            $10K for every 20t ingredients.
-          </p>
+    return (<>
+      {
+        (0 < this.props.storage)
+          ? <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#buyIngredientModal">
+            📦 Buy Ingredient
+          </button>
+          : <span className="d-inline-block" data-toggle="popover"
+            title="Feature locked"
+            data-content="You need at least 1 storage" >
+            <button type="button" className="btn btn-secondary" data-toggle="popover" disabled style={{pointerEvents: "none"}}>
+              📦 Buy Ingredient
+            </button>
+          </span>
+      }
+      <div className="modal" id="buyIngredientModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <form action={this.props.buy_ingredients_game_url} acceptCharset="UTF-8" data-remote="true" method="post">
+              <input type="hidden" name="authenticity_token" value={this.context.formAuthenticityToken} />
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">📦 Buy Ingredient</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>
+                  $10K for every 20t ingredients.
+                </p>
 
-          <input type="number"
-            value={this.state.inputNumberVol}
-            className={(this.state.inputNumberVol == this.state.vol) ? "form-control" : "form-control is-invalid"}
-            onChange={(e) => {
-              this.setState({inputNumberVol: e.target.value});
-              (e.target.value % 20 == 0) && (20 <= e.target.value) && (e.target.value <= this.max) && this.setState({vol: e.target.value})
-            }}/>
+                <input type="number"
+                  value={this.state.inputNumberVol}
+                  className={(this.state.inputNumberVol == this.state.vol) ? "form-control" : "form-control is-invalid"}
+                  onChange={(e) => {
+                    this.setState({inputNumberVol: e.target.value});
+                    (e.target.value % 20 == 0) && (20 <= e.target.value) && (e.target.value <= this.max) && this.setState({vol: e.target.value})
+                  }}/>
 
-          <input
-          type="range" className="custom-range" id="form-range-buy-ingredient"
-          name="vol" value={this.state.vol}
-          min="20" max={this.max} step="20"
-          onChange={(e) => {
-            this.setState({inputNumberVol: e.target.value});
-            this.setState({vol: e.target.value})
-          }}/>
-          <br/>
+                <input
+                type="range" className="custom-range" id="form-range-buy-ingredient"
+                name="vol" value={this.state.vol}
+                min="20" max={this.max} step="20"
+                onChange={(e) => {
+                  this.setState({inputNumberVol: e.target.value});
+                  this.setState({vol: e.target.value})
+                }}/>
+                <br/>
 
-          {cashBalance}
-          <br/>
-          {storageBalance}
+                {cashBalance}
+                <br/>
+                {storageBalance}
+              </div>
+              <div className="modal-footer">
+                {
+                  (this.state.vol == 0)
+                    ? <input type="submit" value="Not enough volume to buy" className="btn btn-primary" disabled />
+                    : <input type="submit" value={`Pay ${GFG.numberToCurrency(cost)} to get ${this.state.vol}t now`} className="btn btn-primary" />
+                }
+              </div>
+            </form>
+          </div>
         </div>
-        <div className="modal-footer">
-          {
-            (this.state.vol == 0)
-              ? <input type="submit" value="Not enough volume to buy" className="btn btn-primary" disabled />
-              : <input type="submit" value={`Pay ${GFG.numberToCurrency(cost)} to get ${this.state.vol}t now`} className="btn btn-primary" />
-          }
-        </div>
-      </React.Fragment>
-    );
+      </div>
+    </>);
   }
 }
 
 BuyIngredient.propTypes = {
-  month: PropTypes.number,
-  cash: PropTypes.number,
   storage: PropTypes.number,
   ingredient: PropTypes.number,
-  product: PropTypes.number
+  product: PropTypes.number,
+  buy_ingredients_game_url: PropTypes.string,
 };
 export default BuyIngredient

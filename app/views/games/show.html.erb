@@ -14,29 +14,6 @@
 <b><%= @game.player.name %></b>'s game <b><%= @game.id %></b> / month <b><%= @game.month %></b> / <%= @game.status %> / VERSION <%= @game.version %>
 <hr>
 
-<!-- Modal -->
-<div class="modal" id="buyIngredientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <%= form_with(url: buy_ingredients_game_url, method: 'post') do |form| %>
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">📦 Buy Ingredient</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <%= react_component('BuyIngredient', {
-          month: @game.month,
-          cash: @game.cash,
-          storage: @game.storage,
-          ingredient: @game.ingredient,
-          product: @game.product
-        }) %>
-    <% end %>
-    </div>
-  </div>
-</div>
-
 <div class="row">
   <div class="col-md-9 themed-grid-col">
     <%= react_component('GamePane', {
@@ -63,6 +40,8 @@
       createContractUrl: game_contracts_path(@game.id),
       contractAll: Contract::ALL.to_h,
       signedContracts: @game.signed_contracts,
+      buy_ingredients_game_url: buy_ingredients_game_url,
+      notice: notice,
     }) %>
   </div>
 
