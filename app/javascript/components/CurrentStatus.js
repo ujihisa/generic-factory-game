@@ -155,6 +155,5 @@ CurrentStatus.propTypes = {
   product: PropTypes.number,
   idleFactory: PropTypes.object,
   factoryNames: PropTypes.array,
-  contractNames: PropTypes.array,
 };
 export default CurrentStatus

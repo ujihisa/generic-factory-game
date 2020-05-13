@@ -111,8 +111,12 @@ function Contracts(props) {
                             <div className={`card ${signed ? "border-light" : locked ? "text-white bg-dark" : selected ? "text-white bg-primary" : "border-info"} mb-3`}
                               onClick={(_) => {
                                 setContract(selected ? null : name) 
-                                if (selected) {
+                                if (!chart) {
+                                  // !?
+                                } else if (selected) {
                                   chart.data.datasets = chartDefaultDatasets;
+
+                                  chart.update();
                                 } else {
                                   chart.data.datasets = [
                                     ...chartDefaultDatasets,
@@ -124,8 +128,9 @@ function Contracts(props) {
                                       data: GFG.MONTHS.map((m) => c[1].trades[m] ? c[1].trades[m].required_products : c[1].trades.default.required_products),
                                     },
                                   ];
+
+                                  chart.update();
                                 }
-                                chart.update();
                               }}>
                               <div className="card-header">
                                 {

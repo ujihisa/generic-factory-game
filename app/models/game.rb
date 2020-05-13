@@ -3,7 +3,6 @@
 class Game < ApplicationRecord
   belongs_to :player
   has_many :factories
-  has_many :contracts
 
   latest_columns = column_names.map(&:to_sym) - [:messages_raw, :portfolios_raw]
   scope :latest, -> { select(latest_columns) }

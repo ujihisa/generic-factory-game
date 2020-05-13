@@ -43,7 +43,6 @@ class GamePane extends React.Component {
             product: this.props.product,
             idleFactory: this.props.idleFactory,
             factoryNames: this.props.factoryNames,
-            contractNames: this.props.contractNames,
           }}>
             <Storage
               create_storages_game_url={this.props.create_storages_game_url} />
@@ -174,7 +173,6 @@ class GamePane extends React.Component {
             product={this.props.product}
             idleFactory={this.props.idleFactory}
             factoryNames={this.props.factoryNames}
-            contractNames={this.props.contractNames}
           />
         </div>
       </div>
@@ -200,7 +198,6 @@ GamePane.propTypes = {
   product: PropTypes.number,
   idleFactory: PropTypes.object,
   factoryNames: PropTypes.array,
-  contractNames: PropTypes.array,
   createContractUrl: PropTypes.string,
   contractAll: PropTypes.object,
   signedContracts: PropTypes.array,

@@ -1,9 +1,4 @@
 class ContractsController < ApplicationController
-  def new
-    @contract = Contract.new
-    @game = Game.find(params[:game_id])
-  end
-
   def create
     # @contract = Contract.new(game_id: params[:game_id], **contract_params)
     @game = Game.find(params[:game_id])
@@ -25,9 +20,8 @@ class ContractsController < ApplicationController
     end
   end
 
-  private
-    # Only allow a list of trusted parameters through.
-    def contract_params
-      params.require(:contract).permit(:game_id, :name)
-    end
+  # Only allow a list of trusted parameters through.
+  private def contract_params
+    params.require(:contract).permit(:game_id, :name)
+  end
 end

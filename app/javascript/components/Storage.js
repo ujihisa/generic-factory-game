@@ -80,7 +80,6 @@ function Storage(props) {
                   product={context.product}
                   idleFactory={context.idleFactory}
                   factoryNames={context.factoryNames}
-                  contractNames={context.contractNames}
                 />
               </div>
               <div className="modal-footer">

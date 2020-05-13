@@ -21,7 +21,7 @@ Rails.application.routes.draw do
       post 'force_change' if Rails.env.development?
     end
     resources :factories
-    resources :contracts
+    resources :contracts, only: [:create]
   end
 
   resources :players

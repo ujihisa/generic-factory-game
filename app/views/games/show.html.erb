@@ -57,11 +57,9 @@
       product: @game.product,
       idleFactory: @game.idle_factory,
       factoryNames: @game.factories.map(&:name),
-      contractNames: @game.contracts.map(&:name),
       new_game_factory_path: new_game_factory_path(@game.id),
       new_employee_game_path: new_employee_game_path,
       new_dispatch_game_path: new_dispatch_game_path,
-      new_game_contract_path: new_game_contract_path(@game.id),
       createContractUrl: game_contracts_path(@game.id),
       contractAll: Contract::ALL.to_h,
       signedContracts: @game.signed_contracts,
@@ -142,14 +140,6 @@
             <%- end %>
           </li>
         </ul>
-        </p>
-        <p>
-          <strong>Contracts:</strong>
-          <ul>
-            <%- @game.contracts.each do |contract| %>
-              <li>Contract <%= contract.name %> (<%= Contract::ALL[contract.name].describe %>)</li>
-            <%- end %>
-          </ul>
         </p>
 
         <br/>
