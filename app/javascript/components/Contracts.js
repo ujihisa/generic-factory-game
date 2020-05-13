@@ -1,24 +1,12 @@
-import React from "react"
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from "prop-types"
 import GFG from '../gfg'
 
-class Contracts extends React.Component {
-  static contextType = GFG.GameContext;
+function Contracts(props) {
+  const context = useContext(GFG.GameContext);
+  const [contract, setContract] = useState(null);
+  const chartRef = React.createRef();
 
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      contract: null,
-    };
-
-    // move to contracts
-    this.chartRef = React.createRef();
-  }
-
-  componentDidMount() {
-    // $('#contractsModal').modal() // DELETE THIS
-    // move to contracts
-    const ctx = this.chartRef.current.getContext("2d");
     const colours = [
       '#D0D0D0',
       '#C8C8C8',
@@ -36,24 +24,30 @@ class Contracts extends React.Component {
       '#606060',
       '#585858',
     ]
-    this.chartDefaultDatasets =
-      this.context.signedContracts.map((name, i) => {
-        const contract = this.props.contractAll[name];
+  const chartDefaultDatasets =
+      context.signedContracts.map((name, i) => {
+        const contract2 = props.contractAll[name];
         return {
           label: name,
-          data: (this.context.signedContracts.includes(name)
-            ? GFG.MONTHS.map((m) => contract.trades[m] ? contract.trades[m].required_products : contract.trades.default.required_products)
+          data: (context.signedContracts.includes(name)
+            ? GFG.MONTHS.map((m) => contract2.trades[m] ? contract2.trades[m].required_products : contract2.trades.default.required_products)
             : []),
           backgroundColor: colours[i],
           borderColor: colours[i + 5],
           borderWidth: 1,
         };
       })
-    this.chart = new Chart(ctx, {
+  var chart;
+
+  useEffect(() => {
+    // $('#contractsModal').modal() // DELETE THIS
+    // move to contracts
+    const ctx = chartRef.current.getContext("2d");
+    chart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: GFG.MONTHS.map((m) => m.slice(0, 3)),
-        datasets: this.chartDefaultDatasets,
+        datasets: chartDefaultDatasets,
       },
       options: {
         scales: {
@@ -75,9 +69,8 @@ class Contracts extends React.Component {
         }
       }
     });
-  }
+  }, []);
 
-  render () {
     return (
       <React.Fragment>
         <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#contractsModal">
@@ -108,21 +101,21 @@ class Contracts extends React.Component {
                 <div className="row">
                   {
                     React.Children.map(
-                      Object.entries(this.props.contractAll).map((c) => {
+                      Object.entries(props.contractAll).map((c) => {
                         const name = c[0];
-                        const signed = this.context.signedContracts.includes(name);
-                        const locked = this.context.credit < c[1].required_credit;
-                        const selected = name == this.state.contract;
+                        const signed = context.signedContracts.includes(name);
+                        const locked = context.credit < c[1].required_credit;
+                        const selected = name == contract;
                         return (
                           <div className="col-sm-4">
                             <div className={`card ${signed ? "border-light" : locked ? "text-white bg-dark" : selected ? "text-white bg-primary" : "border-info"} mb-3`}
                               onClick={(_) => {
-                                this.setState({contract: selected ? null : name}) 
+                                setContract(selected ? null : name) 
                                 if (selected) {
-                                  this.chart.data.datasets = this.chartDefaultDatasets;
+                                  chart.data.datasets = chartDefaultDatasets;
                                 } else {
-                                  this.chart.data.datasets = [
-                                    ...this.chartDefaultDatasets,
+                                  chart.data.datasets = [
+                                    ...chartDefaultDatasets,
                                     {
                                       backgroundColor: '#007bff',
                                       borderColor: '#000000',
@@ -132,7 +125,7 @@ class Contracts extends React.Component {
                                     },
                                   ];
                                 }
-                                this.chart.update();
+                                chart.update();
                               }}>
                               <div className="card-header">
                                 {
@@ -180,8 +173,8 @@ class Contracts extends React.Component {
                   <tbody className="table">
                     {
                       React.Children.map(
-                        Object.entries(this.props.contractAll).map((c) =>
-                          <tr className={c[0] == this.state.contract ? "table-primary" : this.context.signedContracts.includes(c[0]) ? "table-active" : ""}>
+                        Object.entries(props.contractAll).map((c) =>
+                          <tr className={c[0] == contract ? "table-primary" : context.signedContracts.includes(c[0]) ? "table-active" : ""}>
                             <th scope="col">{c[0]}</th>
                             {
                               React.Children.map(
@@ -201,22 +194,22 @@ class Contracts extends React.Component {
                   </tbody>
                 </table>
 
-                <canvas ref={this.chartRef} width="100%" height="50%"></canvas>
+                <canvas ref={chartRef} width="100%" height="50%"></canvas>
               </div>
               <div className="modal-footer">
-                <form action={this.props.createContractUrl} acceptCharset="UTF-8" data-remote="true" method="post">
+                <form action={props.createContractUrl} acceptCharset="UTF-8" data-remote="true" method="post">
                   {
-                    this.state.contract &&
-                      <input type="hidden" name="name" value={this.state.contract} />
+                    contract &&
+                      <input type="hidden" name="name" value={contract} />
                   }
-                  <input type="hidden" name="authenticity_token" value={this.context.formAuthenticityToken} />
+                  <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
                   {
-                    !this.state.contract
+                    !contract
                       ? <input type="submit" value="Cancel" className="btn btn-secondary" data-dismiss="modal" />
-                      : (this.context.credit < this.props.contractAll[this.state.contract].required_credit ||
-                        this.context.signedContracts.includes(this.state.contract))
+                      : (context.credit < props.contractAll[contract].required_credit ||
+                        context.signedContracts.includes(contract))
                           ? <input type="submit" value="Cancel" className="btn btn-secondary" data-dismiss="modal" />
-                          : <input type="submit" value={`Sign Contract ${this.state.contract}`} className="btn btn-primary" />
+                          : <input type="submit" value={`Sign Contract ${contract}`} className="btn btn-primary" />
                   }
                 </form>
               </div>
@@ -225,7 +218,6 @@ class Contracts extends React.Component {
         </div>
       </React.Fragment>
     );
-  }
 }
 
 Contracts.propTypes = {
