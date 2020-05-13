@@ -18,6 +18,57 @@ class Factory < ApplicationRecord
     'full-auto': [70, 0],
   }
 
+  EQUIPMENTS = {
+    Workbench: {
+      cost: 10,
+      production: [9, 18, 18],
+      quality: [18, 18, 36],
+      description: "A place to work on crafting. It's hard to produce anything without this.",
+    },
+    Conveyor: {
+      cost: 100,
+      production: [10, 10, 10],
+      quality: [0, 0, 0],
+      description: "Now staff don't have to walk around, but stuff walk around instead.",
+    },
+    'Advanced toolsets': {
+      cost: 100,
+      production: [0, 5, 10],
+      quality: [0, 5, 10],
+      description: "Leverage skilled craftspersons. Advanced people need advanced tools.",
+    },
+    'Free space': {
+      cost: 100,
+      production: [-5, -5, -5],
+      quality: [20, 20, 20],
+      description: "Enjoy your relaxed time",
+    },
+    'Computers': {
+      cost: 100,
+      production: [0, 0, 0],
+      quality: [10, 10, 10],
+      description: "Enjoy your relaxed time",
+    },
+    'Machines': {
+      cost: 100,
+      production: [0, 0, 0],
+      quality: [0, 0, 0],
+      description: "Industrialization",
+    },
+    'Anormal detector': {
+      cost: 100,
+      production: [0, 0, 0],
+      quality: [20, 20, 0],
+      description: "It has better eyes than human's",
+    },
+    'Fullauto machines': {
+      cost: 200,
+      production: [25, 15, 10],
+      quality: [10, 10, 10],
+      description: "Let the machines do all the jobs",
+    },
+  }
+
   # The amount how much you consume the ingredient.
   def performance
     (a, b) = PERFORMANCE_A_B[name.to_sym]

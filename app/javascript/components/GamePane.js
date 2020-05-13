@@ -7,6 +7,7 @@ import GFG from '../gfg'
 import CurrentStatus from './CurrentStatus'
 import Contracts from './Contracts'
 import BuyIngredient from './BuyIngredient'
+import Hiring from './Hiring'
 
 class GamePane extends React.Component {
   constructor(props) {
@@ -16,6 +17,19 @@ class GamePane extends React.Component {
   }
 
   componentDidMount() {
+    $(document.body).keydown((e) => {
+      if (!e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
+        if (e.key == "s")
+          $('#storageModal').modal('show')
+        else if (e.key == "b")
+          $('#buyIngredientModal').modal('show')
+        else if (e.key == "h")
+          $('#hiringModal').modal('show')
+        else if (e.key == "c")
+          $('#contractsModal').modal('show')
+      }
+    })
+
     $('[data-toggle="popover"]').popover()
 
     if (this.props.notice) {
@@ -34,7 +48,7 @@ class GamePane extends React.Component {
               <p>{this.props.notice}</p>
             </div>
             <div className="modal-footer">
-              <button type="button" id="noticeModaldalOk" className="btn" data-dismiss="modal" autofocus>Ok</button>
+              <button type="button" id="noticeModaldalOk" className="btn" data-dismiss="modal" autoFocus>Ok</button>
             </div>
           </div>
         </div>
@@ -56,29 +70,32 @@ class GamePane extends React.Component {
             cash: this.props.cash,
             formAuthenticityToken: this.props.formAuthenticityToken,
           }}>
-          <GFG.GameContext.Provider value={{
-            month: this.props.month,
-            cash: this.props.cash,
-            debt: this.props.debt,
-            storage: this.props.storage,
-            ingredient: this.props.ingredient,
-            ingredientSubscription: this.props.ingredientSubscription,
-            product: this.props.product,
-            idleFactory: this.props.idleFactory,
-            factoryNames: this.props.factoryNames,
-          }}>
-            <Storage
-              create_storages_game_url={this.props.create_storages_game_url} />
-          </GFG.GameContext.Provider>
+            <GFG.GameContext.Provider value={{
+              month: this.props.month,
+              cash: this.props.cash,
+              debt: this.props.debt,
+              storage: this.props.storage,
+              ingredient: this.props.ingredient,
+              ingredientSubscription: this.props.ingredientSubscription,
+              product: this.props.product,
+              idleFactory: this.props.idleFactory,
+              factoryNames: this.props.factoryNames,
+            }}>
+              <Storage
+                create_storages_game_url={this.props.create_storages_game_url} />
+            </GFG.GameContext.Provider>
 
-          <BuyIngredient 
-            storage={this.props.storage}
-            ingredient={this.props.ingredient}
-            product={this.props.product}
-            buy_ingredients_game_url={this.props.buy_ingredients_game_url}
-          />
+            <BuyIngredient 
+              storage={this.props.storage}
+              ingredient={this.props.ingredient}
+              product={this.props.product}
+              buy_ingredients_game_url={this.props.buy_ingredients_game_url}
+            />
+            <br/><br/>
 
-          <br/><br/>
+            <Hiring />
+            <br/><br/>
+
 
           🏭 <a href={this.props.new_game_factory_path}>Build a Factory</a> (工場建設)
           <br/><br/>
@@ -180,7 +197,8 @@ class GamePane extends React.Component {
       );
     return (
           <GFG.GameContext.Provider value={{
-            signedContracts: this.props.signedContracts
+            signedContracts: this.props.signedContracts,
+            equipments: this.props.equipments,
           }}>
       <div className="row">
         <div className="col-md-5 themed-grid-col">
@@ -199,7 +217,7 @@ class GamePane extends React.Component {
             ingredientSubscription={this.props.ingredientSubscription}
             product={this.props.product}
             idleFactory={this.props.idleFactory}
-            factoryNames={this.props.factoryNames}
+            productionYield={this.props.productionYield}
           />
         </div>
       </div>
@@ -229,5 +247,7 @@ GamePane.propTypes = {
   contractDump: PropTypes.object,
   signedContracts: PropTypes.array,
   notice: PropTypes.string,
+  productionYield: PropTypes.number,
+  equipments: PropTypes.array,
 };
 export default GamePane

@@ -73,7 +73,6 @@ class BuyIngredient extends React.Component {
                 <p>
                   $10K for every 20t ingredients.
                 </p>
-
                 <input type="number"
                   value={this.state.inputNumberVol}
                   className={(this.state.inputNumberVol == this.state.vol) ? "form-control" : "form-control is-invalid"}

@@ -8,6 +8,7 @@ class GameMore < ActiveRecord::Migration[6.0]
       t.text :messages_raw, null: false, default: '[]'
       t.text :portfolios_raw, null: false, default: '[]'
       t.text :signed_contracts_raw, null: false, default: '[]'
+      t.text :equipment_names_raw, null: false, default: '[]'
     end
   end
 end

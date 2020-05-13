@@ -48,7 +48,7 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       if @game.save && Factory.create(game_id: @game.id, name: 'idle')
-        format.html { redirect_to @game, notice: 'Game start!' }
+        format.html { redirect_to @game }
         format.json { render :show, status: :created, location: @game }
       else
         format.html { render :new }

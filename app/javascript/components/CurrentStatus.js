@@ -23,7 +23,7 @@ function CurrentStatus(props) {
 
   return (
     <React.Fragment>
-      <table>
+      <table id="tableCurrentStatus">
         <tbody>
           <tr>
             <th><strong>Date</strong></th>
@@ -117,9 +117,21 @@ function CurrentStatus(props) {
             </td>
           </tr>
           <tr>
-            <th><strong>Factories</strong></th>
+            <th><strong>Factory</strong></th>
             <td>
-              { props.factoryNames.join(", ") }
+              Manual
+              <br/>
+              Volume +{ props.productionYield }t
+              <br/>
+              Average Quality xx.x
+              <br/>
+              <ul className="list-unstyled">
+                {
+                  context.equipments && // TODO: remove this line
+                  context.equipments.map((e) =>
+                    <li key={e.name}>{e.name}</li>)
+                }
+              </ul>
             </td>
             <td>
               🏭
@@ -154,6 +166,6 @@ CurrentStatus.propTypes = {
   ingredientSubscription: PropTypes.number,
   product: PropTypes.number,
   idleFactory: PropTypes.object,
-  factoryNames: PropTypes.array,
+  productionYield: PropTypes.number,
 };
 export default CurrentStatus

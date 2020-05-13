@@ -46,6 +46,16 @@ class Game < ApplicationRecord
     self.signed_contracts_raw = x.to_json
   end
 
+  def equipments
+    JSON.parse(equipment_names_raw).map {|name|
+      Factory::EQUIPMENTS[name.to_sym].merge(name: name)
+    }
+  end
+
+  def equipments=(x)
+    self.equipment_names_raw = x.map(&:name).to_json
+  end
+
   def status
     if cash < 0
       :game_over
