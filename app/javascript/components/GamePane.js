@@ -153,6 +153,9 @@ class GamePane extends React.Component {
         </React.Fragment>
       );
     return (
+          <GFG.GameContext.Provider value={{
+            signedContracts: this.props.signedContracts
+          }}>
       <div className="row">
         <div className="col-md-5 themed-grid-col">
           <h2>Actions</h2>
@@ -175,6 +178,7 @@ class GamePane extends React.Component {
           />
         </div>
       </div>
+      </GFG.GameContext.Provider>
     );
   }
 }

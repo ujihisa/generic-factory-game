@@ -22,3 +22,40 @@
 * 契約を守れない
 * (未実装) 解雇
 * (未実装) 原料の破棄?
+
+---
+
+product quality
+
+* 高くする方法
+    * seniorが作る
+    * seniorがquality assuranceする
+    * high-quality full-autoを所有
+* creditを高める
+    * 基本的に、creditは現在のqualityに収束する
+    * credit + 20 <= quality
+        * +3
+    * credit + 10 <= quality
+        * +1
+    * -9 〜 +9
+        * 0
+    * credit - 10 <= quality
+        * -1
+    * credit - 20 <= quality
+        * -3
+
+---
+harajune
+
+■共通して言えること
+流動資産（特に現金）の状況
+■注文するとき
+十分なデリバリー能力があるか（生産能力が月産5000の工場に100万個は注文しない）
+品質
+管理能力
+■銀行
+営業利益率（金利は、利益から払うので）
+流動比率とか負債比率とか（金返せそうか）
+■入社
+給料
+労働条件（深夜残業が多いかとか、休みあるかとか）

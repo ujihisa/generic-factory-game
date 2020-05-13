@@ -4,8 +4,10 @@ import PropTypes from "prop-types"
 import GFG from '../gfg'
 
 class CurrentStatus extends React.Component {
-  constructor(props) {
-    super(props);
+  static contextType = GFG.GameContext;
+
+  constructor(props, context) {
+    super(props, context);
     this.state = {
     };
   }
@@ -133,7 +135,11 @@ class CurrentStatus extends React.Component {
             <tr>
               <th><strong>Contracts</strong></th>
               <td>
-                { this.props.contractNames.join(", ") }
+                {
+                  // TODO: Replace this with
+                  // this.context.signedContracts.join(", ")
+                  this.context.signedContracts && this.context.signedContracts.join(", ")
+                }
               </td>
               <td>
                 📜
