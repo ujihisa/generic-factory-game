@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import Bank from "./Bank"
 import SubscribeIngredient from "./SubscribeIngredient"
-import ActionMenu from "./ActionMenu"
+import Storage from "./Storage"
 import GFG from '../gfg'
 import CurrentStatus from './CurrentStatus'
 import Contracts from './Contracts'
@@ -45,7 +45,7 @@ class GamePane extends React.Component {
             factoryNames: this.props.factoryNames,
             contractNames: this.props.contractNames,
           }}>
-            <ActionMenu
+            <Storage
               create_storages_game_url={this.props.create_storages_game_url} />
           </GFG.GameContext.Provider>
 
