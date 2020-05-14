@@ -66,7 +66,7 @@ function Hiring(props) {
     ? <>not enough cash</>
     : (totalRecruitingFee == 0)
     ? <>Cancel</>
-    : <input type="submit" value={`Pay ${GFG.numberToCurrency(totalRecruitingFee)} to hire ${totalNumber} props.employees`} />;
+    : <input type="submit" value={`Pay ${GFG.numberToCurrency(totalRecruitingFee)} to hire ${totalNumber} employees`} />;
 
   return (<>
     <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#hiringModal">
@@ -118,7 +118,7 @@ function Hiring(props) {
                 <dd>Have a lot of experiences, but require farely expensive salary.</dd>
 
                 <dt>Chief (workers)</dt>
-                <dd>Great at organizing and leading. They don't produce a lot by themselves you can leverage their quality standard to other props.employees.</dd>
+                <dd>Great at organizing and leading. They don't produce a lot by themselves you can leverage their quality standard to other employees.</dd>
 
                 <dt>Motivated Junior (workers)</dt>
                 <dd>Exactly same as juniors but they aren't greedy</dd>
@@ -127,16 +127,16 @@ function Hiring(props) {
                 <dd>Indicated how much this employee consumes ingredients and produces productions, assuming you have "Workbenches" equipment in your factory</dd>
 
                 <dt>Production quality</dt>
-                <dd>Helps getting more credit by selling high quality products to your customers. The product quality is calculated by the average of your props.employees production quality, weighted by each production volumes.</dd>
+                <dd>Helps getting more credit by selling high quality products to your customers. The product quality is calculated by the average of your employees production quality, weighted by each production volumes.</dd>
 
                 <dt>Produce (role)</dt>
-                <dd>The default role for newly hired props.employees.</dd>
+                <dd>The default role for newly hired employees.</dd>
 
                 <dt>Mentor (role)</dt>
-                <dd>Stops production and increase 3 other props.employees production qualities up to same as the mentor.</dd>
+                <dd>Stops production and increase 3 other employees production qualities up to same as the mentor.</dd>
 
                 <dt>Factory equipments</dt>
-                <dd>Enhances all your props.employees production and quality (see details at Equipment menu.) e.g. "Workbenches", and "Conveyor".</dd>
+                <dd>Enhances all your employees production and quality (see details at Equipment menu.) e.g. "Workbenches", and "Conveyor".</dd>
 
                 <dt>Layoff</dt>
                 <dd>Not implemented yet.</dd>
