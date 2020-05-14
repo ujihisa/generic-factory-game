@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from 'react';
 import PropTypes from "prop-types"
 import Bank from "./Bank"
 import SubscribeIngredient from "./SubscribeIngredient"
@@ -10,14 +10,8 @@ import BuyIngredient from './BuyIngredient'
 import Hiring from './Hiring'
 import Factory from './Factory'
 
-class GamePane extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-
-  componentDidMount() {
+function GamePane(props) {
+  useEffect(() => {
     $(document.body).keydown((e) => {
       if (!e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
         if (e.key == "s")
@@ -35,167 +29,160 @@ class GamePane extends React.Component {
 
     $('[data-toggle="popover"]').popover()
 
-    if (this.props.notice) {
+    if (props.alert) {
       $('#noticeModal').modal('show')
       $('#noticeModaldalOk').trigger('focus')
     }
+  })
 
-  }
+  const noticeModal = props.alert &&
+    <div className="modal" id="noticeModal" tabIndex="-1" role="dialog">
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="modal-body">
+            <small className="text-muted">{props.notice}</small>
+            <p>{props.alert}</p>
+          </div>
+          <div className="modal-footer">
+            <button type="button" id="noticeModaldalOk" className="btn" data-dismiss="modal" autoFocus>Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>;
 
-  render () {
-    const noticeModal = this.props.notice &&
-      <div className="modal" id="noticeModal" tabIndex="-1" role="dialog">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-body">
-              <p>{this.props.notice}</p>
-            </div>
-            <div className="modal-footer">
-              <button type="button" id="noticeModaldalOk" className="btn" data-dismiss="modal" autoFocus>Ok</button>
+  $('.example-popover').popover({
+    container: 'body'
+  })
+  const actions =
+    (props.status != 'in_progress')
+    ? null
+    : (
+      <React.Fragment>
+        { noticeModal }
+        <GFG.GameContext.Provider value={{
+          signedContracts: props.signedContracts,
+          credit: props.credit,
+          cash: props.cash,
+          storage: props.storage,
+          formAuthenticityToken: props.formAuthenticityToken,
+          month: props.month,
+          debt: props.debt,
+          ingredient: props.ingredient,
+          product: props.product,
+          ingredientSubscription: props.ingredientSubscription,
+        }}>
+          <Storage
+            create_storages_game_url={props.create_storages_game_url} />
+
+          <BuyIngredient 
+            ingredient={props.ingredient}
+            product={props.product}
+            buy_ingredients_game_url={props.buy_ingredients_game_url}
+          />
+          <br/><br/>
+
+          <Hiring employees={props.employees} hire_game_path={props.hire_game_path} />
+          <br/><br/>
+
+          <Factory factory_dispatch_game_path={props.factory_dispatch_game_path} />
+        <br/><br/>
+
+        <Contracts contractDump={props.contractDump} createContractUrl={props.createContractUrl} />
+        </GFG.GameContext.Provider>
+
+        {
+          (0 < props.credit || 0 < props.debt)
+            ? <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
+              🏦 Bank
+            </button>
+            : <span className="d-inline-block" data-toggle="popover"
+              title="Feature locked"
+              data-content="You need at least 1 credit" >
+              <button type="button" className="btn btn-secondary" data-toggle="popover" disabled style={{pointerEvents: "none"}}>
+                🏦 Bank
+              </button>
+            </span>
+        }
+
+        <div className="modal" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <form action={props.action} acceptCharset="UTF-8" data-remote="true" method="post">
+                <input type="hidden" name="authenticity_token" value={props.formAuthenticityToken} />
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">🏦 Bank</h5>
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <GFG.GameContext.Provider value={props}>
+                  <Bank />
+                </GFG.GameContext.Provider>
+              </form>
             </div>
           </div>
         </div>
-      </div>;
 
-    $('.example-popover').popover({
-      container: 'body'
-    })
-    const actions =
-    (this.props.status != 'in_progress')
-      ? null
-      :
-      (
-        <React.Fragment>
-          { noticeModal }
-          <GFG.GameContext.Provider value={{
-            signedContracts: this.props.signedContracts,
-            credit: this.props.credit,
-            cash: this.props.cash,
-            storage: this.props.storage,
-            formAuthenticityToken: this.props.formAuthenticityToken,
-          }}>
-            <GFG.GameContext.Provider value={{
-              month: this.props.month,
-              cash: this.props.cash,
-              debt: this.props.debt,
-              storage: this.props.storage,
-              ingredient: this.props.ingredient,
-              ingredientSubscription: this.props.ingredientSubscription,
-              product: this.props.product,
-              idleFactory: this.props.idleFactory,
-              factoryNames: this.props.factoryNames,
-            }}>
-              <Storage
-                create_storages_game_url={this.props.create_storages_game_url} />
-            </GFG.GameContext.Provider>
+        <br/><br/>
 
-            <BuyIngredient 
-              ingredient={this.props.ingredient}
-              product={this.props.product}
-              buy_ingredients_game_url={this.props.buy_ingredients_game_url}
-            />
-            <br/><br/>
-
-            <Hiring employees={this.props.employees} hire_game_path={this.props.hire_game_path} />
-            <br/><br/>
-
-            <Factory factory_dispatch_game_path={this.props.factory_dispatch_game_path} />
-          <br/><br/>
-
-          <Contracts contractDump={this.props.contractDump} createContractUrl={this.props.createContractUrl} />
-          </GFG.GameContext.Provider>
-
-          {
-            (0 < this.props.credit || 0 < this.props.debt)
-              ? <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
-                🏦 Bank
-              </button>
-              : <span className="d-inline-block" data-toggle="popover"
-                title="Feature locked"
-                data-content="You need at least 1 credit" >
-                <button type="button" className="btn btn-secondary" data-toggle="popover" disabled style={{pointerEvents: "none"}}>
-                  🏦 Bank
-                </button>
-              </span>
-          }
-
-          <div className="modal" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <form action={this.props.action} acceptCharset="UTF-8" data-remote="true" method="post">
-                  <input type="hidden" name="authenticity_token" value={this.props.formAuthenticityToken} />
-                  <div className="modal-header">
-                    <h5 className="modal-title" id="exampleModalLabel">🏦 Bank</h5>
-                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <GFG.GameContext.Provider value={this.props}>
-                    <Bank />
-                  </GFG.GameContext.Provider>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          <br/><br/>
-
-          {
-            (20 <= this.props.credit || 0 < this.props.ingredientSubscription)
-              ?  <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#subscribeIngredientModal">
+        {
+          (20 <= props.credit || 0 < props.ingredientSubscription)
+            ?  <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#subscribeIngredientModal">
+              📦 Subscribe Ingredient
+            </button>
+            : <span className="d-inline-block" data-toggle="popover"
+              title="Feature locked"
+              data-content="You need at least 20 credit" >
+              <button type="button" className="btn btn-secondary" data-toggle="popover" disabled style={{pointerEvents: "none"}}>
                 📦 Subscribe Ingredient
               </button>
-              : <span className="d-inline-block" data-toggle="popover"
-                title="Feature locked"
-                data-content="You need at least 20 credit" >
-                <button type="button" className="btn btn-secondary" data-toggle="popover" disabled style={{pointerEvents: "none"}}>
-                  📦 Subscribe Ingredient
-                </button>
-              </span>
-          }
+            </span>
+        }
 
-          <div className="modal" id="subscribeIngredientModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <form action={this.props.subscribe_ingredients_game_url} acceptCharset="UTF-8" data-remote="true" method="post">
-                  <div className="modal-header">
-                    <h5 className="modal-title" id="exampleModalLabel">📦 Subscribe Ingredient</h5>
-                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <SubscribeIngredient cash={this.props.cash} ingredientSubscription={this.props.ingredientSubscription} storage={this.props.storage} />
-                </form>
-              </div>
+        <div className="modal" id="subscribeIngredientModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <form action={props.subscribe_ingredients_game_url} acceptCharset="UTF-8" data-remote="true" method="post">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">📦 Subscribe Ingredient</h5>
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <SubscribeIngredient cash={props.cash} ingredientSubscription={props.ingredientSubscription} storage={props.storage} />
+              </form>
             </div>
           </div>
+        </div>
 
-          <br/><br/>
+        <br/><br/>
 
-          <form action={this.props.end_month_game_url} acceptCharset="UTF-8" data-remote="true" method="post">
-            <br/>
-            {
-              (this.props.estimate_status == 'game_over') &&
-                <div className="alert alert-danger" role="alert">
-                  Are you sure? {(this.props.debt < this.props.credit * 10) ? "Try borrowing more cash" : "Find what you can do to survive!"}
-                </div>
-            }
-            <input type="submit" name="commit" value="End month"  data-disable-with="End month"
-              className={`btn btn-lg ${
-            {in_progress: 'btn-primary', game_over: 'btn-danger', completed: 'btn-success'}[this.props.estimate_status]
-          }`} />
-            <small className="form-text text-muted">
-              You employees work to produce product, and you deliver the accumulated product to your customers until they're satisfied.
-            </small>
-          </form>
+        <form action={props.end_month_game_url} acceptCharset="UTF-8" data-remote="true" method="post">
+          <br/>
+          {
+            (props.estimate_status == 'game_over') &&
+              <div className="alert alert-danger" role="alert">
+                Are you sure? {(props.debt < props.credit * 10) ? "Try borrowing more cash" : "Find what you can do to survive!"}
+              </div>
+          }
+          <input type="submit" name="commit" value="End month"  data-disable-with="End month"
+            className={`btn btn-lg ${
+          {in_progress: 'btn-primary', game_over: 'btn-danger', completed: 'btn-success'}[props.estimate_status]
+        }`} />
+          <small className="form-text text-muted">
+            You employees work to produce product, and you deliver the accumulated product to your customers until they're satisfied.
+          </small>
+        </form>
 
-        </React.Fragment>
-      );
-    return (
-          <GFG.GameContext.Provider value={{
-            signedContracts: this.props.signedContracts,
-            equipments: this.props.equipments,
-          }}>
+      </React.Fragment>
+    );
+
+  return (
+    <GFG.GameContext.Provider value={{
+      signedContracts: props.signedContracts,
+      equipments: props.equipments,
+      month: props.month,
+    }}>
       <div className="row">
         <div className="col-md-5 themed-grid-col">
           <h2>Actions</h2>
@@ -204,26 +191,25 @@ class GamePane extends React.Component {
         <div className="col-md-6 themed-grid-col">
           <h2>Current status</h2>
           <CurrentStatus
-            month={this.props.month}
-            cash={this.props.cash}
-            debt={this.props.debt}
-            credit={this.props.credit}
-            storage={this.props.storage}
-            ingredient={this.props.ingredient}
-            ingredientSubscription={this.props.ingredientSubscription}
-            product={this.props.product}
-            idleFactory={this.props.idleFactory}
-            productionYield={this.props.productionYield}
+            cash={props.cash}
+            debt={props.debt}
+            credit={props.credit}
+            storage={props.storage}
+            ingredient={props.ingredient}
+            ingredientSubscription={props.ingredientSubscription}
+            product={props.product}
+            productionYield={props.productionYield}
+            productRequiredNextMonth={props.productRequiredNextMonth}
           />
         </div>
       </div>
-      </GFG.GameContext.Provider>
-    );
-  }
+    </GFG.GameContext.Provider>
+  );
 }
 
 GamePane.propTypes = {
   status: PropTypes.string,
+  month: PropTypes.number,
   cash: PropTypes.number,
   debt: PropTypes.number,
   credit: PropTypes.number,
@@ -234,11 +220,8 @@ GamePane.propTypes = {
   subscribe_ingredients_game_url: PropTypes.string,
   end_month_game_url: PropTypes.string,
   create_storages_game_url: PropTypes.string,
-  month: PropTypes.number,
   ingredient: PropTypes.number,
   product: PropTypes.number,
-  idleFactory: PropTypes.object,
-  factoryNames: PropTypes.array,
   createContractUrl: PropTypes.string,
   contractDump: PropTypes.object,
   signedContracts: PropTypes.array,
@@ -246,5 +229,6 @@ GamePane.propTypes = {
   productionYield: PropTypes.number,
   equipments: PropTypes.array,
   employees: PropTypes.object,
+  productRequiredNextMonth: PropTypes.number,
 };
 export default GamePane

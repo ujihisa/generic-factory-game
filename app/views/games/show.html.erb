@@ -32,24 +32,20 @@
       month: @game.month,
       ingredient: @game.ingredient,
       product: @game.product,
-      idleFactory: @game.idle_factory,
-      factoryNames: @game.factories.map(&:name),
-      new_game_factory_path: new_game_factory_path(@game.id),
       createContractUrl: game_contracts_path(@game.id),
       contractDump: Contract.dump,
       signedContracts: @game.signed_contracts,
       buy_ingredients_game_url: buy_ingredients_game_url,
       notice: notice,
+      alert: alert,
       productionYield: @game.capped_production,
       equipments: @game.equipments,
       employees: Dispatch.employee_groups_with_num_hired(@game.dispatches),
       hire_game_path: hire_game_path,
       factory_dispatch_game_path: factory_dispatch_game_path,
+      productRequiredNextMonth: @game.signed_contracts_product_required(@game.next_month),
     }) %>
   </div>
-
-  [<%= Dispatch.production_vol(@game.dispatches, @game.equipments) %>]
-
   <div class="col-md-3 themed-grid-col">
   <h2>Calendar</h2>
   <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %> result</h5>
@@ -74,47 +70,18 @@
     <%- end %>
 
       <h3>Factory</h3>
-        <table>
-          <tr>
-            <th>Name</th>
-            <th>Juniors assigned</th>
-            <th>Intermediates assigned</th>
-            <th>Seniors assigned</th>
-          </tr>
-          <%- @game.active_factories.each do |factory| %>
-            <tr>
-              <td><%= factory.name.capitalize %></td>
-              <td>
-                <%- factory.junior.times do %>
-                  <img src='/images/employee-junior.png' width=16 title=junior>
-                <%- end %>
-              </td>
-              <td>
-                <%- factory.intermediate.times do %>
-                  <img src='/images/employee-intermediate.png' width=16 title=intermediate>
-                <%- end %>
-              </td>
-              <td>
-                <%- factory.senior.times do %>
-                  <img src='/images/employee-senior.png' width=16 title=senior>
-                <%- end %>
-              </td>
-            </tr>
-          <%- end %>
-        </table>
-
         <ul>
           <li>
-            Estimated Ingredients Consumption: <%= @game.production / Game::INGREDIENT2PRODUCT %>t
-            <%- if @game.production != @game.capped_production %>
+            Estimated Ingredients Consumption: <%= @game.factory.production_volume / Game::INGREDIENT2PRODUCT %>t
+            <%- if @game.factory.production_volume != @game.capped_production %>
               <ul>
                 <li><font color=red>(Capped to <%= @game.capped_production / Game::INGREDIENT2PRODUCT %>t, because you don't have much ingredients!)</font>
               </ul>
             <%- end %>
           </li>
           <li>
-            Estimated Product Generation: <%= @game.production %>t
-            <%- if @game.production != @game.capped_production %>
+            Estimated Product Generation: <%= @game.factory.production_volume %>t
+            <%- if @game.factory.production_volume != @game.capped_production %>
               <ul>
                 <li><font color=red>(Capped to <%= @game.capped_production %>t, because you don't have much ingredients!)</font>
               </ul>

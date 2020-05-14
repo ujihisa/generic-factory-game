@@ -23,18 +23,18 @@ function CurrentStatus(props) {
 
   return (
     <React.Fragment>
-      <table id="tableCurrentStatus">
+      <table className="table table-hover table-sm">
         <tbody>
           <tr>
-            <th><strong>Date</strong></th>
-            <td>
-              { GFG.currentMonth(props.month) } { 2020 + Math.floor(props.month / 12) }
+            <th scope="col"><strong>Date</strong></th>
+            <td scope="col">
+              { GFG.currentMonth(context.month) } { 2020 + Math.floor(context.month / 12) }
             </td>
-            <td></td>
+            <td scope="col"></td>
           </tr>
           <tr>
-            <th><strong>Money</strong></th>
-            <td>
+            <th scope="col"><strong>Money</strong></th>
+            <td scope="col">
               {
                 (props.debt == 0)
                   ?  <b>{ GFG.numberToCurrency(props.cash) }</b>
@@ -46,11 +46,11 @@ function CurrentStatus(props) {
               }
               {moneyProgress}
             </td>
-            <td></td>
+            <td scope="col"></td>
           </tr>
           <tr>
-            <th><strong>Credit</strong></th>
-            <td>
+            <th scope="col"><strong>Credit</strong></th>
+            <td scope="col">
               { props.credit }
               <div className="progress">
                 <div className="progress-bar bg-secondary" role="progressbar" style={{width: `${props.credit}%`}} aria-valuemin="0" aria-valuemax="100"
@@ -58,11 +58,11 @@ function CurrentStatus(props) {
                 </div>
               </div>
             </td>
-            <td></td>
+            <td scope="col"></td>
           </tr>
           <tr>
-            <th><strong>Storage</strong></th>
-            <td>
+            <th scope="col"><strong>Storage</strong></th>
+            <td scope="col">
               Size: { props.storage }t
               <br/>
               Ingredient: { props.ingredient }t (+ { props.ingredientSubscription }t)
@@ -90,7 +90,7 @@ function CurrentStatus(props) {
                 })()
               }
             </td>
-            <td>
+            <td scope="col">
               🗄️
               <br/>
               📦
@@ -99,26 +99,8 @@ function CurrentStatus(props) {
             </td>
           </tr>
           <tr>
-            <th><strong>Idle Employees</strong></th>
-            <td>
-              {
-                React.Children.map(
-                  [
-                    ...Array(props.idleFactory.junior).fill('junior'),
-                    ...Array(props.idleFactory.intermediate).fill('intermediate'),
-                    ...Array(props.idleFactory.senior).fill('senior')
-                  ],
-                  (e) =>
-                    <img src={`/images/employee-${e}.png`} width="16" title={e} />)
-              }
-            </td>
-            <td>
-              💼
-            </td>
-          </tr>
-          <tr>
-            <th><strong>Factory</strong></th>
-            <td>
+            <th scope="col"><strong>Factory</strong></th>
+            <td scope="col">
               Manual
               <br/>
               Volume +{ props.productionYield }t
@@ -133,20 +115,22 @@ function CurrentStatus(props) {
                 }
               </ul>
             </td>
-            <td>
+            <td scope="col">
               🏭
             </td>
           </tr>
           <tr>
-            <th><strong>Contracts</strong></th>
-            <td>
+            <th scope="col"><strong>Contracts</strong></th>
+            <td scope="col">
               {
-                // TODO: Replace this with
-                // context.signedContracts.join(", ")
-                context.signedContracts && context.signedContracts.join(", ")
+                context.signedContracts.join(", ")
               }
+              <br/>
+              <small className="form-text text-muted">
+                Requiring <b>{props.productRequiredNextMonth}t</b> products
+              </small>
             </td>
-            <td>
+            <td scope="col">
               📜
             </td>
           </tr>
@@ -157,7 +141,6 @@ function CurrentStatus(props) {
 }
 
 CurrentStatus.propTypes = {
-  month: PropTypes.number,
   cash: PropTypes.number,
   debt: PropTypes.number,
   credit: PropTypes.number,
@@ -165,7 +148,7 @@ CurrentStatus.propTypes = {
   ingredient: PropTypes.number,
   ingredientSubscription: PropTypes.number,
   product: PropTypes.number,
-  idleFactory: PropTypes.object,
   productionYield: PropTypes.number,
+  productRequiredNextMonth: PropTypes.number,
 };
 export default CurrentStatus

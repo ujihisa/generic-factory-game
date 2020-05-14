@@ -18,7 +18,6 @@ Rails.application.routes.draw do
       post 'factory_dispatch'
     end
 
-    resources :factories
     resources :contracts, only: [:create]
   end
 

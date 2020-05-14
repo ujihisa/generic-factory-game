@@ -2,12 +2,12 @@
 
 class Game < ApplicationRecord
   belongs_to :player
-  has_many :factories
 
   latest_columns = column_names.map(&:to_sym) - [:messages_raw, :portfolios_raw]
   scope :latest, -> { select(latest_columns) }
 
   validate :validate_dispatches
+  validate :validate_ingredient_and_product
 
   MONTHS = [
     'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
@@ -61,9 +61,10 @@ class Game < ApplicationRecord
   # dispatches_raw: '[["Produce", "Junior", 2], ...]'
   # dispatches: [Dispatch, ...]
   def dispatches
-    JSON.parse(dispatches_raw).map {|r, eg_name, num|
-      Dispatch.new(r.to_sym, eg_name.to_sym, num)
-    }
+    @dispatches ||=
+      JSON.parse(dispatches_raw).map {|r, eg_name, num|
+        Dispatch.new(r.to_sym, eg_name.to_sym, num)
+      }
   end
 
   def dispatches=(x)
@@ -88,32 +89,19 @@ class Game < ApplicationRecord
     MONTHS[month.succ % 12]
   end
 
-  def production
-    factories.map(&:performance).sum * INGREDIENT2PRODUCT
+  def factory
+    Factory.new(equipments, dispatches)
   end
 
   def capped_production
-    [production, ingredient * INGREDIENT2PRODUCT].min
+    [factory.production_volume, ingredient * INGREDIENT2PRODUCT].min
   end
 
-  def idle_factory
-    Factory.where(game_id: id, name: 'idle').first or raise 'Must not happen'
-  end
-
-  def active_factories
-    Factory.where(game_id: id).where.not(name: 'idle').all
-  end
-
-  def num_employees
-    factories.map {|factory|
-      factory.junior + factory.intermediate + factory.senior
-    }.sum
-  end
-
-  def salary
-    factories.map {|factory|
-      factory.junior * 3 + factory.intermediate * 5 + factory.senior * 9
-    }.sum
+  # TODO: move to game.organization.salary
+  def organization_salary
+    self.dispatches.sum {|dispatch|
+      EmployeeGroup.lookup(dispatch.employee_group_name).salary * dispatch.num
+    }
   end
 
   def interest
@@ -132,14 +120,6 @@ class Game < ApplicationRecord
     self.ingredient -= production_vol / INGREDIENT2PRODUCT
     messages << "🏭 Consume #{production_vol / INGREDIENT2PRODUCT}t ingredients" if 0 < production_vol
     messages << "🏭 Produce #{production_vol}t products" if 0 < production_vol
-
-    # if self.ingredient + self.product + production_vol <= self.storage
-    #   # good
-    # else
-    #   # pay penalty
-    #   self.cash -= 10 * (self.ingredient + self.product + production_vol - self.storage)
-    #   production_vol = self.storage - self.product - self.ingredient
-    # end
 
     self.product += production_vol
 
@@ -181,15 +161,9 @@ class Game < ApplicationRecord
     self.cash -= self.storage / 100
     messages << "🗄️ Pay $#{self.storage / 100}K for storage" if 0 < storage
 
-    self.cash -= self.salary
-    messages << "💼 Pay $#{self.salary}K for salary" if 0 < salary
-    credit_diff +=
-      case self.credit
-      when (0..19)
-        self.num_employees
-      else
-        0
-      end
+    salary = self.organization_salary
+    self.cash -= salary
+    messages << "💼 Pay $#{salary}K for salary" if 0 < salary
 
     self.cash -= self.interest
     messages << "🏦 Pay $#{self.interest}K for interest" if 0 < interest
@@ -219,15 +193,16 @@ class Game < ApplicationRecord
     messages << "📦 Pay $#{self.ingredient_subscription * 0.05}K for subscription" if 0 < self.ingredient_subscription
 
     # overflow
-    if self.storage < self.ingredient + self.production
-      diff = self.ingredient - (self.storage - self.production)
+    if self.storage < self.ingredient + self.factory.production_volume
+      diff = self.ingredient - (self.storage - self.factory.production_volume)
       messages << "🗑️ Dispose #{diff}t ingredient due to overflow"
       self.ingredient -= diff
     end
     messages << "💵 Cash balance $#{self.cash}K"
     self.portfolios += [self.portfolio]
 
-    messages
+    self.messages = messages
+    nil
   end
 
   # Always between 0 to 100
@@ -260,6 +235,12 @@ class Game < ApplicationRecord
     end
   end
 
+  def signed_contracts_product_required(display_month)
+    signed_contracts.sum {|name|
+      Contract.find(name: name)[display_month].required_products 
+    }
+  end
+
   # TODO: Move this inner validation into Dispatch model
   private def validate_dispatches
     self.dispatches.each do |dispatch|
@@ -273,6 +254,12 @@ class Game < ApplicationRecord
       else
         self.errors.add(:dispatches, "Invalid employee_group_name: #{dispatch.employee_group_name}")
       end
+    end
+  end
+
+  private def validate_ingredient_and_product
+    if self.storage < self.ingredient + self.product
+      self.errors.add(:storage, "Not enough storage for your ingredient and product")
     end
   end
 end

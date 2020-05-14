@@ -22,8 +22,7 @@ class GamesController < ApplicationController
   def show
     @game = Game.find(params[:id])
     @estimate = Game.find(params[:id]).tap do |game|
-      messages = game.settlement()
-      game.messages = messages
+      game.settlement()
     end
   end
 
@@ -47,7 +46,7 @@ class GamesController < ApplicationController
     @players = Player.all
 
     respond_to do |format|
-      if @game.save && Factory.create(game_id: @game.id, name: 'idle')
+      if @game.save
         format.html { redirect_to @game }
         format.json { render :show, status: :created, location: @game }
       else
@@ -80,11 +79,11 @@ class GamesController < ApplicationController
     @game.storage = storage
 
     if diff <= 0
-      redirect_to @game, notice: "[ERROR] Missing storage"
+      redirect_to @game, alert: "[ERROR] Missing storage"
     elsif 0 <= @game.cash && @game.save
       redirect_to @game, notice: "Successfully Bought #{diff}t Storages"
     else
-      redirect_to @game, notice: "Failed to buy Storages"
+      redirect_to @game, alert: "Failed to buy Storages"
     end
   end
 
@@ -96,13 +95,13 @@ class GamesController < ApplicationController
     if 0 <= @game.cash && @game.save
       redirect_to @game, notice: "Successfully Bought #{vol}t Ingredients"
     else
-      redirect_to @game, notice: "Failed to buy Ingredients"
+      redirect_to @game, alert: "Failed to buy Ingredients"
     end
   end
 
   def subscribe_ingredients
     if @game.credit < 20
-      return redirect_to @game, notice: '[ERROR] Not enough credit!'
+      return redirect_to @game, alert: 'Not enough credit!'
     end
 
     before = @game.ingredient_subscription.to_i
@@ -119,15 +118,14 @@ class GamesController < ApplicationController
         redirect_to @game, notice: "Successfully Subscribed #{after}t Ingredients"
       end
     else
-      redirect_to @game, notice: "Failed to Subscribed Ingredients"
+      redirect_to @game, alert: "Failed to Subscribed Ingredients"
     end
   end
 
   def end_month
     @game = Game.find(params[:id])
 
-    messages = @game.settlement()
-    @game.messages = messages
+    @game.settlement()
 
     if @game.save
       if @game.cash < 0
@@ -136,32 +134,33 @@ class GamesController < ApplicationController
       elsif 1000 <= @game.cash
         messages << 'Game clear!'
         redirect_to @game, notice: messages.join(",\n")
+      elsif @game.month % 12 == 0
+        redirect_to @game, alert: "It's #{2020 + @game.month / 12}. Happy new year!"
       else
-        messages << 'Successfully ended the month'
-        redirect_to @game, notice: messages.join(",\n")
+        redirect_to @game
       end
     else
-      redirect_to @game, notice: 'Hmm. something was wrong...'
+      redirect_to @game, alert: 'Hmm. something was wrong...'
     end
   end
 
   def borrow_money
     new_debt = params[:debt].to_i
     if @game.credit * 10 < new_debt
-      return redirect_to @game, notice: "[ERROR] You can't borrow cash more than your credit * 10"
+      return redirect_to @game, alert: "You can't borrow cash more than your credit * 10"
     end
 
     @game.cash += new_debt - @game.debt
     @game.debt = new_debt
 
     if @game.cash < 0
-      return redirect_to @game, notice: "[ERROR] Not enough cash"
+      return redirect_to @game, alert: "Not enough cash"
     end
 
     if @game.save
       redirect_to @game, notice: 'Borrow/Pay succeeded'
     else
-      redirect_to @game, notice: '[ERROR] Borrow/Pay failed'
+      redirect_to @game, alert: 'Borrow/Pay failed'
     end
   end
 
@@ -175,7 +174,7 @@ class GamesController < ApplicationController
     if @game.save
       redirect_to @game, notice: "Successfully hired employees. Paid $#{num_paid}K for recruiting them."
     else
-      redirect_to @game, notice: "Failed to hire: #{@game.errors.messages}"
+      redirect_to @game, alert: "Failed to hire: #{@game.errors.messages}"
     end
   end
 

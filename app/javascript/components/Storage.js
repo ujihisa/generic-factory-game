@@ -70,7 +70,6 @@ function Storage(props) {
                   }}/>
                 {context.storage}t → {storage}t ({GFG.numberToCurrency(storagePrice())})
                 <CurrentStatus
-                  month={context.month}
                   cash={cash}
                   debt={context.debt}
                   credit={context.credit}
@@ -78,8 +77,7 @@ function Storage(props) {
                   ingredient={context.ingredient}
                   ingredientSubscription={context.ingredientSubscription}
                   product={context.product}
-                  idleFactory={context.idleFactory}
-                  factoryNames={context.factoryNames}
+                  productRequiredNextMonth={props.productRequiredNextMonth}
                 />
               </div>
               <div className="modal-footer">
@@ -101,5 +99,6 @@ function Storage(props) {
 
 Storage.propTypes = {
   create_storages_game_url: PropTypes.string,
+  productRequiredNextMonth: PropTypes.number,
 };
 export default Storage
