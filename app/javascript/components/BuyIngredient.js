@@ -7,7 +7,7 @@ class BuyIngredient extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.spaceLeft = this.props.storage - this.props.ingredient - this.props.product;
+    this.spaceLeft = context.storage - this.props.ingredient - this.props.product;
     this.spaceLeftTruncated = this.spaceLeft - (this.spaceLeft % 20);
     this.max = Math.min(
       Math.floor(context.cash / 0.5 / 20) * 20,
@@ -46,7 +46,7 @@ class BuyIngredient extends React.Component {
 
     return (<>
       {
-        (0 < this.props.storage)
+        (0 < this.context.storage)
           ? <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#buyIngredientModal">
             📦 Buy Ingredient
           </button>

@@ -68,6 +68,7 @@ class GamePane extends React.Component {
             signedContracts: this.props.signedContracts,
             credit: this.props.credit,
             cash: this.props.cash,
+            storage: this.props.storage,
             formAuthenticityToken: this.props.formAuthenticityToken,
           }}>
             <GFG.GameContext.Provider value={{
@@ -86,7 +87,6 @@ class GamePane extends React.Component {
             </GFG.GameContext.Provider>
 
             <BuyIngredient 
-              storage={this.props.storage}
               ingredient={this.props.ingredient}
               product={this.props.product}
               buy_ingredients_game_url={this.props.buy_ingredients_game_url}
