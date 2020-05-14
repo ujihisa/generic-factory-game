@@ -1,8 +1,8 @@
 class GamesController < ApplicationController
   before_action :set_latest_game, only: [
     :edit, :update, :destroy, :create_storages,
-    :new_employee, :create_employee, :new_dispatch, :create_dispatch,
-    :buy_ingredients, :borrow_money, :subscribe_ingredients,
+    :buy_ingredients, :borrow_money, :subscribe_ingredients, :hire,
+    :factory_dispatch,
   ]
 
   # GET /games
@@ -88,63 +88,6 @@ class GamesController < ApplicationController
     end
   end
 
-  def new_employee
-  end
-
-  def create_employee
-    @game = Game.find(params[:id])
-
-    if @game.hire(params[:type].to_sym)
-      redirect_to @game, notice: "Successfully hired the #{params[:type]} employee"
-    else
-      redirect_to @game, notice: "Failed to hire the employee"
-    end
-  end
-
-  def new_dispatch
-  end
-
-  def create_dispatch
-    raise unless params[:id] && params[:type] && params[:from] && params[:to]
-
-    from = Factory.where(game_id: params[:id], name: params[:from]).first
-    to = Factory.where(game_id: params[:id], name: params[:to]).first
-    raise 'must not happen' unless from && to
-
-    num = params[:num].to_i
-    raise 'Must not happen' if num == 0
-
-    success =
-      case params[:type]
-      when 'junior'
-        if num <= from.junior
-          from.junior -= num
-          to.junior += num
-          from.save && to.save
-        end
-      when 'intermediate'
-        if num <= from.intermediate
-          from.intermediate -= num
-          to.intermediate += num
-          from.save && to.save
-        end
-      when 'senior'
-        if num <= from.senior
-          from.senior -= num
-          to.senior += num
-          from.save && to.save
-        end
-      else
-        raise 'must not happen'
-      end
-
-    if success
-      redirect_to @game, notice: "Successfully dispatched the #{params[:type]} employee to #{params[:to]}"
-    else
-      redirect_to @game, notice: "Failed to dispatch the employee"
-    end
-  end
-
   def buy_ingredients
     vol = params[:vol].to_i
     @game = Game.find(params[:id])
@@ -222,11 +165,32 @@ class GamesController < ApplicationController
     end
   end
 
+  def hire
+    # num_employees: {"Junior"=>2, "Intermediate"=>0, "Senior"=>0}
+    num_employees = JSON.parse(params[:num_employees_json])
+
+    num_paid =
+      @game.organization_hire(
+        num_employees.to_h {|k, v| [k.to_sym, v.to_i] })
+    if @game.save
+      redirect_to @game, notice: "Successfully hired employees. Paid $#{num_paid}K for recruiting them."
+    else
+      redirect_to @game, notice: "Failed to hire: #{@game.errors.messages}"
+    end
+  end
+
+  def factory_dispatch
+    # num_role_diffs_json: {"Junior":{"produce":0,"mentor":0}}
+    num_role_diffs = JSON.parse(params[:num_role_diffs_json])
+    pp num_role_diffs
+    # TODO: Implement here
+    render plain: 'ok'
+  end
+
   if Rails.env.development?
     def force_change
       @game = Game.find(params[:id])
-      @game.update(params.permit(:cash, :debt, :credit, :storage, :product, :ingredient))
-      @game.save!
+      @game.update!(params.permit(:cash, :debt, :credit, :storage, :product, :ingredient))
       redirect_to @game, notice: 'GOOD GOOD'
     end
   end

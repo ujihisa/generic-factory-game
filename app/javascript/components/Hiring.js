@@ -5,9 +5,9 @@ function Hiring(props) {
   const context = useContext(GFG.GameContext);
   const [numEmployees, setNumEmployees] = useState({Junior: 0, Intermediate: 0, Senior: 0});
 
-  useEffect(() => {
-    $('#hiringModal').modal('show');
-  });
+  // useEffect(() => {
+  //   $('#hiringModal').modal('show');
+  // });
 
   const modalTable =
     <table className="table table-sm">
@@ -63,10 +63,10 @@ function Hiring(props) {
 
   const modalSubmit =
     (context.cash < totalRecruitingFee)
-    ? <>not enough cash</>
+    ? <><input type="submit" value="Not enough cash" className="btn btn-primary" disabled /></>
     : (totalRecruitingFee == 0)
     ? <>Cancel</>
-    : <input type="submit" value={`Pay ${GFG.numberToCurrency(totalRecruitingFee)} to hire ${totalNumber} employees`} />;
+    : <input type="submit" value={`Pay ${GFG.numberToCurrency(totalRecruitingFee)} to hire ${totalNumber} employees`} className="btn btn-primary" />
 
   return (<>
     <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#hiringModal">
@@ -84,7 +84,11 @@ function Hiring(props) {
           <div className="modal-body" style={{overflowX: "auto"}}>
             { modalTable }
             { JSON.stringify(numEmployees) }
-            { modalSubmit }
+            <form action={props.hire_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
+              <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
+              <input type="hidden" name="num_employees_json" value={JSON.stringify(numEmployees)} />
+              { modalSubmit }
+            </form>
             {/*
 
             <form action={props.createContractUrl} acceptCharset="UTF-8" data-remote="true" method="post">

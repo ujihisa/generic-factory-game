@@ -8,6 +8,7 @@ import CurrentStatus from './CurrentStatus'
 import Contracts from './Contracts'
 import BuyIngredient from './BuyIngredient'
 import Hiring from './Hiring'
+import Factory from './Factory'
 
 class GamePane extends React.Component {
   constructor(props) {
@@ -27,6 +28,8 @@ class GamePane extends React.Component {
           $('#hiringModal').modal('show')
         else if (e.key == "c")
           $('#contractsModal').modal('show')
+        else if (e.key == "f")
+          $('#factoryModal').modal('show')
       }
     })
 
@@ -93,17 +96,10 @@ class GamePane extends React.Component {
             />
             <br/><br/>
 
-            <Hiring employees={this.props.employees} />
+            <Hiring employees={this.props.employees} hire_game_path={this.props.hire_game_path} />
             <br/><br/>
 
-
-          🏭 <a href={this.props.new_game_factory_path}>Build a Factory</a> (工場建設)
-          <br/><br/>
-
-          💼 <a href={this.props.new_employee_game_path}>Hire an employee</a> (従業員新規雇用)
-          <br/><br/>
-
-          ➡️ <a href={this.props.new_dispatch_game_path}>Dispatch an employee</a> (従業員の割当)
+            <Factory factory_dispatch_game_path={this.props.factory_dispatch_game_path} />
           <br/><br/>
 
           <Contracts contractDump={this.props.contractDump} createContractUrl={this.props.createContractUrl} />

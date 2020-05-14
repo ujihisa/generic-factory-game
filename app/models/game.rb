@@ -7,6 +7,8 @@ class Game < ApplicationRecord
   latest_columns = column_names.map(&:to_sym) - [:messages_raw, :portfolios_raw]
   scope :latest, -> { select(latest_columns) }
 
+  validate :validate_dispatches
+
   MONTHS = [
     'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'
@@ -56,6 +58,8 @@ class Game < ApplicationRecord
     self.equipment_names_raw = x.map { _1[:name] }.to_json
   end
 
+  # dispatches_raw: '[["Produce", "Junior", 2], ...]'
+  # dispatches: [Dispatch, ...]
   def dispatches
     JSON.parse(dispatches_raw).map {|r, eg_name, num|
       Dispatch.new(r.to_sym, eg_name.to_sym, num)
@@ -98,27 +102,6 @@ class Game < ApplicationRecord
 
   def active_factories
     Factory.where(game_id: id).where.not(name: 'idle').all
-  end
-
-  # Similar to save()
-  def hire(employee_type)
-    factory = idle_factory()
-    raise 'Must not happen' unless factory
-
-    raise 'Must not happen' unless Employee::RECRUITING_FEES[employee_type]
-    self.cash -= Employee::RECRUITING_FEES[employee_type]
-
-    case employee_type
-    when :junior
-      factory.junior += 1
-    when :intermediate
-      factory.intermediate += 1
-    when :senior
-      factory.senior += 1
-    else
-      raise 'Must not happen'
-    end
-    save && factory.save
   end
 
   def num_employees
@@ -258,5 +241,38 @@ class Game < ApplicationRecord
       includes(:player).
       where('version = ? AND 1000 <= cash', game_version).
       order(month: :asc)
+  end
+
+  # TODO: Move this to Game::Organization model, so that you can call @game.organization.hire
+  # Returns the total recruiting fee, if it's valid
+  def organization_hire(num_employees)
+    self.dispatches = num_employees.map {|eg_name, num|
+      raise 'Must not happen' if num < 0
+
+      existing_num = dispatches.find {|d| d.employee_group_name == eg_name }&.num || 0
+      [:produce, eg_name, existing_num + num]
+    }
+
+    if valid?
+      fee = num_employees.sum {|eg_name, num| num * EmployeeGroup.lookup(eg_name)[:recruiting_fee] }
+      self.cash -= fee
+      fee
+    end
+  end
+
+  # TODO: Move this inner validation into Dispatch model
+  private def validate_dispatches
+    self.dispatches.each do |dispatch|
+      eg = EmployeeGroup.lookup(dispatch.employee_group_name)
+      if eg
+        if 0 < eg.num_hired.to_i && self.credit < eg.required_credit
+          self.errors.add(:dispatches, "Not enough credit to hire #{dispatch.employee_group_name}")
+        else
+          # Yes it's valid!
+        end
+      else
+        self.errors.add(:dispatches, "Invalid employee_group_name: #{dispatch.employee_group_name}")
+      end
+    end
   end
 end

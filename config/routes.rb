@@ -5,12 +5,6 @@ Rails.application.routes.draw do
     member do
       post 'create_storages'
 
-      get 'new_employee'
-      post 'create_employee'
-
-      get 'new_dispatch'
-      post 'create_dispatch'
-
       post 'buy_ingredients'
       post 'subscribe_ingredients'
 
@@ -19,7 +13,11 @@ Rails.application.routes.draw do
       post 'borrow_money'
 
       post 'force_change' if Rails.env.development?
+
+      post 'hire'
+      post 'factory_dispatch'
     end
+
     resources :factories
     resources :contracts, only: [:create]
   end
