@@ -93,7 +93,7 @@ class GamePane extends React.Component {
             />
             <br/><br/>
 
-            <Hiring />
+            <Hiring employees={this.props.employees} />
             <br/><br/>
 
 
@@ -249,5 +249,6 @@ GamePane.propTypes = {
   notice: PropTypes.string,
   productionYield: PropTypes.number,
   equipments: PropTypes.array,
+  employees: PropTypes.object,
 };
 export default GamePane

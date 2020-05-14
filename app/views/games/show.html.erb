@@ -44,8 +44,11 @@
       notice: notice,
       productionYield: @game.capped_production,
       equipments: @game.equipments,
+      employees: Dispatch.employee_groups_with_num_hired(@game.dispatches),
     }) %>
   </div>
+
+  [<%= Dispatch.production_vol(@game.dispatches, @game.equipments) %>]
 
   <div class="col-md-3 themed-grid-col">
   <h2>Calendar</h2>

@@ -53,7 +53,17 @@ class Game < ApplicationRecord
   end
 
   def equipments=(x)
-    self.equipment_names_raw = x.map(&:name).to_json
+    self.equipment_names_raw = x.map { _1[:name] }.to_json
+  end
+
+  def dispatches
+    JSON.parse(dispatches_raw).map {|r, eg_name, num|
+      Dispatch.new(r.to_sym, eg_name.to_sym, num)
+    }
+  end
+
+  def dispatches=(x)
+    self.dispatches_raw = x.to_json
   end
 
   def status
