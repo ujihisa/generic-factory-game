@@ -16,7 +16,7 @@ class ContractsController < ApplicationController
     if @game.save
       redirect_to @game, notice: 'Contract was successfully signed.'
     else
-      redirect_to @game, notice: "[ERROR] #{@game.errors}"
+      redirect_to @game, alert: "[ERROR] #{@game.errors}"
     end
   end
 

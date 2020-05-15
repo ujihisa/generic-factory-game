@@ -129,18 +129,16 @@ class GamesController < ApplicationController
 
     if @game.save
       if @game.cash < 0
-        messages << 'Game over!'
-        redirect_to @game, notice: messages.join(",\n")
+        redirect_to @game, notice: 'Game over!'
       elsif 1000 <= @game.cash
-        messages << 'Game clear!'
-        redirect_to @game, notice: messages.join(",\n")
+        redirect_to @game, notice: 'Game clear!'
       elsif @game.month % 12 == 0
         redirect_to @game, alert: "It's #{2020 + @game.month / 12}. Happy new year!"
       else
         redirect_to @game
       end
     else
-      redirect_to @game, alert: 'Hmm. something was wrong...'
+      redirect_to @game, alert: "Hmm. something was wrong... #{@game.errors.messages}"
     end
   end
 

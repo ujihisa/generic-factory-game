@@ -122,6 +122,7 @@ class Game < ApplicationRecord
     messages << "🏭 Produce #{production_vol}t products" if 0 < production_vol
 
     self.quality = (self.quality * self.product + self.factory.production_quality * production_vol) / (self.product + production_vol).to_f
+    self.quality = 0 if self.quality.nan?
     self.product += production_vol
 
     # Deliver products
@@ -157,6 +158,25 @@ class Game < ApplicationRecord
           0
         end
     end
+
+    credit_diff =
+      case quality
+      when ((credit + 10)..)
+        3
+      when ((credit + 5)..)
+        2
+      when ((credit + 1)..)
+        1
+      when ((credit + 0)..)
+        0
+      when ((credit - 5)..)
+        -1
+      when ((credit - 10)..)
+        -2
+      else
+        -3
+      end
+
 
     # pay fees
     self.cash -= self.storage / 100
@@ -194,8 +214,8 @@ class Game < ApplicationRecord
     messages << "📦 Pay $#{self.ingredient_subscription * 0.05}K for subscription" if 0 < self.ingredient_subscription
 
     # overflow
-    if self.storage < self.ingredient + self.factory.production_volume
-      diff = self.ingredient - (self.storage - self.factory.production_volume)
+    if self.storage < self.ingredient + self.product
+      diff = self.ingredient - (self.storage - self.product)
       messages << "🗑️ Dispose #{diff}t ingredient due to overflow"
       self.ingredient -= diff
     end
