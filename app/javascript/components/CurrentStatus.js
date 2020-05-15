@@ -63,31 +63,38 @@ function CurrentStatus(props) {
           <tr>
             <th scope="col"><strong>Storage</strong></th>
             <td scope="col">
-              Size: { props.storage }t
-              <br/>
-              Ingredient: { props.ingredient }t (+ { props.ingredientSubscription }t)
-              <br/>
-              Product: { props.product }t
-
               {
-                (() => {
-                  const pProduct = 100 * props.product / props.storage
-                  const pIngredient = 100 * props.ingredient / props.storage
-                  const pIngredientSubscription = 100 * props.ingredientSubscription / props.storage
-                  return <div className="progress">
-                    <div className="progress-bar bg-primary" role="progressbar" style={{width: `${pProduct}%`}} aria-valuemin="0" aria-valuemax="100"
-                      aria-valuenow={pProduct}>
-                      P
-                    </div>
-                    <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredient}%`}} aria-valuemin="0" aria-valuemax="100"
-                      aria-valuenow={pIngredient}>
-                      I
-                    </div>
-                    <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredientSubscription}%`, height: "2px"}} aria-valuemin="0" aria-valuemax="100"
-                      aria-valuenow={pIngredientSubscription}>
-                    </div>
-                  </div>
-                })()
+                (props.storage == 0)
+                  ? <div className="alert alert-primary" role="alert">You must buy Storage first</div>
+                  : <>
+                    {
+                      (() => {
+                        const pProduct = 100 * props.product / props.storage
+                        const pIngredient = 100 * props.ingredient / props.storage
+                        const pIngredientSubscription = 100 * props.ingredientSubscription / props.storage
+                        return <div className="progress">
+                          <div className="progress-bar bg-primary" role="progressbar" style={{width: `${pProduct}%`}} aria-valuemin="0" aria-valuemax="100"
+                            aria-valuenow={pProduct}>
+                            P
+                          </div>
+                          <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredient}%`}} aria-valuemin="0" aria-valuemax="100"
+                            aria-valuenow={pIngredient}>
+                            I
+                          </div>
+                          <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredientSubscription}%`, height: "2px"}} aria-valuemin="0" aria-valuemax="100"
+                            aria-valuenow={pIngredientSubscription}>
+                          </div>
+                        </div>
+                      })()
+                    }
+                    Size: { props.storage }t
+                    <br/>
+                    Ingredient: { props.ingredient }t (+ { props.ingredientSubscription }t)
+                    <br/>
+                    Product Volume: { props.product }t
+                    <br/>
+                    Product Quality { props.quality.toPrecision(4) }
+                  </>
               }
             </td>
             <td scope="col">
@@ -101,19 +108,20 @@ function CurrentStatus(props) {
           <tr>
             <th scope="col"><strong>Factory</strong></th>
             <td scope="col">
-              Manual
+              Production Volume <b>+{ props.productionVolume }t</b>
               <br/>
-              Volume +{ props.productionVolume }t
+              Production Quality <b>{ props.productionQuality.toPrecision(4) }</b>
               <br/>
-              Average Quality { props.productionQuality.toPrecision(4) }
-              <br/>
-              <ul className="list-unstyled">
-                {
-                  context.equipments && // TODO: remove this line
-                  context.equipments.map((e) =>
-                    <li key={e.name}>{e.name}</li>)
-                }
-              </ul>
+              {
+                (context.equipments.some((e) => e.name == 'Factory base'))
+                  ? <ul className="list-unstyled">
+                    {
+                      context.equipments.map((e) =>
+                        <li key={e.name}>{e.name}</li>)
+                    }
+                  </ul>
+                  : <div className="alert alert-primary" role="alert">You must install Factory base first</div>
+              }
             </td>
             <td scope="col">
               🏭
@@ -148,6 +156,7 @@ CurrentStatus.propTypes = {
   ingredient: PropTypes.number,
   ingredientSubscription: PropTypes.number,
   product: PropTypes.number,
+  quality: PropTypes.number,
   productionVolume: PropTypes.number,
   productionQuality: PropTypes.number,
   productRequiredNextMonth: PropTypes.number,

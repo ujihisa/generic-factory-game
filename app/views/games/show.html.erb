@@ -32,6 +32,7 @@
       month: @game.month,
       ingredient: @game.ingredient,
       product: @game.product,
+      quality: @game.quality,
       createContractUrl: game_contracts_path(@game.id),
       contractDump: Contract.dump,
       signedContracts: @game.signed_contracts,
@@ -45,16 +46,24 @@
       hire_game_path: hire_game_path,
       factory_dispatch_game_path: factory_dispatch_game_path,
       productRequiredNextMonth: @game.signed_contracts_product_required(@game.next_month),
+      allEquipments: Factory::EQUIPMENTS,
     }) %>
   </div>
   <div class="col-md-3 themed-grid-col">
   <h2>Calendar</h2>
-  <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %> result</h5>
-  <ul>
-    <%- @game.messages.each do |message| %>
-      <li /><%= message %>
-    <%- end %>
-  </ul>
+  <%- if @game.month == 0 %>
+    <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %></h5>
+    <ul>
+      <li />You started your own business from nothing but $100K.
+    </ul>
+  <%- else %>
+    <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %> result</h5>
+    <ul>
+      <%- @game.messages.each do |message| %>
+        <li /><%= message %>
+      <%- end %>
+    </ul>
+  <%- end %>
   <h5><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %> estimate</h5>
   <ul>
     <%- @estimate.messages.each do |message| %>
@@ -104,6 +113,7 @@
       Credit: <%= form.text_field :credit, value: @game.credit %><br/>
       Storage: <%= form.text_field :storage, value: @game.storage %><br/>
       Product: <%= form.text_field :product, value: @game.product %><br/>
+      Quality: <%= form.text_field :quality, value: @game.quality %><br/>
       Ingredient: <%= form.text_field :ingredient, value: @game.ingredient %><br/>
       <%= form.submit %>
     <%- end %>

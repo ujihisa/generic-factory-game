@@ -187,7 +187,7 @@ class GamesController < ApplicationController
   if Rails.env.development?
     def force_change
       @game = Game.find(params[:id])
-      @game.update!(params.permit(:cash, :debt, :credit, :storage, :product, :ingredient))
+      @game.update!(params.permit(:cash, :debt, :credit, :storage, :product, :quality, :ingredient))
       redirect_to @game, notice: 'GOOD GOOD'
     end
   end

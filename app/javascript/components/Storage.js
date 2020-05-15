@@ -77,6 +77,7 @@ function Storage(props) {
                   ingredient={context.ingredient}
                   ingredientSubscription={context.ingredientSubscription}
                   product={context.product}
+                  quality={context.quality}
                   productionVolume={props.productionVolume}
                   productionQuality={props.productionQuality}
                   productRequiredNextMonth={props.productRequiredNextMonth}

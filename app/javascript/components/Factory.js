@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import GFG from '../gfg'
 
 function Factory(props) {
+  const [selectedEquipment, setSelectedEquipment] = useState(null);
   const context = useContext(GFG.GameContext);
   const dispatches = [
     {
@@ -141,21 +142,38 @@ function Factory(props) {
                     </form>
                   </div>
 
-                  <h6>Buy an equipment</h6>
+                  <h6>Buy&install an equipment</h6>
                   <p>You can add these equipments into your factory to increase your employees' production volume and quality.
                   These equipments themselves do not require any running fees, but effect permanently.</p>
 
-                  <select className="custom-select">
-                    <option>Open this select menu</option>
-                    <option>Workbenches ($10K)</option>
-                  </select>
-                  <dl>
-                    <dt>Workbenches</dt>
-                    <dd>blah blah</dd>
-                  </dl>
+
+                  {
+                    Object.values(props.allEquipments).map((equipment, i) =>
+                      <div className="form-check" key={equipment.name}>
+                        <input className="form-check-input" type="radio" name="equipmentRadios" id={`equipmentRadios${i}`} value={equipment.name}
+                          selected={selectedEquipment == equipment.name} onChange={(e) => setSelectedEquipment(e.target.value)}
+                          disabled={
+                            (context.cash < equipment.install)
+                              ? "disabled"
+                              : (context.equipments.some((e) => e.name == equipment.name))
+                                ? "disabled"
+                                : ""
+                          } />
+                        <label className="form-check-label" htmlFor={`equipmentRadios${i}`}>
+                          {equipment.name} ({GFG.numberToCurrency(equipment.install)}, {GFG.numberToCurrency(equipment.cost)}/m)
+                        </label>
+                        <small className="form-text text-muted">
+                          {equipment.description}
+                        </small>
+                      </div>)
+                  }
 
                   <div className="modal-footer">
-                    <input type="submit" value="Buy" className="btn btn-primary" disabled />
+                    {
+                      selectedEquipment
+                        ? <input type="submit" value={`Buy&install ${selectedEquipment}`} className="btn btn-primary" />
+                        : <input type="submit" value="Select what to buy&install" className="btn btn-primary" disabled />
+                    }
                   </div>
                 </div>
               </div>

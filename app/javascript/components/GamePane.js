@@ -69,7 +69,9 @@ function GamePane(props) {
           debt: props.debt,
           ingredient: props.ingredient,
           product: props.product,
+          quality: props.quality,
           ingredientSubscription: props.ingredientSubscription,
+          equipments: props.equipments,
         }}>
           <Storage
             productionVolume={props.productionVolume}
@@ -86,7 +88,9 @@ function GamePane(props) {
           <Hiring employees={props.employees} hire_game_path={props.hire_game_path} />
           <br/><br/>
 
-          <Factory factory_dispatch_game_path={props.factory_dispatch_game_path} />
+          <Factory
+            factory_dispatch_game_path={props.factory_dispatch_game_path}
+            allEquipments={props.allEquipments} />
         <br/><br/>
 
         <Contracts contractDump={props.contractDump} createContractUrl={props.createContractUrl} />
@@ -200,6 +204,7 @@ function GamePane(props) {
             ingredient={props.ingredient}
             ingredientSubscription={props.ingredientSubscription}
             product={props.product}
+            quality={props.quality}
             productionVolume={props.productionVolume}
             productionQuality={props.productionQuality}
             productRequiredNextMonth={props.productRequiredNextMonth}
@@ -225,6 +230,7 @@ GamePane.propTypes = {
   create_storages_game_url: PropTypes.string,
   ingredient: PropTypes.number,
   product: PropTypes.number,
+  quality: PropTypes.number,
   createContractUrl: PropTypes.string,
   contractDump: PropTypes.object,
   signedContracts: PropTypes.array,

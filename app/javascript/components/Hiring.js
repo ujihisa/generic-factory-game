@@ -128,7 +128,7 @@ function Hiring(props) {
                 <dd>Exactly same as juniors but they aren't greedy</dd>
 
                 <dt>Production volume (t)</dt>
-                <dd>Indicated how much this employee consumes ingredients and produces productions, assuming you have "Workbenches" equipment in your factory</dd>
+                <dd>Indicated how much this employee consumes ingredients and produces productions, assuming you have "Factory base"</dd>
 
                 <dt>Production quality</dt>
                 <dd>Helps getting more credit by selling high quality products to your customers. The product quality is calculated by the average of your employees production quality, weighted by each production volumes.</dd>
@@ -140,7 +140,7 @@ function Hiring(props) {
                 <dd>Stops production and increase 3 other employees production qualities up to same as the mentor.</dd>
 
                 <dt>Factory equipments</dt>
-                <dd>Enhances all your employees production and quality (see details at Equipment menu.) e.g. "Workbenches", and "Conveyor".</dd>
+                <dd>Enhances all your employees production and quality (see details at Equipment menu.) e.g. "Conveyor".</dd>
 
                 <dt>Layoff</dt>
                 <dd>Not implemented yet.</dd>

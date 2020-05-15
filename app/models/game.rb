@@ -50,7 +50,7 @@ class Game < ApplicationRecord
 
   def equipments
     JSON.parse(equipment_names_raw).map {|name|
-      Factory::EQUIPMENTS[name.to_sym].merge(name: name)
+      Factory.lookup(equipment_name: name.to_sym)
     }
   end
 

@@ -2,61 +2,63 @@
 
 class Factory
   EQUIPMENTS = {
-    None: {
-      cost: 0,
-      production: [-9, -18, -18],
-      quality: [-18, -18, -36],
-      description: "Default",
-    }.freeze,
-    Workbench: {
-      cost: 10,
+    'Factory base': {
+      install: 10,
+      cost: 5,
       production: [0, 0, 0],
       quality: [0, 0, 0],
-      description: "A place to work on crafting. It's hard to produce anything without this.",
+      description: "It doesn't help you producing but without it you can't produce anything.",
     }.freeze,
     Conveyor: {
-      cost: 100,
+      install: 100,
+      cost: 10,
       production: [10, 10, 10],
       quality: [0, 0, 0],
       description: "Now staff don't have to walk around, but stuff walk around instead.",
     }.freeze,
     'Advanced toolsets': {
-      cost: 100,
+      install: 100,
+      cost: 0,
       production: [0, 5, 10],
       quality: [0, 5, 10],
       description: "Leverage skilled craftspersons. Advanced people need advanced tools.",
     }.freeze,
     'Free space': {
-      cost: 100,
+      install: 100,
+      cost: 0,
       production: [-5, -5, -5],
       quality: [20, 20, 20],
       description: "Enjoy your relaxed time",
     }.freeze,
     'Computers': {
-      cost: 100,
+      install: 100,
+      cost: 5,
       production: [0, 0, 0],
       quality: [10, 10, 10],
-      description: "Enjoy your relaxed time",
+      description: "Helps you archtechting, designing, sharing knowledge, and many more",
     }.freeze,
-    'Machines': {
-      cost: 100,
-      production: [0, 0, 0],
+    'Semiauto machines': {
+      install: 100,
+      cost: 10,
+      production: [10, 10, 10],
       quality: [0, 0, 0],
       description: "Industrialization",
     }.freeze,
     'Anormal detector': {
-      cost: 100,
+      install: 100,
+      cost: 5,
       production: [0, 0, 0],
       quality: [20, 20, 0],
       description: "It has better eyes than human's",
     }.freeze,
     'Fullauto machines': {
-      cost: 200,
+      install: 200,
+      cost: 10,
       production: [25, 15, 10],
       quality: [10, 10, 10],
       description: "Let the machines do all the jobs",
     }.freeze,
-  }.freeze
+  }.to_h {|k, v| [k, v.merge(name: k)] }.freeze
 
   def initialize(equipments, dispatches)
     @equipments = equipments
@@ -65,7 +67,11 @@ class Factory
   end
 
   def production_volume
-    @dispatches.sum { production_vol(_1, @equipments) }
+    if @equipments.include?(:'Factory base')
+      @dispatches.sum { production_vol(_1, @equipments) }
+    else
+      0
+    end
   end
 
   private def production_vol(d, equipments)
@@ -86,8 +92,12 @@ class Factory
   end
 
   def production_quality
-    x = @dispatches.sum { production_quavol(_1, @equipments) } / production_volume.to_f
-    x.nan? ? 0 : x
+    if @equipments.include?(:'Factory base')
+      x = @dispatches.sum { production_quavol(_1, @equipments) } / production_volume.to_f
+      x.nan? ? 0 : x
+    else
+      0
+    end
   end
 
   private def production_quavol(d, equipments)
@@ -111,5 +121,9 @@ class Factory
     else
       raise "Invalid role: #{d.role.inspect}"
     end
+  end
+
+  def self.lookup(equipment_name:)
+    EQUIPMENTS[equipment_name]
   end
 end
