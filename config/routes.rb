@@ -15,7 +15,8 @@ Rails.application.routes.draw do
       post 'force_change' if Rails.env.development?
 
       post 'hire'
-      post 'factory_dispatch'
+      post 'factory_assign'
+      post 'factory_buyinstall'
     end
 
     resources :contracts, only: [:create]

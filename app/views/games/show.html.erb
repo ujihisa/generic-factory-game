@@ -42,11 +42,25 @@
       productionVolume: @game.capped_production,
       productionQuality: @game.factory.production_quality,
       equipments: @game.equipments,
-      employees: Dispatch.employee_groups_with_num_hired(@game.dispatches),
+      employees: Assignment.employee_groups_with_num_hired(@game.assignments),
       hire_game_path: hire_game_path,
-      factory_dispatch_game_path: factory_dispatch_game_path,
+      factory_assign_game_path: factory_assign_game_path,
+      factory_buyinstall_game_path: factory_buyinstall_game_path,
       productRequiredNextMonth: @game.signed_contracts_product_required(@game.next_month),
       allEquipments: Factory::EQUIPMENTS,
+      assignmentsSummary: Assignment::EMPLOYEE_GROUP_NAMES.map {|eg_name|
+        { name: eg_name, numRoles: {
+          produce: @game.assignments.find { _1.employee_group_name == eg_name && _1.role == :produce }&.num || 0,
+          mentor: @game.assignments.find { _1.employee_group_name == eg_name && _1.role == :mentor }&.num || 0,
+        }}
+      },
+      # assignmentsSummary: @game.assignments.each_with_object([]) {|a, memo|
+      #   if x = memo.find {|x| x[:name] == a.employee_group_name }
+      #     x[:numRoles][a.role] = a.num
+      #   else
+      #     memo << { name: a.employee_group_name, numRoles: { a.role => a.num } }
+      #   end
+      # }.sort_by { [:Junior, :Intermediate, :Senior].index(_1[:name]) }
     }) %>
   </div>
   <div class="col-md-3 themed-grid-col">

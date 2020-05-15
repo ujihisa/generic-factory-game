@@ -6,7 +6,8 @@ class Game < ApplicationRecord
   latest_columns = column_names.map(&:to_sym) - [:messages_raw, :portfolios_raw]
   scope :latest, -> { select(latest_columns) }
 
-  validate :validate_dispatches
+  validate :validate_assignments
+  validate :validate_factory_equipments
   validate :validate_ingredient_and_product
 
   MONTHS = [
@@ -58,17 +59,17 @@ class Game < ApplicationRecord
     self.equipment_names_raw = x.map { _1[:name] }.to_json
   end
 
-  # dispatches_raw: '[["Produce", "Junior", 2], ...]'
-  # dispatches: [Dispatch, ...]
-  def dispatches
-    @dispatches ||=
-      JSON.parse(dispatches_raw).map {|r, eg_name, num|
-        Dispatch.new(r.to_sym, eg_name.to_sym, num)
+  # assignments_raw: '[["Produce", "Junior", 2], ...]'
+  # assignments: [Assignment, ...]
+  def assignments
+    @assignments ||=
+      JSON.parse(assignments_raw).map {|r, eg_name, num|
+        Assignment.new(r.to_sym, eg_name.to_sym, num)
       }
   end
 
-  def dispatches=(x)
-    self.dispatches_raw = x.to_json
+  def assignments=(x)
+    self.assignments_raw = x.map(&:values).to_json
   end
 
   def status
@@ -90,7 +91,7 @@ class Game < ApplicationRecord
   end
 
   def factory
-    Factory.new(equipments, dispatches)
+    Factory.new(equipments, assignments)
   end
 
   def capped_production
@@ -99,8 +100,8 @@ class Game < ApplicationRecord
 
   # TODO: move to game.organization.salary
   def organization_salary
-    self.dispatches.sum {|dispatch|
-      EmployeeGroup.lookup(dispatch.employee_group_name).salary * dispatch.num
+    self.assignments.sum {|assignment|
+      EmployeeGroup.lookup(assignment.employee_group_name).salary * assignment.num
     }
   end
 
@@ -242,12 +243,20 @@ class Game < ApplicationRecord
   # TODO: Move this to Game::Organization model, so that you can call @game.organization.hire
   # Returns the total recruiting fee, if it's valid
   def organization_hire(num_employees)
-    self.dispatches = num_employees.map {|eg_name, num|
+    num_employees.each do |_, num|
       raise 'Must not happen' if num < 0
+    end
 
-      existing_num = dispatches.find {|d| d.employee_group_name == eg_name }&.num || 0
-      [:produce, eg_name, existing_num + num]
-    }
+    new_assignments = self.assignments.dup
+    num_employees.each do |(eg_name, num)|
+      assignment = new_assignments.find {|d| d.employee_group_name == eg_name }
+      if assignment
+        assignment.num += num
+      else
+        new_assignments << Assignment.new(:produce, eg_name, num)
+      end
+    end
+    self.assignments = new_assignments
 
     if valid?
       fee = num_employees.sum {|eg_name, num| num * EmployeeGroup.lookup(eg_name)[:recruiting_fee] }
@@ -262,18 +271,18 @@ class Game < ApplicationRecord
     }
   end
 
-  # TODO: Move this inner validation into Dispatch model
-  private def validate_dispatches
-    self.dispatches.each do |dispatch|
-      eg = EmployeeGroup.lookup(dispatch.employee_group_name)
+  # TODO: Move this inner validation into Assignment model
+  private def validate_assignments
+    self.assignments.each do |assignment|
+      eg = EmployeeGroup.lookup(assignment.employee_group_name)
       if eg
         if 0 < eg.num_hired.to_i && self.credit < eg.required_credit
-          self.errors.add(:dispatches, "Not enough credit to hire #{dispatch.employee_group_name}")
+          self.errors.add(:assignments, "Not enough credit to hire #{assignment.employee_group_name}")
         else
           # Yes it's valid!
         end
       else
-        self.errors.add(:dispatches, "Invalid employee_group_name: #{dispatch.employee_group_name}")
+        self.errors.add(:assignments, "Invalid employee_group_name: #{assignment.employee_group_name}")
       end
     end
   end
@@ -282,5 +291,34 @@ class Game < ApplicationRecord
     if self.storage < self.ingredient + self.product
       self.errors.add(:storage, "Not enough storage for your ingredient and product")
     end
+  end
+
+  private def validate_factory_equipments
+    dups = self.equipments.map { _1[:name] }.tally.select {|_, v| 1 < v}.keys
+    if dups.present?
+      self.errors.add(:equipments, "Duplicate equipments: #{dups.join(', ')}")
+    end
+  end
+
+  def buyinstall_equipment(equipment)
+    self.cash -= equipment[:install]
+    self.equipments += [equipment]
+    nil
+  end
+
+  def factory_assign_add(eg_name, produce:, mentor:)
+    ds = self.assignments
+    (d_produce, d_mentor) = ds.select {|d|
+      d.employee_group_name == eg_name
+    }.then {|ds|
+      [ds.find {|d| d.role == :produce }, ds.find {|d| d.role == :mentor }]
+    }
+    new_d_produce = d_produce ? d_produce.dup.tap { _1.num += produce } : Assignment.new(:produce, eg_name, produce)
+    new_d_mentor = d_mentor ? d_mentor.dup.tap { _1.num += mentor } : Assignment.new(:mentor, eg_name, mentor)
+    self.assignments = (
+      ds - [d_produce, d_mentor] + [new_d_produce, new_d_mentor])
+    nil
+    # TODO: validate the sum
+    # TODO: validate negative
   end
 end

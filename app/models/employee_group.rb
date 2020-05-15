@@ -10,7 +10,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       volume: 10,
       quality: 20,
       required_credit: 0,
-    ).freeze,
+    ),
     Intermediate: new(
       category: :intermediate,
       image: "employee-intermediate.png",
@@ -19,7 +19,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       volume: 20,
       quality: 20,
       required_credit: 0,
-    ).freeze,
+    ),
     Senior: new(
       category: :senior,
       image: "employee-senior.png",
@@ -28,7 +28,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       volume: 20,
       quality: 40,
       required_credit: 1,
-    ).freeze,
+    ),
     Chief: new(
       category: :senior,
       image: "employee-senior.png",
@@ -37,7 +37,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       volume: 10,
       quality: 60,
       required_credit: 40,
-    ).freeze,
+    ),
     'Motivated intermediate': new(
       category: :intermediate,
       image: "employee-intermediate.png",
@@ -46,7 +46,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       volume: 20,
       quality: 20,
       required_credit: 70,
-    ).freeze,
+    ),
     'Passionated junior': new(
       category: :junior,
       image: "employee-junior.png",
@@ -55,8 +55,8 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       volume: 10,
       quality: 20,
       required_credit: 90,
-    ).freeze,
-  }.freeze
+    ),
+  }.each {|k, v| v.name = k; v.freeze }.freeze
 
   def self.lookup(name)
     ALL[name]

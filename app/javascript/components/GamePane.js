@@ -89,7 +89,9 @@ function GamePane(props) {
           <br/><br/>
 
           <Factory
-            factory_dispatch_game_path={props.factory_dispatch_game_path}
+            assignmentsSummary={props.assignmentsSummary}
+            factory_assign_game_path={props.factory_assign_game_path}
+            factory_buyinstall_game_path={props.factory_buyinstall_game_path}
             allEquipments={props.allEquipments} />
         <br/><br/>
 
@@ -240,5 +242,7 @@ GamePane.propTypes = {
   equipments: PropTypes.array,
   employees: PropTypes.object,
   productRequiredNextMonth: PropTypes.number,
+  factory_buyinstall_game_path: PropTypes.string,
+  assignmentsSummary: PropTypes.array,
 };
 export default GamePane

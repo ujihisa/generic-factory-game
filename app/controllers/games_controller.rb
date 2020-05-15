@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   before_action :set_latest_game, only: [
     :edit, :update, :destroy, :create_storages,
     :buy_ingredients, :borrow_money, :subscribe_ingredients, :hire,
-    :factory_dispatch,
+    :factory_assign, :factory_buyinstall,
   ]
 
   # GET /games
@@ -176,12 +176,31 @@ class GamesController < ApplicationController
     end
   end
 
-  def factory_dispatch
+  def factory_assign
     # num_role_diffs_json: {"Junior":{"produce":0,"mentor":0}}
     num_role_diffs = JSON.parse(params[:num_role_diffs_json])
-    pp num_role_diffs
-    # TODO: Implement here
-    render plain: 'ok'
+    num_role_diffs.each do |eg_name, diffs|
+      @game.factory_assign_add(eg_name.to_sym, **diffs.to_h { [_1.to_sym, _2.to_i] })
+    end
+    if @game.save
+      redirect_to @game, notice: 'Successfully assigned tasks'
+    else
+      redirect_to @game, alert: "Failed to assign: #{@game.errors.messages}"
+    end
+  end
+
+  def factory_buyinstall
+    equipment = Factory.lookup(equipment_name: params[:equipmentRadios])
+    return redirect_to @game, alert: "Invalid equipment_name #{params[:equipmentRadios]}" unless equipment
+
+    @game.buyinstall_equipment(equipment)
+    if @game.cash < 0
+      redirect_to @game, alert: 'Not enough money'
+    elsif @game.save
+      redirect_to @game, notice: "#{params[:equipmentRadios]} has been installed into your factory."
+    else
+      redirect_to @game, alert: "#{@game.errors.messages}"
+    end
   end
 
   if Rails.env.development?

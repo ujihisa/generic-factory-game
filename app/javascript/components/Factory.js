@@ -4,7 +4,8 @@ import GFG from '../gfg'
 function Factory(props) {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
   const context = useContext(GFG.GameContext);
-  const dispatches = [
+  /*
+  const assignmentsSummary = [
     {
       name: 'Junior',
       numRoles: {
@@ -13,11 +14,12 @@ function Factory(props) {
       },
     }
   ]
+  */
 
   const roleNames = ['produce', 'mentor']
 
   const [numRoleDiffs, setNumRoleDiffs] =
-    useState(dispatches.reduce((o, d) =>
+    useState(props.assignmentsSummary.reduce((o, d) =>
       ({
         ...o,
         [d.name]: roleNames.reduce((o, r) => ({
@@ -26,7 +28,7 @@ function Factory(props) {
         }), {}),
       }), {}));
 
-  var dispatchValid = true;
+  var assignmentValid = true;
 
   return (<>
     <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#factoryModal">
@@ -84,7 +86,7 @@ function Factory(props) {
                   INSERT TABLE HERE
                 </div>
                 <div className="col">
-                  <h6>Dispatch roles</h6>
+                  <h6>Assign roles</h6>
                   <table className="table table-hover table-sm">
                     <thead>
                       <tr>
@@ -95,31 +97,31 @@ function Factory(props) {
                     </thead>
                     <tbody className="table">
                       {
-                        dispatches.map((dispatch) => {
+                        props.assignmentsSummary.map((assignment) => {
                           const outerValid =
-                            (Object.values(numRoleDiffs[dispatch.name]).map((n) => parseInt(n) || 0).reduce((a, b) => a + b) == 0);
+                            (Object.values(numRoleDiffs[assignment.name]).map((n) => parseInt(n) || 0).reduce((a, b) => a + b) == 0);
 
-                          return <tr key={dispatch.name}>
-                            <th scope="col">{dispatch.name}</th>
+                          return <tr key={assignment.name}>
+                            <th scope="col">{assignment.name}</th>
                             {
                               roleNames.map((roleName) => {
                                 const innerValid =
-                                  (0 <= dispatch.numRoles[roleName] + parseInt(numRoleDiffs[dispatch.name][roleName], 10));
+                                  (0 <= assignment.numRoles[roleName] + parseInt(numRoleDiffs[assignment.name][roleName], 10));
 
                                 if (!outerValid || !innerValid)
-                                  dispatchValid = false
+                                  assignmentValid = false
 
                                 return <td scope="col" key={roleName}>
                                   <div className="input-group">
                                     <div className="input-group-prepend">
-                                      <span className="input-group-text">{dispatch.numRoles[roleName]} +</span>
+                                      <span className="input-group-text">{assignment.numRoles[roleName]} +</span>
                                     </div>
                                     <input type="number" className={`form-control ${(outerValid && innerValid) ? "" : "is-invalid"}`} required
-                                      value={numRoleDiffs[dispatch.name][roleName]} onChange={(e) => {
+                                      value={numRoleDiffs[assignment.name][roleName]} onChange={(e) => {
                                         setNumRoleDiffs({
                                           ...numRoleDiffs,
-                                          [dispatch.name]: {
-                                            ...numRoleDiffs[dispatch.name],
+                                          [assignment.name]: {
+                                            ...numRoleDiffs[assignment.name],
                                             [roleName]: e.target.value,
                                           }
                                         });
@@ -135,10 +137,10 @@ function Factory(props) {
                   </table>
                   
                   <div className="modal-footer">
-                    <form action={props.factory_dispatch_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
+                    <form action={props.factory_assign_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
                       <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
                       <input type="hidden" name="num_role_diffs_json" value={JSON.stringify(numRoleDiffs)} />
-                      <input type="submit" value="Dispatch" className="btn btn-primary" disabled={dispatchValid ? "" : "disabled"} />
+                      <input type="submit" value="Assign" className="btn btn-primary" disabled={assignmentValid ? "" : "disabled"} />
                     </form>
                   </div>
 
@@ -147,34 +149,37 @@ function Factory(props) {
                   These equipments themselves do not require any running fees, but effect permanently.</p>
 
 
-                  {
-                    Object.values(props.allEquipments).map((equipment, i) =>
-                      <div className="form-check" key={equipment.name}>
-                        <input className="form-check-input" type="radio" name="equipmentRadios" id={`equipmentRadios${i}`} value={equipment.name}
-                          selected={selectedEquipment == equipment.name} onChange={(e) => setSelectedEquipment(e.target.value)}
-                          disabled={
-                            (context.cash < equipment.install)
-                              ? "disabled"
-                              : (context.equipments.some((e) => e.name == equipment.name))
-                                ? "disabled"
-                                : ""
-                          } />
-                        <label className="form-check-label" htmlFor={`equipmentRadios${i}`}>
-                          {equipment.name} ({GFG.numberToCurrency(equipment.install)}, {GFG.numberToCurrency(equipment.cost)}/m)
-                        </label>
-                        <small className="form-text text-muted">
-                          {equipment.description}
-                        </small>
-                      </div>)
-                  }
-
-                  <div className="modal-footer">
+                  <form action={props.factory_buyinstall_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
+                    <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
                     {
-                      selectedEquipment
-                        ? <input type="submit" value={`Buy&install ${selectedEquipment}`} className="btn btn-primary" />
-                        : <input type="submit" value="Select what to buy&install" className="btn btn-primary" disabled />
+                      Object.values(props.allEquipments).map((equipment, i) =>
+                        <div className="form-check" key={equipment.name}>
+                          <input className="form-check-input" type="radio" name="equipmentRadios" id={`equipmentRadios${i}`} value={equipment.name}
+                            selected={selectedEquipment == equipment.name} onChange={(e) => setSelectedEquipment(e.target.value)}
+                            disabled={
+                              (context.cash < equipment.install)
+                                ? "disabled"
+                                : (context.equipments.some((e) => e.name == equipment.name))
+                                  ? "disabled"
+                                  : ""
+                            } />
+                          <label className="form-check-label" htmlFor={`equipmentRadios${i}`}>
+                            {equipment.name} ({GFG.numberToCurrency(equipment.install)}, {GFG.numberToCurrency(equipment.cost)}/m)
+                          </label>
+                          <small className="form-text text-muted">
+                            {equipment.description}
+                          </small>
+                        </div>)
                     }
-                  </div>
+
+                    <div className="modal-footer">
+                      {
+                        selectedEquipment
+                          ? <input type="submit" value={`Buy&install ${selectedEquipment}`} className="btn btn-primary" />
+                          : <input type="submit" value="Select what to buy&install" className="btn btn-primary" disabled />
+                      }
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>

@@ -60,15 +60,15 @@ class Factory
     }.freeze,
   }.to_h {|k, v| [k, v.merge(name: k)] }.freeze
 
-  def initialize(equipments, dispatches)
+  def initialize(equipments, assignments)
     @equipments = equipments
-    @dispatches = dispatches
+    @assignments = assignments
     freeze
   end
 
   def production_volume
-    if @equipments.include?(:'Factory base')
-      @dispatches.sum { production_vol(_1, @equipments) }
+    if @equipments.find { _1[:name] == :'Factory base' }
+      @assignments.sum { production_vol(_1, @equipments) }
     else
       0
     end
@@ -92,8 +92,8 @@ class Factory
   end
 
   def production_quality
-    if @equipments.include?(:'Factory base')
-      x = @dispatches.sum { production_quavol(_1, @equipments) } / production_volume.to_f
+    if @equipments.find { _1[:name] == :'Factory base' }
+      x = @assignments.sum { production_quavol(_1, @equipments) } / production_volume.to_f
       x.nan? ? 0 : x
     else
       0
@@ -124,6 +124,6 @@ class Factory
   end
 
   def self.lookup(equipment_name:)
-    EQUIPMENTS[equipment_name]
+    EQUIPMENTS[equipment_name.to_sym]
   end
 end

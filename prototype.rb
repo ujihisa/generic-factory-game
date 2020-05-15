@@ -59,7 +59,7 @@ def hire(type)
   end
 end
 
-def dispatch(employee_type, factory_from, factory_to)
+def assignment(employee_type, factory_from, factory_to)
   if @factories[factory_from][employee_type] && @factories[factory_to]
     @factories[factory_from][employee_type] -= 1
     @factories[factory_to][employee_type] += 1
@@ -178,9 +178,9 @@ buy_ingredient()
 buy_ingredient()
 buy_factory(:manual)
 hire(:junior)
-dispatch(:junior, :idle, :manual)
+assignment(:junior, :idle, :manual)
 hire(:intermediate)
-dispatch(:intermediate, :idle, :manual)
+assignment(:intermediate, :idle, :manual)
 contract(:A)
 end_month()
 
