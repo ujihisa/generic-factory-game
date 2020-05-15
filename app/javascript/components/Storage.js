@@ -77,6 +77,8 @@ function Storage(props) {
                   ingredient={context.ingredient}
                   ingredientSubscription={context.ingredientSubscription}
                   product={context.product}
+                  productionVolume={props.productionVolume}
+                  productionQuality={props.productionQuality}
                   productRequiredNextMonth={props.productRequiredNextMonth}
                 />
               </div>
@@ -100,5 +102,7 @@ function Storage(props) {
 Storage.propTypes = {
   create_storages_game_url: PropTypes.string,
   productRequiredNextMonth: PropTypes.number,
+  productionVolume: PropTypes.number,
+  productionQuality: PropTypes.number,
 };
 export default Storage

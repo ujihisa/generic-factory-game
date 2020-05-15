@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 2020_05_09_163704) do
     t.text "signed_contracts_raw", default: "[]", null: false
     t.text "equipment_names_raw", default: "[]", null: false
     t.text "dispatches_raw", default: "[]", null: false
+    t.float "quality", default: 0.0, null: false
     t.index ["player_id", "cash", "month"], name: "index_games_on_player_id_and_cash_and_month"
     t.index ["updated_at"], name: "index_games_on_updated_at"
     t.index ["version"], name: "index_games_on_version"

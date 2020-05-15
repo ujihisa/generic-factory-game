@@ -84,4 +84,32 @@ class Factory
       raise "Invalid role: #{d.role.inspect}"
     end
   end
+
+  def production_quality
+    x = @dispatches.sum { production_quavol(_1, @equipments) } / production_volume.to_f
+    x.nan? ? 0 : x
+  end
+
+  private def production_quavol(d, equipments)
+    case d.role
+    when :mentor
+      0
+    when :produce
+      if 0 < d.num
+        d.num *
+          (
+            EmployeeGroup.lookup(d.employee_group_name).quality +
+            equipments.map {|equipment| equipment[:quality][0] }.sum
+          ) * (
+            EmployeeGroup.lookup(d.employee_group_name).volume +
+            equipments.map {|equipment| equipment[:production][0] }.sum
+          )
+
+      else
+        0
+      end
+    else
+      raise "Invalid role: #{d.role.inspect}"
+    end
+  end
 end

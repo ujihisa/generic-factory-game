@@ -72,6 +72,8 @@ function GamePane(props) {
           ingredientSubscription: props.ingredientSubscription,
         }}>
           <Storage
+            productionVolume={props.productionVolume}
+            productionQuality={props.productionQuality}
             create_storages_game_url={props.create_storages_game_url} />
 
           <BuyIngredient 
@@ -198,7 +200,8 @@ function GamePane(props) {
             ingredient={props.ingredient}
             ingredientSubscription={props.ingredientSubscription}
             product={props.product}
-            productionYield={props.productionYield}
+            productionVolume={props.productionVolume}
+            productionQuality={props.productionQuality}
             productRequiredNextMonth={props.productRequiredNextMonth}
           />
         </div>
@@ -226,7 +229,8 @@ GamePane.propTypes = {
   contractDump: PropTypes.object,
   signedContracts: PropTypes.array,
   notice: PropTypes.string,
-  productionYield: PropTypes.number,
+  productionVolume: PropTypes.number,
+  productionQuality: PropTypes.number,
   equipments: PropTypes.array,
   employees: PropTypes.object,
   productRequiredNextMonth: PropTypes.number,

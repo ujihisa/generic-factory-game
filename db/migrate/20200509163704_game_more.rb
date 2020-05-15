@@ -10,6 +10,8 @@ class GameMore < ActiveRecord::Migration[6.0]
       t.text :signed_contracts_raw, null: false, default: '[]'
       t.text :equipment_names_raw, null: false, default: '[]'
       t.text :dispatches_raw, null: false, default: '[]'
+
+      t.float :quality, null: false, default: 0.0
     end
   end
 end

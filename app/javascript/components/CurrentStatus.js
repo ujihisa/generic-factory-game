@@ -103,9 +103,9 @@ function CurrentStatus(props) {
             <td scope="col">
               Manual
               <br/>
-              Volume +{ props.productionYield }t
+              Volume +{ props.productionVolume }t
               <br/>
-              Average Quality xx.x
+              Average Quality { props.productionQuality.toPrecision(4) }
               <br/>
               <ul className="list-unstyled">
                 {
@@ -148,7 +148,8 @@ CurrentStatus.propTypes = {
   ingredient: PropTypes.number,
   ingredientSubscription: PropTypes.number,
   product: PropTypes.number,
-  productionYield: PropTypes.number,
+  productionVolume: PropTypes.number,
+  productionQuality: PropTypes.number,
   productRequiredNextMonth: PropTypes.number,
 };
 export default CurrentStatus

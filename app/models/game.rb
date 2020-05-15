@@ -121,6 +121,7 @@ class Game < ApplicationRecord
     messages << "🏭 Consume #{production_vol / INGREDIENT2PRODUCT}t ingredients" if 0 < production_vol
     messages << "🏭 Produce #{production_vol}t products" if 0 < production_vol
 
+    self.quality = (self.quality * self.product + self.factory.production_quality * production_vol) / (self.product + production_vol).to_f
     self.product += production_vol
 
     # Deliver products
