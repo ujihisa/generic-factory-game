@@ -237,7 +237,7 @@ class Game < ApplicationRecord
     Game.
       latest.
       includes(:player).
-      where('version = ? AND 1000 <= cash AND mode = "normal"', game_version).
+      where(%q[version = ? AND 1000 <= cash AND mode = 'normal'], game_version).
       order(month: :asc)
   end
 
