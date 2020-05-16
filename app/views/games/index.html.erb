@@ -10,7 +10,7 @@
       <th>Game ID</th>
       <th>Player</th>
       <th>Months spent</th>
-      <th>Cash</th>
+      <th>Money</th>
       <th>Storage</th>
       <th>Ingredient</th>
       <th>Product</th>
@@ -27,7 +27,7 @@
         <td><%= game.month %></td>
         <td>
           <font color="<%= {game_over: 'red', in_progress: 'black', completed: 'blue'}[game.status] %>">
-          <%= number_to_currency(game.cash, precision: 0, format: '%u%nK') %>
+          <%= number_to_currency(game.cash - game.debt, precision: 0, format: '%u%nK') %>
           </font>
         </td>
         <td><%= game.storage %></td>
