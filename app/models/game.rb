@@ -6,6 +6,7 @@ class Game < ApplicationRecord
   latest_columns = column_names.map(&:to_sym) - [:messages_raw, :portfolios_raw]
   scope :latest, -> { select(latest_columns) }
 
+  validates :mode, inclusion: { in: %w(normal tutorial) }
   validate :validate_assignments
   validate :validate_factory_equipments
   validate :validate_ingredient_and_product
@@ -70,6 +71,7 @@ class Game < ApplicationRecord
 
   def assignments=(x)
     self.assignments_raw = x.map(&:values).to_json
+    @assignments = nil
   end
 
   def status
@@ -177,6 +179,7 @@ class Game < ApplicationRecord
       else
         -3
       end
+    credit_diff = 0 if delivery_total == 0
 
 
     # pay fees
@@ -189,19 +192,10 @@ class Game < ApplicationRecord
 
     self.cash -= self.interest
     messages << "🏦 Pay $#{self.interest}K for interest" if 0 < interest
-    credit_diff += 1 if
-      case self.credit
-      when (0..19)
-        10 <= self.debt
-      when (20..39)
-        30 <= self.debt
-      when (40..59)
-        50 <= self.debt
-      when (60..79)
-        70 <= self.debt
-      else
-        false
-      end
+
+    equipments_cost = self.equipments.sum {|eqt| eqt[:cost] }
+    self.cash -= equipments_cost
+    messages << "🏭 Pay $#{equipments_cost}K for factory equipments" if 0 < equipments_cost
 
     if credit_diff != 0
       self.credit = self.class.normalize_credit(self.credit + credit_diff)
@@ -212,7 +206,7 @@ class Game < ApplicationRecord
     self.ingredient += self.ingredient_subscription
     self.cash -= self.ingredient_subscription * 0.05
     messages << "📦 Receive #{self.ingredient_subscription}t ingredient" if 0 < self.ingredient_subscription
-    messages << "📦 Pay $#{self.ingredient_subscription * 0.05}K for subscription" if 0 < self.ingredient_subscription
+    messages << "📦 Pay $#{(self.ingredient_subscription * 0.05).to_i}K for subscription" if 0 < self.ingredient_subscription
 
     # overflow
     if self.storage < self.ingredient + self.product
@@ -236,7 +230,7 @@ class Game < ApplicationRecord
     Game.
       latest.
       includes(:player).
-      where('version = ? AND 1000 <= cash', game_version).
+      where('version = ? AND 1000 <= cash AND mode = "normal"', game_version).
       order(month: :asc)
   end
 

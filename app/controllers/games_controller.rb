@@ -8,8 +8,8 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @current_games = Game.latest.where(version: GenericFactoryGame::VERSION).order(updated_at: :desc)
-    @archived_games = Game.latest.where.not(version: GenericFactoryGame::VERSION).order(version: :desc, updated_at: :desc)
+    @current_games = Game.latest.where(version: GenericFactoryGame::VERSION, mode: 'normal').order(updated_at: :desc)
+    @archived_games = Game.latest.where.not(version: GenericFactoryGame::VERSION, mode: 'normal').order(version: :desc, updated_at: :desc)
   end
 
   def highscore
@@ -43,16 +43,35 @@ class GamesController < ApplicationController
       version: GenericFactoryGame::VERSION,
       ingredient_subscription: 0,
       **game_params)
+    if @game.mode == 'tutorial'
+      @game.cash = 999
+      @game.storage = 500
+      @game.ingredient = 500
+      @game.ingredient_subscription = 500
+      @game.equipments = [Factory.lookup(equipment_name: :'Factory base')]
+      @game.signed_contracts = ['Y']
+      @game.assignments = [Assignment.new(:produce, :Intermediate, 24)]
+      @game.messages = <<~EOS.lines.to_a
+        Welcome to GenericFactoryGame!
+        In this tutorial I'd love you to understand "End month" before starting actual game.
+        Try clicking random places and make sure the "End month" button does not show the red warning, and then click it. That's it!
+
+        The goal of this game is to achieve $1,000K money. (money cash - debt)
+
+        このチュートリアルではGenericFactoryGameの一部の振る舞いについて軽く触れて、ひとまず「End month」を完全に理解してもらいます。
+        いろんなボタンを推したりしてみて、とにかく左下の"End month"のボタンの赤い警告をなくして、それからそれを押してみてください。それだけでいけるはずです!
+
+        このゲームのクリア条件は、資産を$1,000Kにすることです。 (資産=現金-借金)
+      EOS
+    else
+      @game.messages = ['You started your own business from nothing but $100K.']
+    end
     @players = Player.all
 
-    respond_to do |format|
-      if @game.save
-        format.html { redirect_to @game }
-        format.json { render :show, status: :created, location: @game }
-      else
-        format.html { render :new }
-        format.json { render json: @game.errors, status: :unprocessable_entity }
-      end
+    if @game.save
+      redirect_to @game, alert: @game.messages.join("\n")
+    else
+      render :new
     end
   end
 
@@ -216,6 +235,6 @@ class GamesController < ApplicationController
   end
 
   private def game_params
-    params.require(:game).permit(:player_id)
+    params.require(:game).permit(:player_id, :mode)
   end
 end

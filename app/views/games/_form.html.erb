@@ -39,7 +39,15 @@
                 </p>
                 <%= form_with(model: game, local: true) do |form| %>
                   <%= hidden_field_tag :'game[player_id]', player.id %>
-                  <%= form.submit "Start", class: 'btn btn-lg btn-block btn-primary' %>
+                  <%= hidden_field_tag :'game[mode]', 'normal' %>
+                  <%= form.submit "Start game", class: 'btn btn-lg btn-block btn-primary' %>
+                <% end %>
+
+                <br/>
+                <%= form_with(model: game, local: true) do |form| %>
+                  <%= hidden_field_tag :'game[player_id]', player.id %>
+                  <%= hidden_field_tag :'game[mode]', 'tutorial' %>
+                  <%= form.submit "Try tutorial", class: 'btn btn btn-secondary' %>
                 <% end %>
               </div>
             <%- end %>

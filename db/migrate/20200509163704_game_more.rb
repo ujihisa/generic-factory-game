@@ -12,6 +12,8 @@ class GameMore < ActiveRecord::Migration[6.0]
       t.text :assignments_raw, null: false, default: '[]'
 
       t.float :quality, null: false, default: 0.0
+      t.string :mode, null: false, default: 'normal'
+      t.index :mode
     end
   end
 end

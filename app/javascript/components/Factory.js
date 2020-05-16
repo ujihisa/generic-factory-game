@@ -16,6 +16,26 @@ function Factory(props) {
   ]
   */
 
+  const sum = (xs) => xs.reduce((a, b) => a + b, 0);
+  const volumeSubtotalFromAssignmentsSummaryItem = (as) => 
+    as.numRoles.produce *
+      (
+        context.employees[as.name].volume +
+        sum(
+          [...context.equipments, props.allEquipments[selectedEquipment]].
+          filter((eq) => eq).
+          map((eq) => eq.production[as.name])));
+
+  const qualitySubtotalFromAssignmentsSummaryItem = (as) => 
+    (0 < as.numRoles.produce)
+      ? (
+        context.employees[as.name].quality +
+        sum(
+          [...context.equipments, props.allEquipments[selectedEquipment]].
+          filter((eq) => eq).
+          map((eq) => eq.quality[as.name])))
+    : 0;
+
   const roleNames = ['produce', 'mentor']
 
   const [numRoleDiffs, setNumRoleDiffs] =
@@ -52,38 +72,118 @@ function Factory(props) {
                     <thead>
                       <tr>
                         <th scope="col"></th>
-                        <th scope="col">2 Junior</th>
-                        <th scope="col">2 Intermediate</th>
-                        <th scope="col">2 Senior</th>
-                        <th scope="col">1 Chief</th>
+                        {
+                          props.assignmentsSummary.map((as) => 
+                            <th key={as.name} scope="col">
+                              {as.numRoles.produce} { as.name }
+                            </th>)
+                        }
                       </tr>
                     </thead>
                     <tbody className="table">
                       <tr>
                         <th scope="col">Base</th>
-                        <td scope="col">20</td>
+                        {
+                          props.assignmentsSummary.map((as) => 
+                            <td key={as.name} scope="col">
+                              {context.employees[as.name].volume}
+                            </td>)
+                        }
                       </tr>
-                      <tr>
-                        <th scope="col">Conveyor</th>
-                        <td scope="col">+20</td>
-                      </tr>
-                      <tr>
-                        <th scope="col">Mentored</th>
-                        <td scope="col">+40</td>
-                      </tr>
+                      {
+                        [...context.equipments, props.allEquipments[selectedEquipment]].
+                          filter((eq) => eq && eq.name != "Factory base").
+                          map((eq) =>
+                          <tr key={eq.name}>
+                            <th scope="col">{eq.name}</th>
+                            {
+                              props.assignmentsSummary.map((as) => 
+                                <td key={as.name} scope="col">{as.numRoles.produce} * {eq.production[as.name]}</td>)
+                            }
+                          </tr>)
+                      }
                       <tr>
                         <th scope="col">Subtotal</th>
-                        <td scope="col">40</td>
+                        {
+                          props.assignmentsSummary.map((as) => 
+                            <td key={as.name} scope="col">
+                              {volumeSubtotalFromAssignmentsSummaryItem(as)}
+                            </td>)
+                        }
                       </tr>
                       <tr>
                         <th scope="col">Total</th>
-                        <td scope="col">40</td>
+                        <td scope="col" colSpan={props.assignmentsSummary.length}>
+                          {
+                            sum(props.assignmentsSummary.map(volumeSubtotalFromAssignmentsSummaryItem))
+                          }
+                        </td>
                       </tr>
                     </tbody>
                   </table>
 
-                  <h6>Production Quality</h6>
-                  INSERT TABLE HERE
+                  <table className="table table-hover table-sm">
+                    <caption>Production Quality</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col"></th>
+                        {
+                          props.assignmentsSummary.map((as) => 
+                            <th key={as.name} scope="col">
+                              {as.numRoles.produce} { as.name }
+                            </th>)
+                        }
+                      </tr>
+                    </thead>
+                    <tbody className="table">
+                      <tr>
+                        <th scope="col">Base</th>
+                        {
+                          props.assignmentsSummary.map((as) => 
+                            <td key={as.name} scope="col">
+                              {context.employees[as.name].quality}
+                            </td>)
+                        }
+                      </tr>
+                      {
+                        [...context.equipments, props.allEquipments[selectedEquipment]].
+                          filter((eq) => eq && eq.name != "Factory base").
+                          map((eq) =>
+                          <tr key={eq.name}>
+                            <th scope="col">{eq.name}</th>
+                            {
+                              props.assignmentsSummary.map((as) => 
+                                <td key={as.name} scope="col">{as.numRoles.produce} * {eq.quality[as.name]}</td>)
+                            }
+                          </tr>)
+                      }
+                      <tr>
+                        <th scope="col">Subtotal</th>
+                        {
+                          props.assignmentsSummary.map((as) => 
+                            <td key={as.name} scope="col">
+                              {qualitySubtotalFromAssignmentsSummaryItem(as)}
+                            </td>)
+                        }
+                      </tr>
+                      <tr>
+                        <th scope="col">Mentor</th>
+                        <td scope="col" colSpan={props.assignmentsSummary.length}>(client-side calculation not implemented yet)</td>
+                      </tr>
+                      <tr>
+                        <th scope="col">Total</th>
+                        <td scope="col" colSpan={props.assignmentsSummary.length}>
+                          {
+                            (
+                              sum(props.assignmentsSummary.map((as) =>
+                                qualitySubtotalFromAssignmentsSummaryItem(as) * volumeSubtotalFromAssignmentsSummaryItem(as)
+                              )) / sum(props.assignmentsSummary.map(volumeSubtotalFromAssignmentsSummaryItem))
+                            ) || 0
+                          }
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
                 <div className="col">
                   <h6>Assign roles</h6>
@@ -99,7 +199,7 @@ function Factory(props) {
                       {
                         props.assignmentsSummary.map((assignment) => {
                           const outerValid =
-                            (Object.values(numRoleDiffs[assignment.name]).map((n) => parseInt(n) || 0).reduce((a, b) => a + b) == 0);
+                            sum(Object.values(numRoleDiffs[assignment.name]).map((n) => parseInt(n) || 0)) == 0;
 
                           return <tr key={assignment.name}>
                             <th scope="col">{assignment.name}</th>

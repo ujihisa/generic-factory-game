@@ -65,19 +65,12 @@
   </div>
   <div class="col-md-3 themed-grid-col">
   <h2>Calendar</h2>
-  <%- if @game.month == 0 %>
-    <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %></h5>
-    <ul>
-      <li />You started your own business from nothing but $100K.
-    </ul>
-  <%- else %>
-    <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %> result</h5>
-    <ul>
-      <%- @game.messages.each do |message| %>
-        <li /><%= message %>
-      <%- end %>
-    </ul>
-  <%- end %>
+  <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %> result</h5>
+  <ul>
+    <%- @game.messages.each do |message| %>
+      <li /><%= message %>
+    <%- end %>
+  </ul>
   <h5><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %> estimate</h5>
   <ul>
     <%- @estimate.messages.each do |message| %>

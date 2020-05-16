@@ -23,7 +23,7 @@ function Hiring(props) {
       </thead>
       <tbody>
         {
-          Object.entries(props.employees).map(([name, employee]) =>
+          Object.entries(context.employees).map(([name, employee]) =>
             <tr key={name}>
               <th scope="row"><img src={`/images/${employee.image}`} style={{height: "1.5em"}} />&nbsp;{name}</th>
               <td>{GFG.numberToCurrency(employee.recruiting_fee)}</td>
@@ -54,18 +54,18 @@ function Hiring(props) {
     </table>;
 
   const totalRecruitingFee = Object.entries(numEmployees).map(([name, num]) =>
-    props.employees[name].recruiting_fee * num
+    context.employees[name].recruiting_fee * num
   ).reduce((a, b) => a + b);
   const totalSalary = Object.entries(numEmployees).map(([name, num]) =>
-    props.employees[name].salary * num
+    context.employees[name].salary * num
   ).reduce((a, b) => a + b);
   const totalNumber = Object.values(numEmployees).map((x) => parseInt(x, 10) || 0).reduce((a, b) => a + b);
 
   const modalSubmit =
     (context.cash < totalRecruitingFee)
-    ? <><input type="submit" value="Not enough cash" className="btn btn-primary" disabled /></>
+    ? <input type="submit" value="Not enough cash" className="btn btn-primary" disabled />
     : (totalRecruitingFee == 0)
-    ? <>Cancel</>
+    ? <input type="submit" value="Cancel" className="btn btn-primary" disabled />
     : <input type="submit" value={`Pay ${GFG.numberToCurrency(totalRecruitingFee)} to hire ${totalNumber} employees`} className="btn btn-primary" />
 
   return (<>
@@ -83,30 +83,13 @@ function Hiring(props) {
           </div>
           <div className="modal-body" style={{overflowX: "auto"}}>
             { modalTable }
-            { JSON.stringify(numEmployees) }
+          <div className="modal-footer" style={{overflowX: "auto"}}>
             <form action={props.hire_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
               <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
               <input type="hidden" name="num_employees_json" value={JSON.stringify(numEmployees)} />
               { modalSubmit }
             </form>
-            {/*
-
-            <form action={props.createContractUrl} acceptCharset="UTF-8" data-remote="true" method="post">
-              {
-                contract &&
-                  <input type="hidden" name="name" value={contract} />
-              }
-              <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
-              {
-                !contract
-                  ? <input type="submit" value="Cancel" className="btn btn-secondary" data-dismiss="modal" />
-                  : (context.credit < props.contractAll[contract].required_credit ||
-                    context.signedContracts.includes(contract))
-                      ? <input type="submit" value="Cancel" className="btn btn-secondary" data-dismiss="modal" />
-                      : <input type="submit" value={`Sign Contract ${contract}`} className="btn btn-primary" />
-              }
-            </form>
-              */}
+          </div>
             <hr/>
 
             <details>

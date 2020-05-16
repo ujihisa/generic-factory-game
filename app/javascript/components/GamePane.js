@@ -41,7 +41,7 @@ function GamePane(props) {
         <div className="modal-content">
           <div className="modal-body">
             <small className="text-muted">{props.notice}</small>
-            <p>{props.alert}</p>
+            {props.alert.split("\n").map((s) => <p id={s}>{s}</p>)}
           </div>
           <div className="modal-footer">
             <button type="button" id="noticeModaldalOk" className="btn" data-dismiss="modal" autoFocus>Ok</button>
@@ -72,6 +72,7 @@ function GamePane(props) {
           quality: props.quality,
           ingredientSubscription: props.ingredientSubscription,
           equipments: props.equipments,
+          employees: props.employees,
         }}>
           <Storage
             productionVolume={props.productionVolume}
@@ -85,7 +86,7 @@ function GamePane(props) {
           />
           <br/><br/>
 
-          <Hiring employees={props.employees} hire_game_path={props.hire_game_path} />
+          <Hiring hire_game_path={props.hire_game_path} />
           <br/><br/>
 
           <Factory
