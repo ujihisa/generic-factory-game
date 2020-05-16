@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 2020_05_09_163704) do
     t.text "assignments_raw", default: "[]", null: false
     t.float "quality", default: 0.0, null: false
     t.string "mode", default: "normal", null: false
+    t.boolean "advertising", default: false, null: false
     t.index ["mode"], name: "index_games_on_mode"
     t.index ["player_id", "cash", "month"], name: "index_games_on_player_id_and_cash_and_month"
     t.index ["updated_at"], name: "index_games_on_updated_at"

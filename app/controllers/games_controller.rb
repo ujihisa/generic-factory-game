@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   before_action :set_latest_game, only: [
     :edit, :update, :destroy, :create_storages,
     :buy_ingredients, :borrow_money, :subscribe_ingredients, :hire,
-    :factory_assign, :factory_buyinstall,
+    :factory_assign, :factory_buyinstall, :advertise,
   ]
 
   # GET /games
@@ -103,7 +103,7 @@ class GamesController < ApplicationController
     elsif 0 <= @game.cash && @game.save
       redirect_to @game, notice: "Successfully Bought #{diff}t Storages"
     else
-      redirect_to @game, alert: "Failed to buy Storages"
+      redirect_to @game, alert: "Failed to buy Storages: #{@game.errors.messages}"
     end
   end
 
@@ -237,5 +237,28 @@ class GamesController < ApplicationController
 
   private def game_params
     params.require(:game).permit(:player_id, :mode)
+  end
+
+  def advertise
+    if @game.credit < 10
+      return redirect_to @game, alert: 'Not enough credit to advertise'
+    end
+
+    @game.cash -= 100
+
+    if @game.cash < 0
+      return redirect_to @game, alert: 'Not enough cash to advertise'
+    end
+
+    if @game.advertising
+      return redirect_to @game, alert: "You can't advertise more than once a month"
+    end
+
+    @game.advertising = true
+    if @game.save
+      redirect_to @game, notice: "You succeeded in advertizing yourself in this month."
+    else
+      redirect_to @game, alert: "Failed to advertise. #{@game.errors.messages}"
+    end
   end
 end

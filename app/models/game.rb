@@ -65,7 +65,7 @@ class Game < ApplicationRecord
   def assignments
     @assignments ||=
       JSON.parse(assignments_raw).map {|r, eg_name, num|
-        Assignment.new(r.to_sym, eg_name.to_sym, num)
+        Assignment.new(r.to_sym, EmployeeGroup.lookup(eg_name.to_sym).category, num)
       }
   end
 
@@ -197,6 +197,12 @@ class Game < ApplicationRecord
     self.cash -= equipments_cost
     messages << "🏭 Pay $#{equipments_cost}K for factory equipments" if 0 < equipments_cost
 
+    # advertise
+    if self.advertising
+      credit_diff += 10
+      self.advertising = false
+    end
+
     if credit_diff != 0
       self.credit = self.class.normalize_credit(self.credit + credit_diff)
       messages << "❤️ #{"++-"[credit_diff <=> 0]}#{credit_diff.abs} credit"
@@ -214,6 +220,7 @@ class Game < ApplicationRecord
       messages << "🗑️ Dispose #{diff}t ingredient due to overflow"
       self.ingredient -= diff
     end
+
     messages << "💵 Cash balance $#{self.cash}K"
     self.portfolios += [self.portfolio]
 

@@ -46,6 +46,7 @@
       hire_game_path: hire_game_path,
       factory_assign_game_path: factory_assign_game_path,
       factory_buyinstall_game_path: factory_buyinstall_game_path,
+      advertise_game_path: advertise_game_path,
       productRequiredNextMonth: @game.signed_contracts_product_required(@game.next_month),
       allEquipments: Factory::EQUIPMENTS,
       assignmentsSummary: EmployeeGroup::ALL.values.map(&:category).uniq.map {|category|

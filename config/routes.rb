@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       post 'force_change' if Rails.env.development?
 
       post 'hire'
+      post 'advertise'
       post 'factory_assign'
       post 'factory_buyinstall'
     end

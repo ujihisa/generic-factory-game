@@ -9,6 +9,7 @@ import Contracts from './Contracts'
 import BuyIngredient from './BuyIngredient'
 import Hiring from './Hiring'
 import Factory from './Factory'
+import Advertise from './Advertise'
 
 function GamePane(props) {
   useEffect(() => {
@@ -24,6 +25,8 @@ function GamePane(props) {
           $('#contractsModal').modal('show')
         else if (e.key == "f")
           $('#factoryModal').modal('show')
+        else if (e.key == "a" && 10 <= context.credit)
+          $('#advertiseModal').modal('show')
       }
     })
 
@@ -41,7 +44,7 @@ function GamePane(props) {
         <div className="modal-content">
           <div className="modal-body">
             <small className="text-muted">{props.notice}</small>
-            {props.alert.split("\n").map((s) => <p id={s}>{s}</p>)}
+            {props.alert.split("\n").map((s) => <p key={s}>{s}</p>)}
           </div>
           <div className="modal-footer">
             <button type="button" id="noticeModaldalOk" className="btn" data-dismiss="modal" autoFocus>Ok</button>
@@ -97,7 +100,6 @@ function GamePane(props) {
         <br/><br/>
 
         <Contracts contractDump={props.contractDump} createContractUrl={props.createContractUrl} />
-        </GFG.GameContext.Provider>
 
         {
           (0 < props.credit || 0 < props.debt)
@@ -165,6 +167,7 @@ function GamePane(props) {
         </div>
 
         <br/><br/>
+        <Advertise advertise_game_path={props.advertise_game_path} />
 
         <form action={props.end_month_game_url} acceptCharset="UTF-8" data-remote="true" method="post">
           <br/>
@@ -182,6 +185,7 @@ function GamePane(props) {
             You employees work to produce product, and you deliver the accumulated product to your customers until they're satisfied.
           </small>
         </form>
+        </GFG.GameContext.Provider>
 
       </React.Fragment>
     );
@@ -244,6 +248,7 @@ GamePane.propTypes = {
   employees: PropTypes.object,
   productRequiredNextMonth: PropTypes.number,
   factory_buyinstall_game_path: PropTypes.string,
+  advertise_game_path:PropTypes.string, 
   assignmentsSummary: PropTypes.array,
 };
 export default GamePane

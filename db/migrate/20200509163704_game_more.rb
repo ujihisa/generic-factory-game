@@ -14,6 +14,8 @@ class GameMore < ActiveRecord::Migration[6.0]
       t.float :quality, null: false, default: 0.0
       t.string :mode, null: false, default: 'normal'
       t.index :mode
+
+      t.boolean :advertising, null: false, default: false
     end
   end
 end
