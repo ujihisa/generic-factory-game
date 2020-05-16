@@ -44,7 +44,7 @@ function GamePane(props) {
         <div className="modal-content">
           <div className="modal-body">
             <small className="text-muted">{props.notice}</small>
-            {props.alert.split("\n").map((s) => <p key={s}>{s}</p>)}
+            {props.alert.split("\n").map((s, idx) => <p key={idx}>{s}</p>)}
           </div>
           <div className="modal-footer">
             <button type="button" id="noticeModaldalOk" className="btn" data-dismiss="modal" autoFocus>Ok</button>

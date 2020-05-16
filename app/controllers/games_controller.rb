@@ -9,7 +9,7 @@ class GamesController < ApplicationController
   # GET /games.json
   def index
     @current_games = Game.latest.where(version: GenericFactoryGame::VERSION, mode: 'normal').order(updated_at: :desc)
-    @archived_games = Game.latest.where.not(version: GenericFactoryGame::VERSION, mode: 'normal').order(version: :desc, updated_at: :desc)
+    @archived_games = Game.latest.where.not(version: GenericFactoryGame::VERSION).order(version: :desc, updated_at: :desc)
   end
 
   def highscore
