@@ -5,10 +5,6 @@ function Hiring(props) {
   const context = useContext(GFG.GameContext);
   const [numEmployees, setNumEmployees] = useState({Junior: 0, Intermediate: 0, Senior: 0});
 
-  // useEffect(() => {
-  //   $('#hiringModal').modal('show');
-  // });
-
   const modalTable =
     <table className="table table-sm">
       <thead>
@@ -16,8 +12,8 @@ function Hiring(props) {
           <th scope="col"></th>
           <th scope="col"><small>Recruiting</small> fee</th>
           <th scope="col"><small>Monthly</small> salary</th>
-          <th scope="col"><small>Production</small> volume</th>
-          <th scope="col"><small>Production</small> quality</th>
+          <th scope="col"><small>Base production</small> volume</th>
+          <th scope="col"><small>Base production</small> quality</th>
           <th scope="col">#</th>
         </tr>
       </thead>
@@ -103,9 +99,6 @@ function Hiring(props) {
 
                 <dt>Senior (workers)</dt>
                 <dd>Have a lot of experiences, but require farely expensive salary.</dd>
-
-                <dt>Chief (workers)</dt>
-                <dd>Great at organizing and leading. They don't produce a lot by themselves you can leverage their quality standard to other employees.</dd>
 
                 <dt>Motivated Junior (workers)</dt>
                 <dd>Exactly same as juniors but they aren't greedy</dd>

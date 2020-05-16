@@ -64,7 +64,8 @@ class GamesController < ApplicationController
         このゲームのクリア条件は、資産を$1,000Kにすることです。 (資産=現金-借金)
       EOS
     else
-      @game.messages = ['You started your own business from nothing but $100K.']
+      @game.cash = 150
+      @game.messages = ['You started your own business from nothing but $150K.']
     end
     @players = Player.all
 

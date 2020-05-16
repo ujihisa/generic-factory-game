@@ -48,11 +48,14 @@
       factory_buyinstall_game_path: factory_buyinstall_game_path,
       productRequiredNextMonth: @game.signed_contracts_product_required(@game.next_month),
       allEquipments: Factory::EQUIPMENTS,
-      assignmentsSummary: Assignment::EMPLOYEE_GROUP_NAMES.map {|eg_name|
-        { name: eg_name, numRoles: {
-          produce: @game.assignments.find { _1.employee_group_name == eg_name && _1.role == :produce }&.num || 0,
-          mentor: @game.assignments.find { _1.employee_group_name == eg_name && _1.role == :mentor }&.num || 0,
-        }}
+      assignmentsSummary: EmployeeGroup::ALL.values.map(&:category).uniq.map {|category|
+        {
+          name: category,
+          numRoles: {
+            produce: @game.assignments.select { _1.employee_group.category == category && _1.role == :produce }.sum(&:num),
+            mentor: @game.assignments.select { _1.employee_group.category == category && _1.role == :mentor }.sum(&:num),
+          }
+        }
       },
       # assignmentsSummary: @game.assignments.each_with_object([]) {|a, memo|
       #   if x = memo.find {|x| x[:name] == a.employee_group_name }

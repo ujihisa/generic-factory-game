@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Assignment < Struct.new(:role, :employee_group_name, :num)
-  EMPLOYEE_GROUP_NAMES = [:Junior, :Intermediate, :Senior].freeze
-
   def self.employee_groups_with_num_hired(assignments)
     assignments.inject(EmployeeGroup::ALL) {|eg_all, assignment|
       key = assignment.employee_group_name
@@ -12,5 +10,9 @@ class Assignment < Struct.new(:role, :employee_group_name, :num)
 
       eg_all.merge(key => eg)
     }
+  end
+
+  def employee_group
+    EmployeeGroup.lookup(employee_group_name)
   end
 end
