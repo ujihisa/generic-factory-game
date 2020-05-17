@@ -1,6 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import GFG from '../gfg'
 
+const capitalize = (s) =>
+  s.charAt(0).toUpperCase() + s.slice(1)
+
 function Factory(props) {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
   const context = useContext(GFG.GameContext);
@@ -36,13 +39,11 @@ function Factory(props) {
           map((eq) => eq.quality[as.name])))
     : 0;
 
-  const roleNames = ['produce', 'mentor']
-
   const [numRoleDiffs, setNumRoleDiffs] =
-    useState(props.assignmentsSummary.reduce((o, d) =>
+    useState(props.assignmentsSummary.reduce((o, a) =>
       ({
         ...o,
-        [d.name]: roleNames.reduce((o, r) => ({
+        [a.name]: Object.keys(a.numRoles).reduce((o, r) => ({
           ...o,
           [r]: 0,
         }), {}),
@@ -66,7 +67,7 @@ function Factory(props) {
           <div className="modal-body" style={{overflowX: "auto"}}>
             <div className="container">
               <div className="row">
-                <div className="col-8">
+                <div className="col-7">
                   <table className="table table-hover table-sm">
                     <caption>Production Volume (t)</caption>
                     <thead>
@@ -186,13 +187,15 @@ function Factory(props) {
                   </table>
                 </div>
                 <div className="col">
-                  <h6>Assign roles</h6>
+                  <h6>Assign tasks</h6>
                   <table className="table table-hover table-sm">
                     <thead>
                       <tr>
                         <th scope="col"></th>
-                        <th scope="col">Produce</th>
-                        <th scope="col">Mentor</th>
+                        {
+                          Object.keys(props.assignmentsSummary[0].numRoles).map((roleName) =>
+                            <th scope="col" key={roleName}>{capitalize(roleName)}</th>)
+                        }
                       </tr>
                     </thead>
                     <tbody className="table">
@@ -204,9 +207,9 @@ function Factory(props) {
                           return <tr key={assignment.name}>
                             <th scope="col">{assignment.name}</th>
                             {
-                              roleNames.map((roleName) => {
+                              Object.entries(assignment.numRoles).map(([roleName, roleNum]) => {
                                 const innerValid =
-                                  (0 <= assignment.numRoles[roleName] + parseInt(numRoleDiffs[assignment.name][roleName], 10));
+                                  (0 <= roleNum + parseInt(numRoleDiffs[assignment.name][roleName], 10));
 
                                 if (!outerValid || !innerValid)
                                   assignmentValid = false
@@ -216,14 +219,14 @@ function Factory(props) {
                                     <div className="input-group">
                                       {
                                         (roleName == "produce")
-                                          ? <>{assignment.numRoles[roleName]} + {numRoleDiffs[assignment.name][roleName]}</>
+                                          ? <>{roleNum} + {numRoleDiffs[assignment.name][roleName]}</>
                                           : <>
                                             <div className="input-group-prepend">
-                                              <span className="input-group-text">{assignment.numRoles[roleName]} +</span>
+                                              <span className="input-group-text">{roleNum} +</span>
                                             </div>
                                             <input type="number" className="form-control" required
-                                              min={-assignment.numRoles[roleName]}
-                                              max={sum(Object.values(assignment.numRoles)) - assignment.numRoles[roleName]}
+                                              min={-roleNum}
+                                              max={sum(Object.values(assignment.numRoles)) - roleNum}
                                               value={numRoleDiffs[assignment.name][roleName]} onChange={(e) => {
                                                 setNumRoleDiffs({
                                                   ...numRoleDiffs,
@@ -264,7 +267,7 @@ function Factory(props) {
                     <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
                     {
                       Object.values(props.allEquipments).map((equipment, i) =>
-                        <div className="form-check" key={equipment.name}>
+                        <div className="form-check" key={equipment.name} >
                           <input className="form-check-input" type="radio" name="equipmentRadios" id={`equipmentRadios${i}`} value={equipment.name}
                             selected={selectedEquipment == equipment.name} onChange={(e) => setSelectedEquipment(e.target.value)}
                             disabled={
@@ -276,6 +279,7 @@ function Factory(props) {
                             } />
                           <label className="form-check-label" htmlFor={`equipmentRadios${i}`}>
                             {equipment.name} ({GFG.numberToCurrency(equipment.install)}, {GFG.numberToCurrency(equipment.cost)}/m)
+                            { (context.equipments.some((e) => e.name == equipment.name)) && " ✔️" }
                           </label>
                           <small className="form-text text-muted">
                             {equipment.description}
