@@ -63,15 +63,13 @@ class Game < ApplicationRecord
   # assignments_raw: '[["Produce", "Junior", 2], ...]'
   # assignments: [Assignment, ...]
   def assignments
-    @assignments ||=
-      JSON.parse(assignments_raw).map {|r, eg_name, num|
-        Assignment.new(r.to_sym, EmployeeGroup.lookup(eg_name.to_sym).category, num)
-      }
+    JSON.parse(assignments_raw).map {|r, eg_name, num|
+      Assignment.new(r.to_sym, EmployeeGroup.lookup(eg_name.to_sym).category, num).freeze
+    }.freeze
   end
 
   def assignments=(x)
     self.assignments_raw = x.map(&:values).to_json
-    @assignments = nil
   end
 
   # employee_groups_raw: '{"Junior" => 2, "Motivated intermediate" => 1, ...}'
@@ -263,16 +261,17 @@ class Game < ApplicationRecord
     end
 
     # assignments_raw
-    new_assignments = self.assignments.dup
-    num_employees.each do |(eg_name, num)|
-      assignment = new_assignments.find {|d| d.employee_group_name == eg_name }
+    new_assignments = self.assignments.map(&:dup)
+    num_employees.select { _2 != 0 }.each do |(eg_name, num)|
+      category = EmployeeGroup.lookup(eg_name).category
+      assignment = new_assignments.find {|a| a.employee_group_name == category }
       if assignment
         assignment.num += num
       else
-        new_assignments << Assignment.new(:produce, eg_name, num)
+        new_assignments << Assignment.new(:produce, category, num)
       end
     end
-    self.assignments = new_assignments
+    self.assignments = new_assignments.freeze
 
     # employee_groups_raw
     self.employee_groups = employee_groups.to_h {|k, v|

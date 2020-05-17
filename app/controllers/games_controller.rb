@@ -51,6 +51,7 @@ class GamesController < ApplicationController
       @game.equipments = [Factory.lookup(equipment_name: :'Factory base')]
       @game.signed_contracts = ['Y']
       @game.assignments = [Assignment.new(:produce, :Intermediate, 24)]
+      @game.employee_groups_raw = {'Intermediate' => 24}.to_json
       @game.messages = <<~EOS.lines.to_a
         Welcome to GenericFactoryGame!
         In this tutorial I'd love you to understand "End month" before starting actual game.
