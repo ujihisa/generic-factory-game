@@ -5,128 +5,139 @@
       💸💀💸 GAME OVER
     </font>
   </h1>
+  <%- if 3 <= @game.month %>
+    <%= render 'charts' %>
+  <%- else %>
+    <div class="alert alert-primary" role="alert">
+      (Charts will be shown here if you survive longer than 3 months.)
+    </div>
+  <%- end %>
 <%- when :completed %>
   <h1 class='display-3 jumbotron'>
     🎉 Game Clear!
   </h1>
+
+  <%- if @game.mode != 'tutorial' %>
+    <%= render 'charts' %>
+  <%- end %>
 <%- end %>
 
-<b><%= @game.player.name %></b>'s game <b><%= @game.id %></b> / month <b><%= @game.month %></b> / <%= @game.status %> / VERSION <%= @game.version %>
-<hr>
-
-<div class="row">
-  <div class="col-md-9 themed-grid-col">
-    <%= react_component('GamePane', {
-      status: @game.status,
-      cash: @game.cash,
-      debt: @game.debt,
-      credit: @game.credit,
-      storage: @game.storage,
-      ingredientSubscription: @game.ingredient_subscription,
-      action: borrow_money_game_url,
-      formAuthenticityToken: form_authenticity_token,
-      subscribe_ingredients_game_url: subscribe_ingredients_game_url,
-      end_month_game_url: end_month_game_url,
-      estimate_status: @estimate.status,
-      create_storages_game_url: create_storages_game_url,
-      month: @game.month,
-      ingredient: @game.ingredient,
-      product: @game.product,
-      quality: @game.quality,
-      createContractUrl: game_contracts_path(@game.id),
-      contractDump: Contract.dump,
-      signedContracts: @game.signed_contracts,
-      buy_ingredients_game_url: buy_ingredients_game_url,
-      notice: notice,
-      alert: alert,
-      productionVolume: @game.capped_production,
-      productionQuality: @game.factory.production_quality,
-      equipments: @game.equipments,
-      employees: Assignment.employee_groups_with_num_hired(@game.assignments),
-      hire_game_path: hire_game_path,
-      factory_assign_game_path: factory_assign_game_path,
-      factory_buyinstall_game_path: factory_buyinstall_game_path,
-      advertise_game_path: advertise_game_path,
-      productRequiredNextMonth: @game.signed_contracts_product_required(@game.next_month),
-      allEquipments: Factory::EQUIPMENTS,
-      assignmentsSummary: EmployeeGroup::ALL.values.map(&:category).uniq.map {|category|
-        {
-          name: category,
-          numRoles: {
-            produce: @game.assignments.select { _1.employee_group.category == category && _1.role == :produce }.sum(&:num),
-            mentor: @game.assignments.select { _1.employee_group.category == category && _1.role == :mentor }.sum(&:num),
-          }
-        }
-      },
-      # assignmentsSummary: @game.assignments.each_with_object([]) {|a, memo|
-      #   if x = memo.find {|x| x[:name] == a.employee_group_name }
-      #     x[:numRoles][a.role] = a.num
-      #   else
-      #     memo << { name: a.employee_group_name, numRoles: { a.role => a.num } }
-      #   end
-      # }.sort_by { [:Junior, :Intermediate, :Senior].index(_1[:name]) }
-    }) %>
-  </div>
-  <div class="col-md-3 themed-grid-col">
-  <h2>Calendar</h2>
-  <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %> result</h5>
-  <ul>
-    <%- @game.messages.each do |message| %>
-      <li /><%= message %>
-    <%- end %>
-  </ul>
-  <h5><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %> estimate</h5>
-  <ul>
-    <%- @estimate.messages.each do |message| %>
-      <li class="text-muted"/><%= message %>
-    <%- end %>
-  </ul>
-
-    <hr>
-    <%- if notice %>
-      <p id="notice">
-      🆕
-      <%= notice %>
-      </p>
-    <%- end %>
-
-      <h3>Factory</h3>
-        <ul>
-          <li>
-            Estimated Ingredients Consumption: <%= @game.factory.production_volume / Game::INGREDIENT2PRODUCT %>t
-            <%- if @game.factory.production_volume != @game.capped_production %>
-              <ul>
-                <li><font color=red>(Capped to <%= @game.capped_production / Game::INGREDIENT2PRODUCT %>t, because you don't have much ingredients!)</font>
-              </ul>
-            <%- end %>
-          </li>
-          <li>
-            Estimated Product Generation: <%= @game.factory.production_volume %>t
-            <%- if @game.factory.production_volume != @game.capped_production %>
-              <ul>
-                <li><font color=red>(Capped to <%= @game.capped_production %>t, because you don't have much ingredients!)</font>
-              </ul>
-            <%- end %>
-          </li>
-        </ul>
-        </p>
-
-        <br/>
-  </div>
-</div>
-<%- if Rails.env.development? %>
+  <b><%= @game.player.name %></b>'s game <b><%= @game.id %></b> / month <b><%= @game.month %></b> / <%= @game.status %> / VERSION <%= @game.version %>
   <hr>
-  <div align="right">
-    <h2>DEVELOPMENT</h2>
-    <%= form_with(url: force_change_game_url, method: 'post') do |form| %>
-      Cash: <%= form.text_field :cash, value: @game.cash %><br/>
-      Debt: <%= form.text_field :debt, value: @game.debt %><br/>
-      Credit: <%= form.text_field :credit, value: @game.credit %><br/>
-      Storage: <%= form.text_field :storage, value: @game.storage %><br/>
-      Product: <%= form.text_field :product, value: @game.product %><br/>
-      Quality: <%= form.text_field :quality, value: @game.quality %><br/>
-      Ingredient: <%= form.text_field :ingredient, value: @game.ingredient %><br/>
-      <%= form.submit %>
-    <%- end %>
+
+  <div class="row">
+    <div class="col-md-9 themed-grid-col">
+      <%= react_component('GamePane', {
+        status: @game.status,
+        cash: @game.cash,
+        debt: @game.debt,
+        credit: @game.credit,
+        storage: @game.storage,
+        ingredientSubscription: @game.ingredient_subscription,
+        action: borrow_money_game_url,
+        formAuthenticityToken: form_authenticity_token,
+        subscribe_ingredients_game_url: subscribe_ingredients_game_url,
+        end_month_game_url: end_month_game_url,
+        estimate_status: @estimate.status,
+        create_storages_game_url: create_storages_game_url,
+        month: @game.month,
+        ingredient: @game.ingredient,
+        product: @game.product,
+        quality: @game.quality,
+        createContractUrl: game_contracts_path(@game.id),
+        contractDump: Contract.dump,
+        signedContracts: @game.signed_contracts,
+        buy_ingredients_game_url: buy_ingredients_game_url,
+        notice: notice,
+        alert: alert,
+        productionVolume: @game.capped_production,
+        productionQuality: @game.factory.production_quality,
+        equipments: @game.equipments,
+        employees: Assignment.employee_groups_with_num_hired(@game.assignments),
+        hire_game_path: hire_game_path,
+        factory_assign_game_path: factory_assign_game_path,
+        factory_buyinstall_game_path: factory_buyinstall_game_path,
+        advertise_game_path: advertise_game_path,
+        productRequiredNextMonth: @game.signed_contracts_product_required(@game.next_month),
+        allEquipments: Factory::EQUIPMENTS,
+        assignmentsSummary: EmployeeGroup::ALL.values.map(&:category).uniq.map {|category|
+          {
+            name: category,
+            numRoles: {
+              produce: @game.assignments.select { _1.employee_group.category == category && _1.role == :produce }.sum(&:num),
+              mentor: @game.assignments.select { _1.employee_group.category == category && _1.role == :mentor }.sum(&:num),
+            }
+          }
+        },
+        # assignmentsSummary: @game.assignments.each_with_object([]) {|a, memo|
+        #   if x = memo.find {|x| x[:name] == a.employee_group_name }
+        #     x[:numRoles][a.role] = a.num
+        #   else
+        #     memo << { name: a.employee_group_name, numRoles: { a.role => a.num } }
+        #   end
+        # }.sort_by { [:Junior, :Intermediate, :Senior].index(_1[:name]) }
+      }) %>
+    </div>
+    <div class="col-md-3 themed-grid-col">
+    <h2>Calendar</h2>
+    <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %> result</h5>
+    <ul>
+      <%- @game.messages.each do |message| %>
+        <li /><%= message %>
+      <%- end %>
+    </ul>
+    <h5><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %> estimate</h5>
+    <ul>
+      <%- @estimate.messages.each do |message| %>
+        <li class="text-muted"/><%= message %>
+      <%- end %>
+    </ul>
+
+      <hr>
+      <%- if notice %>
+        <p id="notice">
+        🆕
+        <%= notice %>
+        </p>
+      <%- end %>
+
+        <h3>Factory</h3>
+          <ul>
+            <li>
+              Estimated Ingredients Consumption: <%= @game.factory.production_volume / Game::INGREDIENT2PRODUCT %>t
+              <%- if @game.factory.production_volume != @game.capped_production %>
+                <ul>
+                  <li><font color=red>(Capped to <%= @game.capped_production / Game::INGREDIENT2PRODUCT %>t, because you don't have much ingredients!)</font>
+                </ul>
+              <%- end %>
+            </li>
+            <li>
+              Estimated Product Generation: <%= @game.factory.production_volume %>t
+              <%- if @game.factory.production_volume != @game.capped_production %>
+                <ul>
+                  <li><font color=red>(Capped to <%= @game.capped_production %>t, because you don't have much ingredients!)</font>
+                </ul>
+              <%- end %>
+            </li>
+          </ul>
+          </p>
+
+          <br/>
+    </div>
   </div>
+  <%- if Rails.env.development? %>
+    <hr>
+    <div align="right">
+      <h2>DEVELOPMENT</h2>
+      <%= form_with(url: force_change_game_url, method: 'post') do |form| %>
+        Cash: <%= form.text_field :cash, value: @game.cash %><br/>
+        Debt: <%= form.text_field :debt, value: @game.debt %><br/>
+        Credit: <%= form.text_field :credit, value: @game.credit %><br/>
+        Storage: <%= form.text_field :storage, value: @game.storage %><br/>
+        Product: <%= form.text_field :product, value: @game.product %><br/>
+        Quality: <%= form.text_field :quality, value: @game.quality %><br/>
+        Ingredient: <%= form.text_field :ingredient, value: @game.ingredient %><br/>
+        <%= form.submit %>
+      <%- end %>
+    </div>
 <%- end %>

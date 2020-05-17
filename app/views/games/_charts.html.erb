@@ -1,0 +1,48 @@
+<%- if @game.portfolios.present? %>
+  <canvas id="chartMoney"></canvas>
+  <script>
+    var ctx = document.getElementById('chartMoney').getContext('2d');
+    var chartMoney = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: <%= @game.portfolios.map { _1['month'] }.inspect %>,
+        datasets: [
+          {
+            label: 'Debt',
+            data: <%= @game.portfolios.map { _1['debt'] }.inspect %>,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+            ],
+            borderWidth: 1,
+            lineTension: 0,
+          },
+          {
+            label: 'Cash',
+            data: <%= @game.portfolios.map { _1['cash'] }.inspect %>,
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.2)',
+            ],
+            borderColor: [
+              'rgba(54, 162, 235, 1)',
+            ],
+            borderWidth: 1,
+            lineTension: 0,
+          },
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            stacked: true,
+            ticks: {
+              beginAtZero: true,
+            }
+          }]
+        }
+      }
+    });
+  </script>
+<%- end %>
