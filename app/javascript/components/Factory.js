@@ -211,23 +211,34 @@ function Factory(props) {
                                 if (!outerValid || !innerValid)
                                   assignmentValid = false
 
-                                return <td scope="col" key={roleName}>
-                                  <div className="input-group">
-                                    <div className="input-group-prepend">
-                                      <span className="input-group-text">{assignment.numRoles[roleName]} +</span>
+                                return (
+                                  <td scope="col" key={roleName}>
+                                    <div className="input-group">
+                                      {
+                                        (roleName == "produce")
+                                          ? <>{assignment.numRoles[roleName]} + {numRoleDiffs[assignment.name][roleName]}</>
+                                          : <>
+                                            <div className="input-group-prepend">
+                                              <span className="input-group-text">{assignment.numRoles[roleName]} +</span>
+                                            </div>
+                                            <input type="number" className="form-control" required
+                                              min={-assignment.numRoles[roleName]}
+                                              max={sum(Object.values(assignment.numRoles)) - assignment.numRoles[roleName]}
+                                              value={numRoleDiffs[assignment.name][roleName]} onChange={(e) => {
+                                                setNumRoleDiffs({
+                                                  ...numRoleDiffs,
+                                                  [assignment.name]: {
+                                                    ...numRoleDiffs[assignment.name],
+                                                    [roleName]: e.target.value,
+                                                    produce: -parseInt(e.target.value, 10),
+                                                  }
+                                                });
+                                              }} />
+                                          </>
+                                      }
                                     </div>
-                                    <input type="number" className={`form-control ${(outerValid && innerValid) ? "" : "is-invalid"}`} required
-                                      value={numRoleDiffs[assignment.name][roleName]} onChange={(e) => {
-                                        setNumRoleDiffs({
-                                          ...numRoleDiffs,
-                                          [assignment.name]: {
-                                            ...numRoleDiffs[assignment.name],
-                                            [roleName]: e.target.value,
-                                          }
-                                        });
-                                      }} />
-                                  </div>
-                                </td>;
+                                  </td>
+                                );
                               })
                             }
                           </tr>

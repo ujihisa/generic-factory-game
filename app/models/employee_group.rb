@@ -33,7 +33,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       category: :Intermediate,
       image: "employee-intermediate.png",
       recruiting_fee: 4,
-      salary: 4,
+      salary: 3,
       volume: 20,
       quality: 20,
       required_credit: 65,
@@ -42,7 +42,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       category: :Junior,
       image: "employee-junior.png",
       recruiting_fee: 2,
-      salary: 2,
+      salary: 1,
       volume: 10,
       quality: 20,
       required_credit: 85,
@@ -51,5 +51,9 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
 
   def self.lookup(name)
     ALL[name]
+  end
+
+  def salary_total
+    salary * num_hired
   end
 end

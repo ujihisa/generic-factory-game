@@ -76,6 +76,7 @@ function GamePane(props) {
           ingredientSubscription: props.ingredientSubscription,
           equipments: props.equipments,
           employees: props.employees,
+          employeeGroups: props.employeeGroups,
         }}>
           <Storage
             productionVolume={props.productionVolume}
@@ -246,6 +247,7 @@ GamePane.propTypes = {
   productionQuality: PropTypes.number,
   equipments: PropTypes.array,
   employees: PropTypes.object,
+  employeeGroups: PropTypes.object,
   productRequiredNextMonth: PropTypes.number,
   factory_buyinstall_game_path: PropTypes.string,
   advertise_game_path:PropTypes.string, 

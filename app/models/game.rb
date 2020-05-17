@@ -74,6 +74,20 @@ class Game < ApplicationRecord
     @assignments = nil
   end
 
+  # employee_groups_raw: '{"Junior" => 2, "Motivated intermediate" => 1, ...}'
+  def employee_groups
+    hash = JSON.parse(employee_groups_raw)
+    EmployeeGroup::ALL.to_h {|k, v|
+      v = v.dup
+      v.num_hired = hash[k.to_s] || 0
+      [k, v.freeze]
+    }.freeze
+  end
+
+  def employee_groups=(hash)
+    self.employee_groups_raw = hash.transform_values(&:num_hired).to_json
+  end
+
   def status
     if cash < 0
       :game_over
@@ -102,8 +116,8 @@ class Game < ApplicationRecord
 
   # TODO: move to game.organization.salary
   def organization_salary
-    self.assignments.sum {|assignment|
-      EmployeeGroup.lookup(assignment.employee_group_name).salary * assignment.num
+    self.employee_groups.values.sum {|eg|
+      eg.salary_total
     }
   end
 
@@ -248,6 +262,7 @@ class Game < ApplicationRecord
       raise 'Must not happen' if num < 0
     end
 
+    # assignments_raw
     new_assignments = self.assignments.dup
     num_employees.each do |(eg_name, num)|
       assignment = new_assignments.find {|d| d.employee_group_name == eg_name }
@@ -259,6 +274,14 @@ class Game < ApplicationRecord
     end
     self.assignments = new_assignments
 
+    # employee_groups_raw
+    self.employee_groups = employee_groups.to_h {|k, v|
+      v = v.dup
+      v.num_hired += num_employees[k] || 0
+      [k, v]
+    }
+
+    # recruiting_fee
     if valid?
       fee = num_employees.sum {|eg_name, num| num * EmployeeGroup.lookup(eg_name)[:recruiting_fee] }
       self.cash -= fee

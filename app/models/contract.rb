@@ -95,11 +95,11 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
     }),
 
     'Y' => new('Y', 90, "City project", {
-      default: Trade.new(500, 300),
+      default: Trade.new(500, 250),
     }),
 
     'Z' => new('Z', 100, "National project", {
-      default: Trade.new(800, 500),
+      default: Trade.new(800, 400),
     }),
   }.freeze
   private_constant :ALL

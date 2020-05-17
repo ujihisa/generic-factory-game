@@ -3,7 +3,9 @@ import GFG from '../gfg'
 
 function Hiring(props) {
   const context = useContext(GFG.GameContext);
-  const [numEmployees, setNumEmployees] = useState({Junior: 0, Intermediate: 0, Senior: 0});
+
+  // like {Junior: 0, Intermediate: 0, Senior: 0, ...}
+  const [numEmployees, setNumEmployees] = useState(Object.fromEntries(Object.keys(context.employeeGroups).map((k) => [k, 0])));
 
   const modalTable =
     <table className="table table-sm">
@@ -19,7 +21,7 @@ function Hiring(props) {
       </thead>
       <tbody>
         {
-          Object.entries(context.employees).map(([name, employee]) =>
+          Object.entries(context.employeeGroups).map(([name, employee]) =>
             <tr key={name}>
               <th scope="row"><img src={`/images/${employee.image}`} style={{height: "1.5em"}} />&nbsp;{name}</th>
               <td>{GFG.numberToCurrency(employee.recruiting_fee)}</td>
@@ -100,8 +102,8 @@ function Hiring(props) {
                 <dt>Senior (workers)</dt>
                 <dd>Have a lot of experiences, but require farely expensive salary.</dd>
 
-                <dt>Motivated Junior (workers)</dt>
-                <dd>Exactly same as juniors but they aren't greedy</dd>
+                <dt>Motivated intermediate / Passionated senior (workers)</dt>
+                <dd>Exactly same as intermediates/seniors but they love working at a higher class company rather than just for money</dd>
 
                 <dt>Production volume (t)</dt>
                 <dd>Indicated how much this employee consumes ingredients and produces productions, assuming you have "Factory base"</dd>
