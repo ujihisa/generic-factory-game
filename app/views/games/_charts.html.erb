@@ -9,7 +9,7 @@
         datasets: [
           {
             label: 'Debt',
-            data: <%= @game.portfolios.map { _1['debt'] }.inspect %>,
+            data: <%= @game.portfolios.map { -_1['debt'] }.inspect %>,
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
             ],
@@ -31,12 +31,22 @@
             borderWidth: 1,
             lineTension: 0,
           },
+          {
+            label: 'Money',
+            data: <%= @game.portfolios.map { _1['cash'] - _1['debt'] }.inspect %>,
+            fill: false,
+            borderColor: [
+              'rgba(27, 81, 117, 1)',
+            ],
+            borderWidth: 2,
+            lineTension: 0,
+          },
         ]
       },
       options: {
         scales: {
           yAxes: [{
-            stacked: true,
+            // stacked: true,
             ticks: {
               beginAtZero: true,
             }
