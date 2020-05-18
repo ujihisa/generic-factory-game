@@ -2,8 +2,6 @@
 
 TODOs
 
-* I sacrified the quality to achive this prototype. Fix all the code
-* Credit
-* Fire
-* Marketing
-* Debt
+* "(client-side calculation not implemented yet)" thing
+* highlight warning messages from `Game#messages`
+* Naive initial tests for contributors
