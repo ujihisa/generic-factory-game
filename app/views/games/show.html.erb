@@ -110,27 +110,21 @@
     <%- end %>
 
       <h3>Factory</h3>
+      <!--
+        Estimated Ingredients Consumption: <%= @game.factory.production_volume / Game::INGREDIENT2PRODUCT %>t
+        <%- if @game.factory.production_volume != @game.capped_production %>
+          <ul>
+            <li><font color=red>(Capped to <%= @game.capped_production / Game::INGREDIENT2PRODUCT %>t, because you don't have much ingredients!)</font>
+          </ul>
+        <%- end %>
+      -->
+      Estimated Product Generation: <%= @game.factory.production_volume %>t
+      <%- if @game.factory.production_volume != @game.capped_production %>
         <ul>
-          <li>
-            Estimated Ingredients Consumption: <%= @game.factory.production_volume / Game::INGREDIENT2PRODUCT %>t
-            <%- if @game.factory.production_volume != @game.capped_production %>
-              <ul>
-                <li><font color=red>(Capped to <%= @game.capped_production / Game::INGREDIENT2PRODUCT %>t, because you don't have much ingredients!)</font>
-              </ul>
-            <%- end %>
-          </li>
-          <li>
-            Estimated Product Generation: <%= @game.factory.production_volume %>t
-            <%- if @game.factory.production_volume != @game.capped_production %>
-              <ul>
-                <li><font color=red>(Capped to <%= @game.capped_production %>t, because you don't have much ingredients!)</font>
-              </ul>
-            <%- end %>
-          </li>
+          <li><font color=red>(Capped to <%= @game.capped_production %>t, because you don't have enough ingredients!)</font>
         </ul>
-        </p>
-
-        <br/>
+      <%- end %>
+      <br/>
   </div>
 </div>
 <%- if Rails.env.development? %>
