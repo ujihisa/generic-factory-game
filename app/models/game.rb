@@ -26,6 +26,14 @@ class Game < ApplicationRecord
     self.messages_raw = value.to_json
   end
 
+  def alerts
+    JSON.parse(alerts_raw).freeze
+  end
+
+  def alerts=(value)
+    self.alerts_raw = value.to_json
+  end
+
   def portfolios
     JSON.parse(portfolios_raw).freeze
   end
@@ -126,6 +134,7 @@ class Game < ApplicationRecord
   # Like update(), it doesn't save.
   def settlement
     messages = []
+    alerts = []
 
     self.month += 1
     credit_diff = 0
@@ -155,8 +164,8 @@ class Game < ApplicationRecord
         self.cash -= trade.sales * 10
         credit_diff -= 10
 
-        messages << "⚠️ Products not enough"
-        messages << "💸 Pay $#{trade.sales * 10}K penalty for contract #{contract_name}"
+        alerts << "⚠️ Products not enough"
+        alerts << "💸 Pay $#{trade.sales * 10}K penalty for contract #{contract_name}"
       end
     end
     if 0 < delivery_total
@@ -233,10 +242,15 @@ class Game < ApplicationRecord
       self.ingredient -= diff
     end
 
-    messages << "💵 Cash balance $#{self.cash}K"
+    if self.cash < 0
+      alerts << "💵 Cash balance $#{self.cash}K"
+    else
+      messages << "💵 Cash balance $#{self.cash}K"
+    end
     self.portfolios += [self.portfolio]
 
     self.messages = messages
+    self.alerts = alerts
     nil
   end
 

@@ -84,12 +84,18 @@
   <h2>Calendar</h2>
   <h5><%= @game.current_month %> <%= 2020 + @game.month / 12 %> result</h5>
   <ul>
+    <%- @game.alerts.each do |alert| %>
+      <li class="alert alert-danger" role="alert"/><%= alert %>
+    <%- end %>
     <%- @game.messages.each do |message| %>
       <li /><%= message %>
     <%- end %>
   </ul>
   <h5><%= @estimate.current_month %> <%= 2020 + @estimate.month / 12 %> estimate</h5>
   <ul>
+    <%- @estimate.alerts.each do |alert| %>
+      <li class="alert alert-danger" role="alert"/><%= alert %>
+    <%- end %>
     <%- @estimate.messages.each do |message| %>
       <li class="text-muted"/><%= message %>
     <%- end %>

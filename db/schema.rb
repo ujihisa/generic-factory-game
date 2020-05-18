@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_17_034721) do
+ActiveRecord::Schema.define(version: 2020_05_18_191353) do
 
   create_table "contracts", force: :cascade do |t|
     t.integer "game_id", null: false
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 2020_05_17_034721) do
     t.string "mode", default: "normal", null: false
     t.boolean "advertising", default: false, null: false
     t.text "employee_groups_raw", default: "{}", null: false
+    t.text "alerts_raw", default: "[]", null: false
     t.index ["mode"], name: "index_games_on_mode"
     t.index ["player_id", "cash", "month"], name: "index_games_on_player_id_and_cash_and_month"
     t.index ["updated_at"], name: "index_games_on_updated_at"
