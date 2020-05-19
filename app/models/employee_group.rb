@@ -24,7 +24,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       category: :Senior,
       image: "employee-senior.png",
       recruiting_fee: 7,
-      salary: 3,
+      salary: 7,
       volume: 20,
       quality: 40,
       required_credit: 1,
