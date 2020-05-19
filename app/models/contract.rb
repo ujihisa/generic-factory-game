@@ -4,15 +4,6 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
   Trade = Struct.new(:required_products, :sales)
   private_constant :Trade
 
-  Rule = Struct.new(:default, :January, keyword_init: true) do
-    alias orig_at []
-    def [](month_str)
-      raise ArgumentError unless %w[January].include?(month_str)
-      orig_at(month.to_sym) || orig_at(:default)
-    end
-  end
-  private_constant :Rule
-
   def [](month_str)
     case month_str
     when *Game::MONTHS
