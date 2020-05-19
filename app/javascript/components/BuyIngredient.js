@@ -8,18 +8,18 @@ class BuyIngredient extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.spaceLeft = context.storage - this.props.ingredient - this.props.product;
-    this.spaceLeftTruncated = this.spaceLeft - (this.spaceLeft % 20);
+    this.spaceLeftTruncated = this.spaceLeft - (this.spaceLeft % 40);
     this.max = Math.min(
-      Math.floor(context.cash / 0.5 / 20) * 20,
+      Math.floor(context.cash / 0.25 / 40) * 40,
       this.spaceLeftTruncated);
     this.state = {
-      vol: Math.min(20, this.spaceLeftTruncated),
-      inputNumberVol: Math.min(20, this.spaceLeftTruncated),
+      vol: Math.min(40, this.spaceLeftTruncated),
+      inputNumberVol: Math.min(40, this.spaceLeftTruncated),
     };
   }
 
   render () {
-    const costPerVol = 0.5;
+    const costPerVol = 0.25;
     const cost = costPerVol * this.state.vol;
     const cashBalance =
       <div className="progress">
@@ -71,20 +71,20 @@ class BuyIngredient extends React.Component {
               </div>
               <div className="modal-body">
                 <p>
-                  $10K for every 20t ingredients.
+                  $10K for every 40t ingredients.
                 </p>
                 <input type="number"
                   value={this.state.inputNumberVol}
                   className={(this.state.inputNumberVol == this.state.vol) ? "form-control" : "form-control is-invalid"}
                   onChange={(e) => {
                     this.setState({inputNumberVol: e.target.value});
-                    (e.target.value % 20 == 0) && (20 <= e.target.value) && (e.target.value <= this.max) && this.setState({vol: e.target.value})
+                    (e.target.value % 40 == 0) && (40 <= e.target.value) && (e.target.value <= this.max) && this.setState({vol: e.target.value})
                   }}/>
 
                 <input
                 type="range" className="custom-range" id="form-range-buy-ingredient"
                 name="vol" value={this.state.vol}
-                min="20" max={this.max} step="20"
+                min="40" max={this.max} step="40"
                 onChange={(e) => {
                   this.setState({inputNumberVol: e.target.value});
                   this.setState({vol: e.target.value})

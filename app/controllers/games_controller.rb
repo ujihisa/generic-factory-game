@@ -111,7 +111,7 @@ class GamesController < ApplicationController
   def buy_ingredients
     vol = params[:vol].to_i
     @game = Game.find(params[:id])
-    @game.cash -= vol * 0.5
+    @game.cash -= vol * 0.25
     @game.ingredient += vol
     if 0 <= @game.cash && @game.save
       redirect_to @game, notice: "Successfully Bought #{vol}t Ingredients"
