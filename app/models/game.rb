@@ -351,18 +351,25 @@ class Game < ApplicationRecord
   end
 
   private def validate_signed_contracts_raw
+    # Names
     signed_contracts.each do |contract|
       contract.validate
-
       contract.errors.messages.each do |message|
         self.errors.add(:signed_contracts, message)
       end
+    end
 
-      if self.credit < contract.required_credit
-        self.errors.add(:signed_contracts, 'Not enough credit')
+    # Credit
+    (before, after) = changes['signed_contracts_raw']&.map { Contract.from_raw(_1) }
+    if before
+      (after - before).each do |added_contract|
+        if self.credit < added_contract.required_credit
+          self.errors.add(:signed_contracts, 'Not enough credit')
+        end
       end
     end
 
+    # Duplicates
     if signed_contracts.uniq != signed_contracts
       self.errors.add(:signed_contracts, 'Duplicated contracts')
     end
