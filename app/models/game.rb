@@ -137,7 +137,6 @@ class Game < ApplicationRecord
     alerts = []
 
     self.month += 1
-    credit_diff = 0
 
     # produce
     production_vol = self.capped_production
@@ -162,7 +161,6 @@ class Game < ApplicationRecord
       else
         # penalty
         self.cash -= trade.sales * 10
-        credit_diff -= 10
 
         alerts << "⚠️ Products not enough"
         alerts << "💸 Pay $#{trade.sales * 10}K penalty for contract #{contract_name}"
@@ -171,37 +169,37 @@ class Game < ApplicationRecord
     if 0 < delivery_total
       messages << "📜 Deliver #{delivery_total}t products"
       messages << "📜 Gain $#{sales_total}K sales"
-
-      credit_diff +=
-        case self.credit
-        when (0..19), (20..39)
-          self.signed_contracts.size
-        when (40..59)
-          1
-        else
-          0
-        end
     end
 
-    credit_diff =
-      case quality
-      when ((credit + 10)..)
-        3
-      when ((credit + 5)..)
-        2
-      when ((credit + 1)..)
-        1
-      when ((credit + 0)..)
-        0
-      when ((credit - 5)..)
-        -1
-      when ((credit - 10)..)
-        -2
-      else
-        -3
-      end
-    credit_diff = 0 if delivery_total == 0
+    if 0 < delivery_total
+      credit_diff =
+        case quality - credit
+        when (10..)
+          3
+        when (5..)
+          2
+        when (1..)
+          1
+        when (0..)
+          0
+        when (-5..)
+          -1
+        when (-10..)
+          -2
+        else
+          -3
+        end
+      self.credit = self.class.normalize_credit(self.credit + credit_diff)
+      messages << "❤️ #{"++-"[credit_diff <=> 0]}#{credit_diff.abs} credit from product quality"
+    end
 
+    # advertise
+    if self.advertising
+      self.credit += 10
+      messages << "❤️ +10 credit from advertisement"
+
+      self.advertising = false
+    end
 
     # pay fees
     self.cash -= self.storage / 100
@@ -217,17 +215,6 @@ class Game < ApplicationRecord
     equipments_cost = self.equipments.sum {|eqt| eqt[:cost] }
     self.cash -= equipments_cost
     messages << "🏭 Pay $#{equipments_cost}K for factory equipments" if 0 < equipments_cost
-
-    # advertise
-    if self.advertising
-      credit_diff += 10
-      self.advertising = false
-    end
-
-    if credit_diff != 0
-      self.credit = self.class.normalize_credit(self.credit + credit_diff)
-      messages << "❤️ #{"++-"[credit_diff <=> 0]}#{credit_diff.abs} credit"
-    end
 
     # receive ingredients
     if 0 < self.ingredient_subscription
