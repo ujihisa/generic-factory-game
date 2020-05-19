@@ -1,19 +1,8 @@
 # frozen_string_literal: true
 
 class Contract < Struct.new(:name, :required_credit, :description, :trades)
-  class Trade < Struct.new(:required_products, :sales)
-    def initialize(*)
-      super
-      freeze
-    end
-  end
+  Trade = Struct.new(:required_products, :sales)
   private_constant :Trade
-
-  def self.from_raw(signed_contracts_raw)
-    JSON.parse(signed_contracts_raw).map {|name|
-      find(name: name) or raise "Invalid contract name #{name}"
-    }
-  end
 
   def trade(month_str)
     case month_str
@@ -103,12 +92,8 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
     'Z' => new('Z', 100, "National project", {
       default: Trade.new(800, 400),
     }),
-  }
+  }.freeze
   private_constant :ALL
-
-  include ActiveModel::Validations
-  validates :name, inclusion: { in: ALL.keys }
-
 
   # ActiveRecord'ish UIs
   def self.find(name:)

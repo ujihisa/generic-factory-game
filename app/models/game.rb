@@ -10,7 +10,6 @@ class Game < ApplicationRecord
   validate :validate_assignments
   validate :validate_factory_equipments
   validate :validate_ingredient_and_product
-  validate :validate_signed_contracts_raw
 
   MONTHS = [
     'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
@@ -52,11 +51,11 @@ class Game < ApplicationRecord
   end
 
   def signed_contracts
-    Contract.from_raw(signed_contracts_raw)
+    JSON.parse(signed_contracts_raw)
   end
 
   def signed_contracts=(x)
-    self.signed_contracts_raw = x.map(&:name).to_json
+    self.signed_contracts_raw = x.to_json
   end
 
   def equipments
@@ -151,8 +150,8 @@ class Game < ApplicationRecord
 
     # Deliver products
     (delivery_total, sales_total) = [0, 0]
-    self.signed_contracts.each do |contract|
-      trade = contract.trade(self.current_month)
+    self.signed_contracts.each do |contract_name|
+      trade = Contract.find(name: contract_name).trade(self.current_month)
       if trade.required_products <= self.product
         # good
         self.product -= trade.required_products
@@ -164,7 +163,7 @@ class Game < ApplicationRecord
         self.cash -= trade.sales * 10
 
         alerts << "⚠️ Products not enough"
-        alerts << "💸 Pay $#{trade.sales * 10}K penalty for contract #{contract.name}"
+        alerts << "💸 Pay $#{trade.sales * 10}K penalty for contract #{contract_name}"
       end
     end
     if 0 < delivery_total
@@ -294,8 +293,8 @@ class Game < ApplicationRecord
   end
 
   def signed_contracts_product_required(display_month)
-    signed_contracts.sum {|contract|
-      contract.trade(display_month).required_products 
+    signed_contracts.sum {|name|
+      Contract.find(name: name).trade(display_month).required_products 
     }
   end
 
@@ -348,23 +347,5 @@ class Game < ApplicationRecord
     nil
     # TODO: validate the sum
     # TODO: validate negative
-  end
-
-  private def validate_signed_contracts_raw
-    signed_contracts.each do |contract|
-      contract.validate
-
-      contract.errors.messages.each do |message|
-        self.errors.add(:signed_contracts, message)
-      end
-
-      if self.credit < contract.required_credit
-        self.errors.add(:signed_contracts, 'Not enough credit')
-      end
-    end
-
-    if signed_contracts.uniq != signed_contracts
-      self.errors.add(:signed_contracts, 'Duplicated contracts')
-    end
   end
 end
