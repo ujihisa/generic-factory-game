@@ -152,7 +152,7 @@ class Game < ApplicationRecord
     # Deliver products
     (delivery_total, sales_total) = [0, 0]
     self.signed_contracts.each do |contract_name|
-      trade = Contract.find(name: contract_name)[self.current_month]
+      trade = Contract.find(name: contract_name).trade(self.current_month)
       if trade.required_products <= self.product
         # good
         self.product -= trade.required_products
@@ -230,10 +230,13 @@ class Game < ApplicationRecord
     end
 
     # receive ingredients
-    self.ingredient += self.ingredient_subscription
-    self.cash -= self.ingredient_subscription * 0.05
-    messages << "📦 Receive #{self.ingredient_subscription}t ingredient" if 0 < self.ingredient_subscription
-    messages << "📦 Pay $#{(self.ingredient_subscription * 0.05).to_i}K for subscription" if 0 < self.ingredient_subscription
+    if 0 < self.ingredient_subscription
+      self.ingredient += self.ingredient_subscription
+      fee_subscription = (self.ingredient_subscription * 0.05).to_i
+      self.cash -= fee_subscription
+      messages << "📦 Receive #{self.ingredient_subscription}t ingredient"
+      messages << "📦 Pay $#{fee_subscription}K for subscription"
+    end
 
     # overflow
     if self.storage < self.ingredient + self.product
@@ -304,7 +307,7 @@ class Game < ApplicationRecord
 
   def signed_contracts_product_required(display_month)
     signed_contracts.sum {|name|
-      Contract.find(name: name)[display_month].required_products 
+      Contract.find(name: name).trade(display_month).required_products 
     }
   end
 

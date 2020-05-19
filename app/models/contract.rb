@@ -4,7 +4,7 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
   Trade = Struct.new(:required_products, :sales)
   private_constant :Trade
 
-  def [](month_str)
+  def trade(month_str)
     case month_str
     when *Game::MONTHS
       trades[month_str.to_sym] || trades[:default]
