@@ -2,9 +2,8 @@ class ContractsController < ApplicationController
   def create
     # @contract = Contract.new(game_id: params[:game_id], **contract_params)
     @game = Game.find(params[:game_id])
-    contract = Contract.find(name: params[:name])
 
-    @game.signed_contracts += [contract]
+    @game.signed_contracts.sign(@game.month, params[:name])
 
     if @game.save
       redirect_to @game, notice: 'Contract was successfully signed.'

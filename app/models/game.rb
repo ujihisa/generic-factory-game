@@ -51,12 +51,11 @@ class Game < ApplicationRecord
     pf = keys.zip(self.attributes.values_at(*keys)).to_h
   end
 
-  def signed_contracts
-    Contract.from_raw(signed_contracts_raw)
-  end
+  serialize :signed_contracts_raw, SignedContracts
 
-  def signed_contracts=(x)
-    self.signed_contracts_raw = x.map(&:name).to_json
+  # TODO: Rename column
+  def signed_contracts
+    signed_contracts_raw
   end
 
   def equipments
@@ -151,7 +150,7 @@ class Game < ApplicationRecord
 
     # Deliver products
     (delivery_total, sales_total) = [0, 0]
-    self.signed_contracts.each do |contract|
+    self.signed_contracts.each do |contract, month|
       trade = contract.trade(self.current_month)
       if trade.required_products <= self.product
         # good
@@ -294,7 +293,7 @@ class Game < ApplicationRecord
   end
 
   def signed_contracts_product_required(display_month)
-    signed_contracts.sum {|contract|
+    signed_contracts.sum {|contract, _|
       contract.trade(display_month).required_products 
     }
   end
@@ -351,27 +350,30 @@ class Game < ApplicationRecord
   end
 
   private def validate_signed_contracts_raw
+    # TODO: This name validation does not work because `contract` gets nil
     # Names
-    signed_contracts.each do |contract|
+    signed_contracts.each do |contract, month|
       contract.validate
       contract.errors.messages.each do |message|
         self.errors.add(:signed_contracts, message)
       end
     end
 
-    # Credit
-    (before, after) = changes['signed_contracts_raw']&.map { Contract.from_raw(_1) }
+    (before, after) = changes['signed_contracts_raw']
     if before
-      (after - before).each do |added_contract|
+      after.diff(before).each do |added_contract, month|
+        # Credit
         if self.credit < added_contract.required_credit
           self.errors.add(:signed_contracts, 'Not enough credit')
         end
-      end
-    end
 
-    # Duplicates
-    if signed_contracts.uniq != signed_contracts
-      self.errors.add(:signed_contracts, 'Duplicated contracts')
+        # Duplicate
+        before.
+          select {|c, m| c.name == added_contract.name && m != month }.
+          each do |c, m|
+            self.errors.add(:signed_contracts, "#{c.name} has been signed at month #{m}")
+          end
+      end
     end
   end
 end

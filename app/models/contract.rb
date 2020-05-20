@@ -9,12 +9,6 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
   end
   private_constant :Trade
 
-  def self.from_raw(signed_contracts_raw)
-    JSON.parse(signed_contracts_raw).map {|name|
-      find(name: name) or raise "Invalid contract name #{name}"
-    }
-  end
-
   def trade(month_str)
     case month_str
     when *Game::MONTHS
