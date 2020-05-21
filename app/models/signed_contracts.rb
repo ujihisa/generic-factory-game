@@ -35,6 +35,12 @@ class SignedContracts
     to_a - another.to_a
   end
 
+  def product_required(display_month)
+    @hash.sum {|contract, _|
+      Contract.find(name: contract).trade(display_month).required_products
+    }
+  end
+
   private def validate_name
     @hash.each do |contract_name, month|
       unless Contract.find(name: contract_name)

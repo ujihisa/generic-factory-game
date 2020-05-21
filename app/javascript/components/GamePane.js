@@ -241,7 +241,7 @@ GamePane.propTypes = {
   quality: PropTypes.number,
   createContractUrl: PropTypes.string,
   contractDump: PropTypes.object,
-  signedContracts: PropTypes.array,
+  signedContracts: PropTypes.object,
   notice: PropTypes.string,
   productionVolume: PropTypes.number,
   productionQuality: PropTypes.number,

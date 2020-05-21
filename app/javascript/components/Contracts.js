@@ -27,11 +27,11 @@ function Contracts(props) {
       '#585858',
     ]
   const chartDefaultDatasets =
-      context.signedContracts.map((name, i) => {
+      Object.keys(context.signedContracts).map((name, i) => {
         const contract2 = props.contractDump[name];
         return {
           label: name,
-          data: (context.signedContracts.includes(name)
+          data: (Object.keys(context.signedContracts).includes(name)
             ? GFG.MONTHS.map((m) => contract2.trades[m].required_products)
             : []),
           backgroundColor: colours[i],
@@ -99,7 +99,7 @@ function Contracts(props) {
               <div className="row">
                 {
                   Object.entries(props.contractDump).map(([name, c]) => {
-                    const signed = context.signedContracts.includes(name);
+                    const signed = Object.keys(context.signedContracts).includes(name);
                     const locked = context.credit < c.required_credit;
                     const selected = name == contract;
                     return (
@@ -166,7 +166,7 @@ function Contracts(props) {
                 <tbody className="table">
                   {
                     Object.entries(props.contractDump).map(([name, c]) =>
-                      <tr key={name} className={name == contract ? "table-primary" : context.signedContracts.includes(name) ? "table-active" : ""}>
+                      <tr key={name} className={name == contract ? "table-primary" : Object.keys(context.signedContracts).includes(name) ? "table-active" : ""}>
                         <th scope="col">{name}</th>
                         {
                           Object.entries(c.trades).map(([m, t]) =>
@@ -192,7 +192,7 @@ function Contracts(props) {
                   !contract
                     ? <input type="submit" value="Cancel" className="btn btn-secondary" data-dismiss="modal" />
                     : (context.credit < props.contractDump[contract].required_credit ||
-                      context.signedContracts.includes(contract))
+                      Object.keys(context.signedContracts).includes(contract))
                         ? <input type="submit" value="Cancel" className="btn btn-secondary" data-dismiss="modal" />
                         : <input type="submit" value={`Sign Contract ${contract}`} className="btn btn-primary" />
                 }

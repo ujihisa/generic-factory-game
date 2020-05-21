@@ -10,7 +10,7 @@ class Game < ApplicationRecord
   validate :validate_assignments
   validate :validate_factory_equipments
   validate :validate_ingredient_and_product
-  validate :validate_signed_contracts_raw
+  validate :validate_signed_contracts
 
   MONTHS = [
     'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
@@ -287,12 +287,6 @@ class Game < ApplicationRecord
     end
   end
 
-  def signed_contracts_product_required(display_month)
-    signed_contracts.sum {|contract, _|
-      contract.trade(display_month).required_products 
-    }
-  end
-
   # TODO: Move this inner validation into Assignment model
   private def validate_assignments
     self.assignments.each do |assignment|
@@ -344,7 +338,7 @@ class Game < ApplicationRecord
     # TODO: validate negative
   end
 
-  private def validate_signed_contracts_raw
+  private def validate_signed_contracts
     # Name
     unless signed_contracts.valid?
       signed_contracts.errors.messages.each do |message|
