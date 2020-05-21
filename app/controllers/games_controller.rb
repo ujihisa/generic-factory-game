@@ -49,7 +49,6 @@ class GamesController < ApplicationController
       @game.ingredient = 500
       @game.ingredient_subscription = 500
       @game.equipments = [Factory.lookup(equipment_name: :'Factory base')]
-      @game.signed_contracts = ['Y']
       @game.assignments = [Assignment.new(:produce, :Intermediate, 24)]
       @game.employee_groups_raw = {'Intermediate' => 24}.to_json
       @game.messages = <<~EOS.lines.to_a
@@ -71,6 +70,11 @@ class GamesController < ApplicationController
     @players = Player.all
 
     if @game.save
+      if @game.mode == 'tutorial'
+        @game.signed_contracts = {'Y': 0}
+        @game.save!(validate: false)
+      end
+
       redirect_to @game, alert: @game.messages.join("\n")
     else
       render :new

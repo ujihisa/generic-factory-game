@@ -51,12 +51,7 @@ class Game < ApplicationRecord
     pf = keys.zip(self.attributes.values_at(*keys)).to_h
   end
 
-  serialize :signed_contracts_raw, SignedContracts
-
-  # TODO: Rename column
-  def signed_contracts
-    signed_contracts_raw
-  end
+  serialize :signed_contracts, SignedContracts
 
   def equipments
     JSON.parse(equipment_names_raw).map {|name|
@@ -359,7 +354,7 @@ class Game < ApplicationRecord
       end
     end
 
-    (before, after) = changes['signed_contracts_raw']
+    (before, after) = changes['signed_contracts']
     if before
       after.diff(before).each do |added_contract, month|
         # Credit

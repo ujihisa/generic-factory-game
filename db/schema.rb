@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_18_191353) do
+ActiveRecord::Schema.define(version: 2020_05_21_014750) do
 
   create_table "contracts", force: :cascade do |t|
     t.integer "game_id", null: false
@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 2020_05_18_191353) do
     t.integer "ingredient_subscription", default: 0, null: false
     t.text "messages_raw", default: "[]", null: false
     t.text "portfolios_raw", default: "[]", null: false
-    t.text "signed_contracts_raw", default: "[]", null: false
+    t.text "signed_contracts", default: "{}", null: false
     t.text "equipment_names_raw", default: "[]", null: false
     t.text "assignments_raw", default: "[]", null: false
     t.float "quality", default: 0.0, null: false
