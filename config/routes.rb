@@ -18,6 +18,8 @@ Rails.application.routes.draw do
       post 'advertise'
       post 'factory_assign'
       post 'factory_buyinstall'
+
+      post 'contracts/cancel', to: 'contracts#cancel'
     end
 
     resources :contracts, only: [:create]

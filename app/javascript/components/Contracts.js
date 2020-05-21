@@ -88,11 +88,12 @@ function Contracts(props) {
             </div>
             <div className="modal-body" style={{overflowX: "auto"}}>
               <ul>
-                <li>契約は、このゲームでお金を得る唯一の方法である。</li>
-                <li>商品契約を結ぶと、毎月決まった量の生産物を渡し、それによって毎月決まった額の報酬を得る。</li>
-                <li>もしも生産物を渡せなければ、ペナルティとしてその月の報酬の10倍の額を支払う。</li>
-                <li>一度契約を結ぶと、解約する方法は無い。契約する前に、必要な生産物をきちんと生産できるか事前に確認せよ。</li>
-                <li>特定の月は、生産物の量と報酬の額が変動する。具体的にどの月にどう変わるかは、結ぶ契約による。</li>
+                <li>Once you sign a contract, you must deliver certain amount of products, and you gain certain sales from it.</li>
+                <li>You must pay 10 x sales for the month when you can't deliver the products they require.</li>
+                <li>There's no way to cancel or terminate contracts, except for cooling off within the same month when you signed.</li>
+                <li>As the table and descriptions below show, the required product volumes and sales changes depending on month of year.</li>
+                <li>There's no randomness</li>
+                <li>Some contracts require minimal credit. Once you sign, you don't always have to keep the credit.</li>
               </ul>
               <br/>
               
@@ -198,6 +199,15 @@ function Contracts(props) {
                 }
               </form>
             </div>
+            {
+              Object.entries(context.signedContracts).some(([_, signedMonth]) => signedMonth == context.month) &&
+                <div className="modal-footer">
+                  <form action={props.cancelContractUrl} acceptCharset="UTF-8" data-remote="true" method="post">
+                    <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
+                    <input type="submit" value={`Cancel this month's signed contracts ${Object.entries(context.signedContracts).filter(([_, m]) => m == context.month).map(([c, _]) => c).join(', ')} (Cooling off)`} className="btn btn-primary" />
+                  </form>
+                </div>
+            }
           </div>
         </div>
       </div>
@@ -206,6 +216,7 @@ function Contracts(props) {
 
 Contracts.propTypes = {
   contractDump: PropTypes.object,
-  createContractUrl: PropTypes.string
+  createContractUrl: PropTypes.string,
+  cancelContractUrl: PropTypes.string,
 };
 export default Contracts

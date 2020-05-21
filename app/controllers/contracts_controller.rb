@@ -12,6 +12,17 @@ class ContractsController < ApplicationController
     end
   end
 
+  def cancel
+    @game = Game.find(params[:id])
+    @game.signed_contracts.cancel(@game.month)
+
+    if @game.save
+      redirect_to @game, notice: 'Cooling off cancellation was successfully signed.'
+    else
+      redirect_to @game, alert: "Failed to make a cooling off cancellation: #{@game.errors.messages}"
+    end
+  end
+
   # Only allow a list of trusted parameters through.
   private def contract_params
     params.require(:contract).permit(:game_id, :name)

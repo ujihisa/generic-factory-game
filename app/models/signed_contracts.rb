@@ -41,6 +41,10 @@ class SignedContracts
     }
   end
 
+  def cancel(month)
+    @hash = @hash.select {|_, v| v != month }
+  end
+
   private def validate_name
     @hash.each do |contract_name, month|
       unless Contract.find(name: contract_name)

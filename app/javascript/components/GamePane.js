@@ -100,7 +100,7 @@ function GamePane(props) {
             allEquipments={props.allEquipments} />
         <br/><br/>
 
-        <Contracts contractDump={props.contractDump} createContractUrl={props.createContractUrl} />
+        <Contracts contractDump={props.contractDump} createContractUrl={props.createContractUrl} cancelContractUrl={props.cancelContractUrl} />
 
         {
           (0 < props.credit || 0 < props.debt)
@@ -240,6 +240,7 @@ GamePane.propTypes = {
   product: PropTypes.number,
   quality: PropTypes.number,
   createContractUrl: PropTypes.string,
+  cancelContractUrl: PropTypes.string,
   contractDump: PropTypes.object,
   signedContracts: PropTypes.object,
   notice: PropTypes.string,
