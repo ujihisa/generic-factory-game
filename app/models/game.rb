@@ -345,13 +345,12 @@ class Game < ApplicationRecord
   end
 
   private def validate_signed_contracts_raw
-    # TODO: This name validation does not work because `contract` gets nil
-    # Names
-    signed_contracts.each do |contract, month|
-      contract.validate
-      contract.errors.messages.each do |message|
+    # Name
+    unless signed_contracts.valid?
+      signed_contracts.errors.messages.each do |message|
         self.errors.add(:signed_contracts, message)
       end
+      return
     end
 
     (before, after) = changes['signed_contracts']

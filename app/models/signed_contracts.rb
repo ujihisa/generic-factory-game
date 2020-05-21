@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class SignedContracts
+  include ActiveModel::Validations
+  validate :validate_name
+
   def initialize(hash)
     @hash = hash.to_h
   end
@@ -30,5 +33,13 @@ class SignedContracts
 
   def diff(another)
     to_a - another.to_a
+  end
+
+  private def validate_name
+    @hash.each do |contract_name, month|
+      unless Contract.find(name: contract_name)
+        self.errors.add(:signed_contracts, "Contract name #{contract_name.inspect} is not valid")
+      end
+    end
   end
 end

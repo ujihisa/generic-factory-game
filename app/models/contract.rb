@@ -100,10 +100,6 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
   }
   private_constant :ALL
 
-  include ActiveModel::Validations
-  validates :name, inclusion: { in: ALL.keys }
-
-
   # ActiveRecord'ish UIs
   def self.find(name:)
     ALL[name]
