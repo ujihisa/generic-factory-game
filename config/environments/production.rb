@@ -121,4 +121,6 @@ Rails.application.configure do
     authentication:       'plain',
     enable_starttls_auto: true,
   }
+  # devise
+  config.action_mailer.default_url_options = { host: 'generic-factory-game.herokuapp.com', protocol: 'https' }
 end
