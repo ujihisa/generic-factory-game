@@ -5,5 +5,5 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   belongs_to :player
-  validates :player_id, presence: true
+  validates :player_id, presence: true, uniqueness: true
 end

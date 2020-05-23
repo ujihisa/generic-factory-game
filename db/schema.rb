@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 2020_05_23_201421) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["player_id"], name: "index_users_on_player_id"
+    t.index ["player_id"], name: "index_users_on_player_id", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

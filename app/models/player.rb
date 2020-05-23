@@ -2,6 +2,7 @@ class Player < ApplicationRecord
   validates_uniqueness_of :name
   validates :name, length: { in: 1..255 }
   has_many :games
+  has_one :user
 
   def best_game
     Game.

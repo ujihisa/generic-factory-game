@@ -1,4 +1,9 @@
 <p id="notice"><%= notice %></p>
+<%- if alert %>
+  <div class="alert alert-danger" role="alert">
+    <%= alert %>
+  </div>
+<%- end %>
 
 <h1>GenericFactoryGame</h1>
 <h2>Version <%= GenericFactoryGame::VERSION %></h2>

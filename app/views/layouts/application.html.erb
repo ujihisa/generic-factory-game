@@ -22,6 +22,12 @@
   </div>
   <hr>
   <%= link_to 'GenericFactoryGame', '/' %>
-  | <%= link_to 'Contribute me!', 'https://github.com/ujihisa/generic-factory-game' %>
+  |
+  <%= link_to 'Contribute me!', 'https://github.com/ujihisa/generic-factory-game' %>
+  <%- if current_user %>
+    |
+    <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
+  <%- end %>
+
   </body>
 </html>
