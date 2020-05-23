@@ -1,22 +1,19 @@
 # frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
-  # before_action :configure_sign_up_params, only: [:create]
+  before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
   def new
     super {|user|
-      user.player_id = Player.first.id
+      user.player_id = params[:player_id]
     }
   end
 
   # POST /resource
   def create
-    super {|user|
-      user.player_id = params[:user][:player_id]
-      user.save
-    }
+    super
   end
 
   # GET /resource/edit
@@ -47,7 +44,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   private def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:attribute])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:player_id])
   end
 
   # If you have extra params to permit, append them to the sanitizer.
