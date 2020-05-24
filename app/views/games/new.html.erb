@@ -2,6 +2,12 @@
   <h1>Start a new game</h1>
 </div>
 
+<%- if alert %>
+  <div class="alert alert-danger" role="alert">
+    <%= alert %>
+  </div>
+<%- end %>
+
 <%= render 'form', game: @game %>
 
 <%= link_to 'Back', games_path %>

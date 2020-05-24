@@ -1,8 +1,7 @@
 class GamesController < ApplicationController
-  before_action :set_latest_game, only: [
-    :edit, :update, :destroy, :create_storages,
-    :buy_ingredients, :borrow_money, :subscribe_ingredients, :hire,
-    :factory_assign, :factory_buyinstall, :advertise,
+  before_action :game_with_user, only: [
+    :create_storages, :buy_ingredients, :borrow_money, :subscribe_ingredients,
+    :end_month, :hire, :factory_assign, :factory_buyinstall, :advertise,
   ]
 
   # GET /games
@@ -32,10 +31,6 @@ class GamesController < ApplicationController
     @players = Player.all
   end
 
-  # GET /games/1/edit
-  def edit
-  end
-
   # POST /games
   # POST /games.json
   def create
@@ -43,6 +38,10 @@ class GamesController < ApplicationController
       version: GenericFactoryGame::VERSION,
       ingredient_subscription: 0,
       **game_params)
+    if @game.player.user && @game.player.user != current_user
+      return redirect_to :new_game, alert: 'Invalid game/user'
+    end
+
     if @game.mode == 'tutorial'
       @game.cash = 999
       @game.storage = 500
@@ -78,20 +77,6 @@ class GamesController < ApplicationController
       redirect_to @game, alert: @game.messages.join("\n")
     else
       render :new
-    end
-  end
-
-  # PATCH/PUT /games/1
-  # PATCH/PUT /games/1.json
-  def update
-    respond_to do |format|
-      if @game.update(game_params)
-        format.html { redirect_to @game, notice: 'Game was successfully updated.' }
-        format.json { render :show, status: :ok, location: @game }
-      else
-        format.html { render :edit }
-        format.json { render json: @game.errors, status: :unprocessable_entity }
-      end
     end
   end
 
@@ -239,8 +224,12 @@ class GamesController < ApplicationController
     end
   end
 
-  private def set_latest_game
+  private def game_with_user
     @game = Game.latest.find(params[:id])
+
+    if @game.player.user && @game.player.user != current_user
+      redirect_to :new_game, alert: 'Invalid game/user'
+    end
   end
 
   private def game_params

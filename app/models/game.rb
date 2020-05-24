@@ -4,7 +4,7 @@ class Game < ApplicationRecord
   belongs_to :player
 
   latest_columns = column_names.map(&:to_sym) - [:messages_raw, :portfolios_raw]
-  scope :latest, -> { select(latest_columns) }
+  scope :latest, -> { includes(:player).select(latest_columns) }
 
   validates :mode, inclusion: { in: %w(normal tutorial) }
   validate :validate_assignments
