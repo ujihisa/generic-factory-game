@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GenericFactoryGame</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <%= favicon_link_tag  %>
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+  <div class="container">
+    <%- if notice %>
+      <div class="alert alert-info" role="alert">
+        <%= notice %>
+      </div>
+    <%- end %>
+    <%- if alert %>
+      <div class="alert alert-danger" role="alert">
+        <%= alert %>
+      </div>
+    <%- end %>
+
+  <%= yield %>
+  </div>
+  <hr>
+  <%= link_to 'GenericFactoryGame', '/' %>
+  |
+  <%= link_to 'Contribute me!', 'https://github.com/ujihisa/generic-factory-game' %>
+  |
+  <%- if current_user %>
+    <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
+  <%- else %>
+    <%= link_to 'Sign in', new_user_session_path %>
+  <%- end %>
+
+  </body>
+</html>
