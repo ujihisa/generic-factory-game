@@ -28,6 +28,17 @@ function CurrentStatus(props) {
           <tr>
             <th scope="col"><strong>Date</strong></th>
             <td scope="col">
+              {
+                ['December', 'January', 'February'].includes(GFG.currentMonth(context.month))
+                  ? '🏂'
+                  : ['March', 'April', 'May'].includes(GFG.currentMonth(context.month))
+                    ? '🌼'
+                    : ['June', 'July', 'August'].includes(GFG.currentMonth(context.month))
+                    ? '🌞'
+                    : ['September', 'October', 'November'].includes(GFG.currentMonth(context.month))
+                      ? '🍁'
+                      : '-'
+              }
               { GFG.currentMonth(context.month) } { 2020 + Math.floor(context.month / 12) }
             </td>
             <td scope="col"></td>
