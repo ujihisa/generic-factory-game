@@ -19,66 +19,127 @@
 
   <div class="container" style='max-width: 960px;'>
     <div class="card-deck mb-3 text-center">
-      <%- @players.each_slice(3).each do |players| %>
-        <%- players[2] ||= nil # To expand always to 3 %>
-        <%- players.each do |player| %>
-          <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
-            <%- if player %>
-              <div class="card-header">
-                <h4 class="my-0 font-weight-normal"><%= player.name %></h4>
+      <%- if current_user %>
+        <%- player = current_user.player %>
+        <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
+        </div>
+        <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal"><%= player.name %></h4>
+          </div>
+          <div class="card-body">
+            <div>
+              <%- if player.user %>
+                <!-- Write something here -->
+              <%- else %>
+                <strong>
+                  <%= link_to 'Sign up', new_user_registration_path(player_id: player.id) %>
+                </strong>
+              <%- end %>
+            </div>
+            <br/>
+
+            <%- if player.user && player.user != current_user %>
+              <div>
+                <%= submit_tag "Try tutorial", class: 'btn btn btn-secondary', disabled: true %>
+
+                <br/><br/>
+
+                <%= submit_tag "Start game", class: 'btn btn-lg btn-block btn-primary', disabled: true %>
               </div>
-              <div class="card-body">
-                <div>
-                  <%- if player.user %>
-                    <!-- Write something here -->
-                  <%- else %>
-                    <strong>
-                      <%= link_to 'Sign up', new_user_registration_path(player_id: player.id) %>
-                    </strong>
-                  <%- end %>
-                </div>
+            <%- else %>
+              <div>
+                <%= form_with(model: game, local: true) do |form| %>
+                  <%= hidden_field_tag :'game[player_id]', player.id %>
+                  <%= hidden_field_tag :'game[mode]', 'tutorial' %>
+                  <%= form.submit "Try tutorial", class: 'btn btn btn-secondary' %>
+                <% end %>
+
                 <br/>
 
-                <%- if player.user && player.user != current_user %>
-                  <div>
-                    <%= submit_tag "Try tutorial", class: 'btn btn btn-secondary', disabled: true %>
-
-                    <br/><br/>
-
-                    <%= submit_tag "Start game", class: 'btn btn-lg btn-block btn-primary', disabled: true %>
-                  </div>
-                <%- else %>
-                  <div>
-                    <%= form_with(model: game, local: true) do |form| %>
-                      <%= hidden_field_tag :'game[player_id]', player.id %>
-                      <%= hidden_field_tag :'game[mode]', 'tutorial' %>
-                      <%= form.submit "Try tutorial", class: 'btn btn btn-secondary' %>
-                    <% end %>
-
-                    <br/>
-
-                    <%= form_with(model: game, local: true) do |form| %>
-                      <%= hidden_field_tag :'game[player_id]', player.id %>
-                      <%= hidden_field_tag :'game[mode]', 'normal' %>
-                      <%= form.submit "Start game", class: 'btn btn-lg btn-block btn-primary' %>
-                    <% end %>
-                  </div>
-                <%- end %>
-
-                <p>
-                <%- if best_game = player.best_game %>
-                  <%= link_to "Best score: #{best_game.month} months", games_highscore_path %>
-                <%- elsif player.games.empty? %>
-                  First time to try!
-                <%- else %>
-                  <%= link_to 'Working in progress', games_path %>
-                <%- end %>
-                </p>
+                <%= form_with(model: game, local: true) do |form| %>
+                  <%= hidden_field_tag :'game[player_id]', player.id %>
+                  <%= hidden_field_tag :'game[mode]', 'normal' %>
+                  <%= form.submit "Start game", class: 'btn btn-lg btn-block btn-primary' %>
+                <% end %>
               </div>
             <%- end %>
+
+            <p>
+            <%- if best_game = player.best_game %>
+              <%= link_to "Best score: #{best_game.month} months", games_highscore_path %>
+            <%- elsif player.games.empty? %>
+              First time to try!
+            <%- else %>
+              <%= link_to 'Working in progress', games_path %>
+            <%- end %>
+            </p>
           </div>
+        </div>
+        <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
+        </div>
+      <%- else %>
+        <%- @players.each_slice(3).each do |players| %>
+          <%- players[2] ||= nil # To expand always to 3 %>
+          <%- players.each do |player| %>
+            <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
+              <%- if player %>
+                <div class="card-header">
+                  <h4 class="my-0 font-weight-normal"><%= player.name %></h4>
+                </div>
+                <div class="card-body">
+                  <div>
+                    <%- if player.user %>
+                      <!-- Write something here -->
+                    <%- else %>
+                      <strong>
+                        <%= link_to 'Sign up', new_user_registration_path(player_id: player.id) %>
+                      </strong>
+                    <%- end %>
+                  </div>
+                  <br/>
+
+                  <%- if player.user && player.user != current_user %>
+                    <div>
+                      <%= submit_tag "Try tutorial", class: 'btn btn btn-secondary', disabled: true %>
+
+                      <br/><br/>
+
+                      <%= submit_tag "Start game", class: 'btn btn-lg btn-block btn-primary', disabled: true %>
+                    </div>
+                  <%- else %>
+                    <div>
+                      <%= form_with(model: game, local: true) do |form| %>
+                        <%= hidden_field_tag :'game[player_id]', player.id %>
+                        <%= hidden_field_tag :'game[mode]', 'tutorial' %>
+                        <%= form.submit "Try tutorial", class: 'btn btn btn-secondary' %>
+                      <% end %>
+
+                      <br/>
+
+                      <%= form_with(model: game, local: true) do |form| %>
+                        <%= hidden_field_tag :'game[player_id]', player.id %>
+                        <%= hidden_field_tag :'game[mode]', 'normal' %>
+                        <%= form.submit "Start game", class: 'btn btn-lg btn-block btn-primary' %>
+                      <% end %>
+                    </div>
+                  <%- end %>
+
+                  <p>
+                  <%- if best_game = player.best_game %>
+                    <%= link_to "Best score: #{best_game.month} months", games_highscore_path %>
+                  <%- elsif player.games.empty? %>
+                    First time to try!
+                  <%- else %>
+                    <%= link_to 'Working in progress', games_path %>
+                  <%- end %>
+                  </p>
+                </div>
+              <%- end %>
+            </div>
+          <%- end %>
+          <br/>
         <%- end %>
-        <br/>
       <%- end %>
     </div>
     <div class="alert alert-info" role="alert">
