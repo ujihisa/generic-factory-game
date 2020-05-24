@@ -38,15 +38,19 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
 
   ALL = {
     'A' => new('A', 0, 'They have a big sale in Nov.', {
-      default: Trade.new(20, 6),
-      November: Trade.new(40, 12),
+      default: Trade.new(12, 9),
+      November: Trade.new(24, 18),
     }),
 
     'B' => new('B', 0, 'Their business is constant', {
-      default: Trade.new(32, 9),
+      default: Trade.new(50, 26),
     }),
 
-    'C' => new('C', 0, 'Their business is constant, but they pay only twice a year.', {
+    'C2' => new('C2', 0, 'Their business is constant', {
+      default: Trade.new(100, 33),
+    }),
+
+    'C' => new('C', 10, 'Their business is constant, but they pay only twice a year.', {
       default: Trade.new(40, 0),
       January: Trade.new(40, 75),
       July: Trade.new(40, 75),

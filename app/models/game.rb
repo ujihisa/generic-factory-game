@@ -216,7 +216,7 @@ class Game < ApplicationRecord
     # receive ingredients
     if 0 < self.ingredient_subscription
       self.ingredient += self.ingredient_subscription
-      fee_subscription = (self.ingredient_subscription * 0.05).to_i
+      fee_subscription = (self.ingredient_subscription * 0.10).to_i
       self.cash -= fee_subscription
       messages << "📦 Receive #{self.ingredient_subscription}t ingredient"
       messages << "📦 Pay $#{fee_subscription}K for subscription"
