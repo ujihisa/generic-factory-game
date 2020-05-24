@@ -94,6 +94,7 @@ function Contracts(props) {
                 <li>As the table and descriptions below show, the required product volumes and sales changes depending on month of year.</li>
                 <li>There's no randomness</li>
                 <li>Some contracts require minimal credit. Once you sign, you don't always have to keep the credit.</li>
+                <li><strong>Sales payments occur in 3 months. </strong> e.g. Sales payment for Nov 2020 occurs in Feb 2021.</li>
               </ul>
               <br/>
               

@@ -147,12 +147,14 @@ class Game < ApplicationRecord
     (delivery_total, sales_total) = [0, 0]
     self.signed_contracts.each do |contract, month|
       trade = contract.trade(self.current_month)
+      payment_trade = contract.trade(MONTHS[(self.month - 3) % 12])
+
       if trade.required_products <= self.product
         # good
         self.product -= trade.required_products
-        self.cash += trade.sales
+        sales_total += payment_trade.sales if 2 < self.month - month
 
-        delivery_total += trade.required_products; sales_total += trade.sales
+        delivery_total += trade.required_products
       else
         # penalty
         self.cash -= trade.sales * 10
