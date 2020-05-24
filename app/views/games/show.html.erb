@@ -1,3 +1,6 @@
+<b><%= @game.player.name %></b>'s game <b><%= @game.id %></b> / month <b><%= @game.month %></b> / <%= @game.status %> / VERSION <%= @game.version %>
+<hr>
+
 <%- case @game.status %>
 <%- when :game_over %>
   <h1 class='display-3 jumbotron'>
@@ -17,13 +20,31 @@
     🎉 Game Clear!
   </h1>
 
-  <%- if @game.mode != 'tutorial' %>
+  <%- if @game.mode == 'tutorial' %>
+    <div class="container" style='max-width: 480px;'>
+      <div class="card-deck mb-3 text-center">
+        <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">
+              Let's try an actual game!
+            </h4>
+          </div>
+          <div class="card-body">
+            <%= form_with(url: games_path, method: :post) do |form| %>
+              <%= hidden_field_tag :'game[player_id]', @game.player.id %>
+              <%= hidden_field_tag :'game[mode]', 'normal' %>
+              <%= form.submit "Start game", class: 'btn btn-lg btn-block btn-primary' %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+  <%- else  %>
     <%= render 'stats' %>
   <%- end %>
 <%- end %>
 
-<b><%= @game.player.name %></b>'s game <b><%= @game.id %></b> / month <b><%= @game.month %></b> / <%= @game.status %> / VERSION <%= @game.version %>
-<hr>
 
 <div class="row">
   <div class="col-md-9 themed-grid-col">
