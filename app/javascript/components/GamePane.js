@@ -94,9 +94,9 @@ function GamePane(props) {
           <br/><br/>
 
           <Factory
-            assignmentsSummary={props.assignmentsSummary}
             factory_assign_game_path={props.factory_assign_game_path}
             factory_buyinstall_game_path={props.factory_buyinstall_game_path}
+            assignmentsSummary={props.assignmentsSummary}
             allEquipments={props.allEquipments} />
         <br/><br/>
 
@@ -196,6 +196,7 @@ function GamePane(props) {
       signedContracts: props.signedContracts,
       equipments: props.equipments,
       month: props.month,
+      employeeGroups: props.employeeGroups,
     }}>
       <div className="row">
         <div className="col-md-5 themed-grid-col">

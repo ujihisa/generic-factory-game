@@ -108,6 +108,13 @@ function CurrentStatus(props) {
           <tr>
             <th scope="col"><strong>Factory</strong></th>
             <td scope="col">
+              {
+                Object.values(context.employeeGroups).map((employeeGroup, i) => 
+                  Array(employeeGroup.num_hired).fill(
+                    <img key={i} src={`/images/${employeeGroup.image}`} style={{height: "2.0em"}} />)
+                )
+              }
+              <br/>
               Production Volume <b>+{ props.productionVolume }t</b>
               <br/>
               Production Quality <b>{ props.productionQuality.toPrecision(4) }</b>
