@@ -1,4 +1,5 @@
 <%- if @game.portfolios.present? %>
+  <h4>Charts</h4>
   <canvas id="chartMoney"></canvas>
   <script>
     var ctx = document.getElementById('chartMoney').getContext('2d');
@@ -55,4 +56,13 @@
       }
     });
   </script>
+  <h4>Contracts signed</h4>
+  <ul>
+    <%- @game.signed_contracts.each do |contract, month| %>
+      <li>
+        Contract <strong><%= contract.name %></strong> in <%= Game::MONTHS[month % 12] %> <%= 2020 + month / 12 %> (Month <%= month %>)
+      </li>
+    <%- end %>
+  </ul>
+  <hr />
 <%- end %>

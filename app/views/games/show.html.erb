@@ -6,7 +6,7 @@
     </font>
   </h1>
   <%- if 3 <= @game.month %>
-    <%= render 'charts' %>
+    <%= render 'stats' %>
   <%- else %>
     <div class="alert alert-primary" role="alert">
       (Charts will be shown here if you survive longer than 3 months.)
@@ -18,7 +18,7 @@
   </h1>
 
   <%- if @game.mode != 'tutorial' %>
-    <%= render 'charts' %>
+    <%= render 'stats' %>
   <%- end %>
 <%- end %>
 
