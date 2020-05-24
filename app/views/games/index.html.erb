@@ -4,30 +4,34 @@
 
 <h2>Version <%= GenericFactoryGame::VERSION %></h2>
 
-<table>
+<table class="table table-hover table-xl">
   <thead>
     <tr>
-      <th>Game ID</th>
-      <th>Player</th>
-      <th>Months spent</th>
-      <th>Money</th>
-      <th>Storage</th>
-      <th>Ingredient</th>
-      <th>Product</th>
-      <th>Last update</th>
-      <th>Status</th>
+      <th scope="col">Game ID</th>
+      <th scope="col">Player</th>
+      <th scope="col">Months spent</th>
+      <th scope="col">Money</th>
+      <th scope="col">Storage</th>
+      <th scope="col">Ingredient</th>
+      <th scope="col">Product</th>
+      <th scope="col">Last update</th>
+      <th scope="col">Status</th>
     </tr>
   </thead>
 
-  <tbody>
+  <tbody class="table">
     <% @current_games.each do |game| %>
       <tr>
         <td><%= game.id %></td>
         <td><%= game.player.name %></td>
         <td><%= game.month %></td>
         <td>
+          <%= number_to_currency(game.cash, precision: 0, format: '%u%nK') %>
+          -
+          <%= number_to_currency(game.debt, precision: 0, format: '%u%nK') %>
+          =
           <font color="<%= {game_over: 'red', in_progress: 'black', completed: 'blue'}[game.status] %>">
-          <%= number_to_currency(game.cash - game.debt, precision: 0, format: '%u%nK') %>
+            <%= number_to_currency(game.cash - game.debt, precision: 0, format: '%u%nK') %>
           </font>
         </td>
         <td><%= game.storage %></td>
