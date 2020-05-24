@@ -110,14 +110,14 @@ class GamesController < ApplicationController
   end
 
   def subscribe_ingredients
-    if @game.credit < 20
+    if @game.credit < 10
       return redirect_to @game, alert: 'Not enough credit!'
     end
 
     before = @game.ingredient_subscription.to_i
     after = params[:ingredient_subscription].to_i
 
-    change_fee = [(after - before) * 0.05, 0].max
+    change_fee = [(after - before) * 0.1, 0].max
     @game.cash -= change_fee
     @game.ingredient_subscription = after
 
