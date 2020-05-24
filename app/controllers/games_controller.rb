@@ -55,7 +55,7 @@ class GamesController < ApplicationController
         In this tutorial I'd love you to understand "End month" before starting actual game.
         Try clicking random places and make sure the "End month" button does not show the red warning, and then click it. That's it!
 
-        The goal of this game is to achieve $1,000K money. (money cash - debt)
+        The goal of this game is to achieve 1 million dollars. ($1,000K)
 
         このチュートリアルではGenericFactoryGameの一部の振る舞いについて軽く触れて、ひとまず「End month」を完全に理解してもらいます。
         いろんなボタンを推したりしてみて、とにかく左下の"End month"のボタンの赤い警告をなくして、それからそれを押してみてください。それだけでいけるはずです!
