@@ -8,8 +8,8 @@ Bundler.require(*Rails.groups)
 
 module GenericFactoryGame
   RELEASE_DATE = Date.parse('2020-05-16')
-  VERSION = '1.0.0-preview'
-  PREVIOUS_VERSION = '0.2.0'
+  VERSION = '1.0.0'
+  PREVIOUS_VERSION = '1.0.0-preview'
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
