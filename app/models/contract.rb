@@ -39,54 +39,52 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
   ALL = {
     'A' => new('A', 0, 'They have a big sale in Nov.', {
       default: Trade.new(18, 28),
-      November: Trade.new(38, 59),
+      November: Trade.new(38, 40),
     }),
 
     'B' => new('B', 0, 'Their business is constant', {
-      default: Trade.new(56, 50),
+      default: Trade.new(56, 30),
     }),
 
     'C2' => new('C2', 0, 'Their business is constant', {
-      default: Trade.new(100, 66),
+      default: Trade.new(100, 40),
     }),
 
-    'C' => new('C', 10, 'Their business is constant, but they pay only twice a year.', {
+    'C' => new('C', 20, 'Their business is constant, but they pay only twice a year.', {
       default: Trade.new(40, 0),
       January: Trade.new(40, 75),
       July: Trade.new(40, 75),
     }),
 
-    'D' => new('D', 10, 'They are rich. Summer is their battlefield', {
-      default: Trade.new(60, 21),
-      July: Trade.new(100, 35),
-      August: Trade.new(100, 35),
+    'D' => new('D', 20, 'They close business only in January', {
+      default: Trade.new(10, 16),
+      January: Trade.new(0, 0),
     }),
 
-    'E' => new('E', 10, 'They have a big sale in Dec. Also they are a little bit stingy.', {
-      default: Trade.new(80, 25),
-      December: Trade.new(160, 50),
+    'E' => new('E', 20, 'They have a sale in Dec.', {
+      default: Trade.new(40, 32),
+      December: Trade.new(60, 39),
     }),
 
     'F' => new('F', 20, 'They have a big sale in Dec.', {
-      default: Trade.new(100, 40),
-      December: Trade.new(200, 80),
+      default: Trade.new(80, 45),
+      December: Trade.new(100, 50),
     }),
 
-    'G' => new('G', 30, 'They only sell twice a year, but both of them are vital to their business', {
-      default: Trade.new(0, 0),
-      January: Trade.new(100, 45),
-      June: Trade.new(100, 45),
+    'G' => new('G', 40, 'They close business only in January', {
+      default: Trade.new(20, 27),
+      January: Trade.new(0, 0),
     }),
 
-    'H' => new('H', 30, 'Their business is constant', {
-      default: Trade.new(220, 80),
+    'H' => new('H', 40, 'Their business is constant', {
+      default: Trade.new(60, 47),
     }),
 
     'I' => new('I', 40, 'Their business is constant', {
-      default: Trade.new(100, 50),
+      default: Trade.new(120, 66),
     }),
 
-    'J' => new('J', 30, 'They are busy in winter season', {
+    'J' => new('J', 40, 'They are busy in winter season', {
       default: Trade.new(100, 45),
       November: Trade.new(200, 90),
       December: Trade.new(200, 90),
@@ -94,11 +92,11 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
       February: Trade.new(200, 90),
     }),
 
-    'Y' => new('Y', 90, "City project", {
+    'Y' => new('Y', 80, "City project", {
       default: Trade.new(500, 250),
     }),
 
-    'Z' => new('Z', 100, "National project", {
+    'Z' => new('Z', 90, "National project", {
       default: Trade.new(800, 400),
     }),
   }
