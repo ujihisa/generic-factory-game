@@ -4,10 +4,10 @@ class Factory
   EQUIPMENTS = {
     'Factory base': {
       install: 10,
-      cost: 1,
+      cost: 20,
       production: { Junior: 0, Intermediate: 0, Senior: 0 },
       quality: { Junior: 0, Intermediate: 0, Senior: 0 },
-      description: "It doesn't help you producing but without it you can't produce anything.",
+      description: "It doesn't help you producing but without it you can't produce anything. The rent is not cheap too.",
     }.freeze,
     Conveyor: {
       install: 100,

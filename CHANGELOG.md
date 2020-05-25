@@ -7,6 +7,11 @@
     * SubscribeIngredient
         * 20 credit -> 10 credit
         * $1 for 20t -> $1 for 10t
+    * Employees
+        * Bare product quality changes
+            * Junior: 20 -> 10
+            * Intermediate: 20 -> 10
+            * Senior: 40 -> 20
 
 
 ## 1.0.0-preview
