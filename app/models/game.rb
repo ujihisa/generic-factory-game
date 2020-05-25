@@ -163,6 +163,7 @@ class Game < ApplicationRecord
         alerts << "💸 Pay $#{trade.sales * 10}K penalty for contract #{contract.name}"
       end
     end
+    self.cash += sales_total
     if 0 < delivery_total
       messages << "📜 Deliver #{delivery_total}t products"
       messages << "📜 Gain $#{sales_total}K sales"

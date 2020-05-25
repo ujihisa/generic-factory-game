@@ -8,7 +8,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       recruiting_fee: 3,
       salary: 3,
       volume: 10,
-      quality: 20,
+      quality: 10,
       required_credit: 0,
     ),
     Intermediate: new(
@@ -17,7 +17,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       recruiting_fee: 5,
       salary: 5,
       volume: 20,
-      quality: 20,
+      quality: 10,
       required_credit: 0,
     ),
     Senior: new(
@@ -26,7 +26,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       recruiting_fee: 7,
       salary: 7,
       volume: 20,
-      quality: 40,
+      quality: 20,
       required_credit: 1,
     ),
     'Motivated intermediate': new(
@@ -35,7 +35,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       recruiting_fee: 4,
       salary: 3,
       volume: 20,
-      quality: 20,
+      quality: 10,
       required_credit: 65,
     ),
     'Passionated junior': new(
@@ -44,7 +44,7 @@ class EmployeeGroup < Struct.new(:name, :category, :image, :recruiting_fee, :sal
       recruiting_fee: 2,
       salary: 1,
       volume: 10,
-      quality: 20,
+      quality: 10,
       required_credit: 85,
     ),
   }.each {|k, v| v.name = k; v.freeze }.freeze
