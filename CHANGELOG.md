@@ -12,7 +12,10 @@
             * Junior: 20 -> 10
             * Intermediate: 20 -> 10
             * Senior: 40 -> 20
-
+    * Contracts
+        * Less product volume contracts tend to be high sales performance
+        * It's harder to fullfill minimal credit for better contracts
+* "Easy mode"
 
 ## 1.0.0-preview
 
