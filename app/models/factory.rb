@@ -7,55 +7,71 @@ class Factory
       cost: 20,
       production: { Junior: 0, Intermediate: 0, Senior: 0 },
       quality: { Junior: 0, Intermediate: 0, Senior: 0 },
+      deprecate: [],
       description: "It doesn't help you producing but without it you can't produce anything. The rent is not cheap too.",
+    }.freeze,
+    'Cheap toolsets': {
+      install: 50,
+      cost: 2,
+      production: { Junior: 0, Intermediate: 2, Senior: 4 },
+      quality: { Junior: 0, Intermediate: 2, Senior: 4 },
+      deprecate: [],
+      description: "Leverage skilled craftspersons. Minor upgrade for experienced employees",
     }.freeze,
     Conveyor: {
       install: 100,
-      cost: 5,
+      cost: 10,
       production: { Junior: 10, Intermediate: 10, Senior: 10 },
       quality: { Junior: 0, Intermediate: 0, Senior: 0 },
+      deprecate: [],
       description: "Now staff don't have to walk around, but stuff walk around instead.",
     }.freeze,
     'Advanced toolsets': {
       install: 100,
-      cost: 0,
+      cost: 5,
       production: { Junior: 0, Intermediate: 5, Senior: 10 },
       quality: { Junior: 0, Intermediate: 5, Senior: 10 },
+      deprecate: [:'Cheap toolsets'],
       description: "Leverage skilled craftspersons. Advanced people need advanced tools.",
     }.freeze,
     'Free space': {
       install: 100,
-      cost: 0,
+      cost: 5,
       production: { Junior: -5, Intermediate: -5, Senior: -5 },
       quality: { Junior: 20, Intermediate: 20, Senior: 20 },
+      deprecate: [],
       description: "Enjoy your relaxed time",
     }.freeze,
     'Computers': {
       install: 200,
-      cost: 5,
+      cost: 10,
       production: { Junior: 0, Intermediate: 0, Senior: 0 },
       quality: { Junior: 10, Intermediate: 10, Senior: 10 },
+      deprecate: [],
       description: "Helps you archtechting, designing, sharing knowledge, and many more",
     }.freeze,
     'Semiauto machines': {
       install: 200,
-      cost: 10,
+      cost: 20,
       production: { Junior: 10, Intermediate: 10, Senior: 10 },
       quality: { Junior: 0, Intermediate: 0, Senior: 0 },
+      deprecate: [],
       description: "Industrialization",
     }.freeze,
     'Anormal detector': {
       install: 300,
-      cost: 5,
+      cost: 10,
       production: { Junior: 0, Intermediate: 0, Senior: 0 },
       quality: { Junior: 20, Intermediate: 20, Senior: 0 },
+      deprecate: [],
       description: "It has better eyes than human's",
     }.freeze,
     'Fullauto machines': {
       install: 400,
-      cost: 10,
-      production: { Junior: 25, Intermediate: 15, Senior: 10 },
+      cost: 40,
+      production: { Junior: 35, Intermediate: 25, Senior: 20 },
       quality: { Junior: 10, Intermediate: 10, Senior: 10 },
+      deprecate: [:'Semiauto machines'],
       description: "Let the machines do all the jobs",
     }.freeze,
   }.to_h {|k, v| [k, v.merge(name: k)] }.freeze
@@ -68,7 +84,7 @@ class Factory
 
   def production_volume
     if @equipments.find { _1[:name] == :'Factory base' }
-      @assignments.sum { production_vol(_1, @equipments) }
+      @assignments.sum { production_vol(_1, self.class.__reject_deprecated(@equipments)) }
     else
       0
     end
@@ -80,9 +96,11 @@ class Factory
       0
     when :produce
       if 0 < a.num
-        a.num * (
-          EmployeeGroup.lookup(a.employee_group_name).volume +
-          equipments.map {|equipment| equipment[:production][a.employee_group_name] }.sum)
+        equipments_sum = equipments.
+          map {|equipment| equipment[:production][a.employee_group_name] }.
+          sum
+
+        a.num * (EmployeeGroup.lookup(a.employee_group_name).volume + equipments_sum)
       else
         0
       end
@@ -93,7 +111,7 @@ class Factory
 
   def production_quality
     if @equipments.find { _1[:name] == :'Factory base' }
-      x = self.class.__production_quavol(@assignments, @equipments) / production_volume.to_f
+      x = self.class.__production_quavol(@assignments, self.class.__reject_deprecated(@equipments)) / production_volume.to_f
       x.nan? ? 0 : x
     else
       0
@@ -129,5 +147,9 @@ class Factory
 
   def self.lookup(equipment_name:)
     EQUIPMENTS[equipment_name.to_sym]
+  end
+
+  def self.__reject_deprecated(equipments)
+    equipments.reject {|equipment| equipments.any? { _1[:deprecate].include?(equipment[:name]) } }
   end
 end
