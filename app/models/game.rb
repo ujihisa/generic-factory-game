@@ -187,17 +187,17 @@ class Game < ApplicationRecord
         else
           -3
         end
-      self.credit = self.class.normalize_credit(self.credit + credit_diff)
       messages << "❤️ #{"++-"[credit_diff <=> 0]}#{credit_diff.abs} credit from product quality"
     end
 
     # advertise
     if self.advertising
-      self.credit += 10
+      credit_diff += 10
       messages << "❤️ +10 credit from advertisement"
 
       self.advertising = false
     end
+    self.credit = self.class.normalize_credit(self.credit + credit_diff) if credit_diff
 
     # pay fees
     self.cash -= self.storage / 100

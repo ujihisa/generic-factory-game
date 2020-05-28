@@ -71,7 +71,7 @@ class BuyIngredient extends React.Component {
               </div>
               <div className="modal-body">
                 <p>
-                  $10K for every 40t ingredients.
+                  $10K for every 40t ingredients. (0.25 $K/t)
                 </p>
                 <input type="number"
                   value={this.state.inputNumberVol}

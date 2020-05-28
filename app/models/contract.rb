@@ -22,9 +22,9 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
     trades.map {|k, v|
       case k
       when :default
-        "#{v.required_products}t for $#{v.sales}K"
+        "#{v.required_products}t for $#{v.sales}K (#{'%.2f' % (v.sales / v.required_products.to_f)} $K/t)"
       else
-        "#{v.required_products}t for $#{v.sales}K in #{k}"
+        "#{v.required_products}t for $#{v.sales}K in #{k} (#{'%.2f' % (v.sales / v.required_products.to_f)} $K/t)"
       end
     }
   end
@@ -36,79 +36,79 @@ class Contract < Struct.new(:name, :required_credit, :description, :trades)
 
   private_class_method :new
 
-  ALL = {
+  EASY = {
     'A' => new('A', 0, 'They have a big sale in Nov.', {
-      default: Trade.new(18, 28),
-      November: Trade.new(38, 40),
+      default: Trade.new(18, 28), # Math.sqrt(18) * 6 = 25
+      November: Trade.new(38, 40), # Math.sqrt(38) * 6 = 37
     }),
 
     'B' => new('B', 0, 'Their business is constant', {
-      default: Trade.new(56, 30),
+      default: Trade.new(56, 30), # Math.sqrt(56) * 6 = 45
     }),
 
-    'C2' => new('C2', 0, 'Their business is constant', {
-      default: Trade.new(100, 40),
+    'C' => new('C', 0, 'Their business is constant', {
+      default: Trade.new(100, 40), # Math.sqrt(100) * 6 = 60
     }),
 
-    'C' => new('C', 20, 'Their business is constant, but they pay only twice a year.', {
-      default: Trade.new(40, 0),
-      January: Trade.new(40, 75),
-      July: Trade.new(40, 75),
-    }),
-
-    'D' => new('D', 20, 'They close business only in January', {
-      default: Trade.new(10, 16),
+    'D' => new('D', 15, 'They close business only in January', {
+      default: Trade.new(10, 18), # Math.sqrt(10) * 6 = 19
       January: Trade.new(0, 0),
     }),
 
-    'E' => new('E', 20, 'They have a sale in Dec.', {
-      default: Trade.new(40, 32),
-      December: Trade.new(60, 39),
+    'E' => new('E', 15, 'They have a sale in Dec.', {
+      default: Trade.new(40, 37), # Math.sqrt(40) * 6 = 38
+      December: Trade.new(80, 53), # Math.sqrt(80) * 6 = 54
     }),
 
-    'F' => new('F', 20, 'They have a big sale in Dec.', {
-      default: Trade.new(80, 45),
-      December: Trade.new(100, 50),
+    'F' => new('F', 15, 'They have a big sale in Dec.', {
+      default: Trade.new(80, 53), # Math.sqrt(80) * 6 = 54
+      December: Trade.new(100, 59), # Math.sqrt(100) * 6 = 60
     }),
 
-    'G' => new('G', 40, 'They close business only in January', {
-      default: Trade.new(20, 27),
+    'G' => new('G', 30, 'They close business only in January', {
+      default: Trade.new(20, 27), # Math.sqrt(20) * 6 = 27
       January: Trade.new(0, 0),
     }),
 
-    'H' => new('H', 40, 'Their business is constant', {
-      default: Trade.new(60, 47),
+    'H' => new('H', 30, 'Their business is constant', {
+      default: Trade.new(60, 46), # Math.sqrt(60) * 6 = 46
     }),
 
-    'I' => new('I', 40, 'Their business is constant', {
-      default: Trade.new(120, 66),
+    'I' => new('I', 30, 'Their business is constant', {
+      default: Trade.new(120, 66), # Math.sqrt(120) * 6 = 66
     }),
 
-    'J' => new('J', 40, 'They are busy in winter season', {
-      default: Trade.new(100, 45),
-      November: Trade.new(200, 90),
-      December: Trade.new(200, 90),
-      January: Trade.new(200, 90),
-      February: Trade.new(200, 90),
+    'J' => new('J', 45, 'They only need twice a year', {
+      default: Trade.new(0, 0),
+      July: Trade.new(200, 85), # Math.sqrt(200) * 6 = 85
+      December: Trade.new(200, 85), # Math.sqrt(200) * 6 = 85
     }),
 
-    'Y' => new('Y', 80, "City project", {
-      default: Trade.new(500, 250),
-    }),
-
-    'Z' => new('Z', 90, "National project", {
-      default: Trade.new(800, 400),
-    }),
+    # 'J' => new('J', 40, 'They are busy in winter season', {
+    #   default: Trade.new(100, 45),
+    #   November: Trade.new(200, 90),
+    #   December: Trade.new(200, 90),
+    #   January: Trade.new(200, 90),
+    #   February: Trade.new(200, 90),
+    # }),
+    #
+    # 'Y' => new('Y', 80, "City project", {
+    #   default: Trade.new(500, 250),
+    # }),
+    #
+    # 'Z' => new('Z', 90, "National project", {
+    #   default: Trade.new(800, 400),
+    # }),
   }
-  private_constant :ALL
+  private_constant :EASY
 
   # ActiveRecord'ish UIs
   def self.find(name:)
-    ALL[name]
+    EASY[name]
   end
 
   def self.dump
-    ALL.transform_values {|contract|
+    EASY.transform_values {|contract|
       trades = Game::MONTHS.to_h {|m|
         v = contract.trades[m.to_sym]&.to_h&.merge(anomaly: true) || contract.trades[:default]&.to_h
         [m, v]
