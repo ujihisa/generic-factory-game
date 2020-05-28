@@ -122,9 +122,9 @@ function CurrentStatus(props) {
               <div style={{position: "relative"}}>
                 <div>
                   {
-                    Object.values(context.employeeGroups).map((employeeGroup, i) => 
-                      Array(employeeGroup.num_hired).fill(
-                        <img key={i} src={`/images/${employeeGroup.image}`} style={{height: "2.0em"}} />)
+                    Object.values(context.employeeGroups).map((employeeGroup) => 
+                      Array(employeeGroup.num_hired).map((_, i) =>
+                        <img key={`employee-image-${i}`} src={`/images/${employeeGroup.image}`} style={{height: "2.0em"}} />)
                     )
                   }
                   <br/>
