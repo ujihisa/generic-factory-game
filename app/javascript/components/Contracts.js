@@ -93,7 +93,7 @@ function Contracts(props) {
                 <li>There's no way to cancel or terminate contracts, except for cooling off within the same month when you signed.</li>
                 <li>As the table and descriptions below show, the required product volumes and sales changes depending on month of year.</li>
                 <li>There's no randomness</li>
-                <li>Some contracts require minimal credit. Once you sign, you don't always have to keep the credit.</li>
+                <li>Some contracts require minimal credit. Note that once you've signed one, you don't always have to keep the credit for that.</li>
                 <li><strong>Sales payments occur in 3 months. </strong> e.g. Sales payment for Nov 2020 occurs in Feb 2021.</li>
               </ul>
               <br/>
@@ -147,7 +147,7 @@ function Contracts(props) {
                             }
                             <p className="card-text">{c.description}</p>
                             <p className="card-text">
-                              <small className="text-muted">Required credit: </small>
+                              <small className="text-muted">Required credit to sign: </small>
                               {c.required_credit}
                             </p>
                           </div>
@@ -155,31 +155,6 @@ function Contracts(props) {
                       </div>)})
                 }
               </div>
-
-              <table className="table table-hover table-sm">
-                <thead>
-                  <tr>
-                    <th scope="col"></th>
-                    {
-                      GFG.MONTHS.map((m) => <th key={m} scope="col">{m.slice(0, 3)}</th>)
-                    }
-                  </tr>
-                </thead>
-                <tbody className="table">
-                  {
-                    Object.entries(props.contractDump).map(([name, c]) =>
-                      <tr key={name} className={name == contract ? "table-primary" : Object.keys(context.signedContracts).includes(name) ? "table-active" : ""}>
-                        <th scope="col">{name}</th>
-                        {
-                          Object.entries(c.trades).map(([m, t]) =>
-                            <td key={m} scope="col">
-                              <span className={t.anomaly ? "mark" : ""}>{t.required_products}t<br/>{GFG.numberToCurrency(t.sales)}</span>
-                            </td>)
-                        }
-                      </tr>)
-                  }
-                </tbody>
-              </table>
 
               <canvas ref={chartRef} width="100%" height="50%"></canvas>
             </div>
