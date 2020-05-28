@@ -20,14 +20,14 @@ class Factory
     }.freeze,
     Conveyor: {
       install: 100,
-      cost: 10,
+      cost: 15,
       production: { Junior: 10, Intermediate: 10, Senior: 10 },
       quality: { Junior: 0, Intermediate: 0, Senior: 0 },
       deprecate: [],
       description: "Now staff don't have to walk around, but stuff walk around instead.",
     }.freeze,
     'Advanced toolsets': {
-      install: 100,
+      install: 150,
       cost: 5,
       production: { Junior: 0, Intermediate: 5, Senior: 10 },
       quality: { Junior: 0, Intermediate: 5, Senior: 10 },
