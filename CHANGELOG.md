@@ -23,6 +23,7 @@
         * If you buy "Fullauto machines", you can't buy "Semiauto machines"
         * If you already have "Semiauto machines", buying "Fullauto machines" removes "Semiauto machines"
             * After you get "Fullauto machines", you don't have to pay monthly cost of "Semiauto machines", since it doesn't exist now
+* Factory equipments now have images
 
 ## 1.0.0-preview
 
