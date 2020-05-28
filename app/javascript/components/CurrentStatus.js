@@ -119,27 +119,45 @@ function CurrentStatus(props) {
           <tr>
             <th scope="col"><strong>Factory</strong></th>
             <td scope="col">
-              {
-                Object.values(context.employeeGroups).map((employeeGroup) => 
-                  Array(employeeGroup.num_hired).map((_, i) =>
-                    <img key={`employee-image-${i}`} src={`/images/${employeeGroup.image}`} style={{height: "2.0em"}} />)
-                )
-              }
-              <br/>
-              Production Volume <b>+{ props.productionVolume }t</b>
-              <br/>
-              Production Quality <b>{ props.productionQuality.toPrecision(4) }</b>
-              <br/>
-              {
-                (context.equipments.some((e) => e.name == 'Factory base'))
-                  ? <ul className="list-unstyled">
-                    {
-                      context.equipments.map((e) =>
-                        <li key={e.name}>{e.name}</li>)
-                    }
-                  </ul>
-                  : <div className="alert alert-primary" role="alert">You must install Factory base first</div>
-              }
+              <div style={{position: "relative"}}>
+                <div>
+                  {
+                    Object.values(context.employeeGroups).map((employeeGroup, i) => 
+                      Array(employeeGroup.num_hired).fill(
+                        <img key={i} src={`/images/${employeeGroup.image}`} style={{height: "2.0em"}} />)
+                    )
+                  }
+                  <br/>
+                  Production Volume <b>+{ props.productionVolume }t</b>
+                  <br/>
+                  Production Quality <b>{ props.productionQuality.toPrecision(4) }</b>
+                  <br/>
+                </div>
+                {
+                  (0 < context.equipments.length) &&
+                    <div style={{position: "relative", height: "200px"}}>
+                      {
+                        context.equipments.
+                          filter((equipment) => context.equipments.every((e) => !e.deprecate.includes(equipment.name))).
+                          map((equipment, i) =>
+                            <img key={i} src={`/images/${equipment.image.src}`} style={{position: "absolute", zIndex: equipment.image.z}} />)
+
+                      }
+                    </div>
+                }
+                <div>
+                  {
+                    (context.equipments.some((e) => e.name == 'Factory base'))
+                      ? <ul className="list-unstyled">
+                        {
+                          context.equipments.map((e) =>
+                            <li key={e.name}>{e.name}</li>)
+                        }
+                      </ul>
+                      : <div className="alert alert-primary" role="alert">You must install Factory base first</div>
+                  }
+                </div>
+              </div>
             </td>
             <td scope="col">
               🏭
