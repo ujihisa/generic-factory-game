@@ -20,14 +20,15 @@ function Factory(props) {
   */
 
   const sum = (xs) => xs.reduce((a, b) => a + b, 0);
+
+  const signed = (n) => (n < 0) ? `${n}` : `+${n}`;
+
   const volumeSubtotalFromAssignmentsSummaryItem = (as) => 
-    as.numRoles.produce *
-      (
-        context.employees[as.name].volume +
-        sum(
-          [...context.equipments, props.allEquipments[selectedEquipment]].
-          filter((eq) => eq).
-          map((eq) => eq.production[as.name])));
+    context.employees[as.name].volume +
+      sum(
+        [...context.equipments, props.allEquipments[selectedEquipment]].
+        filter((eq) => eq).
+        map((eq) => eq.production[as.name]));
 
   const qualitySubtotalFromAssignmentsSummaryItem = (as) => 
     (0 < as.numRoles.produce)
@@ -96,10 +97,14 @@ function Factory(props) {
                           filter((eq) => eq && eq.name != "Factory base").
                           map((eq) =>
                           <tr key={eq.name}>
-                            <th scope="col">{eq.name}</th>
+                            <th scope="col">
+                              <small className="form-text text-muted">
+                                {eq.name}
+                              </small>
+                            </th>
                             {
                               props.assignmentsSummary.map((as) => 
-                                <td key={as.name} scope="col">{as.numRoles.produce} * {eq.production[as.name]}</td>)
+                                <td key={as.name} scope="col">{signed(eq.production[as.name])}</td>)
                             }
                           </tr>)
                       }
@@ -108,7 +113,7 @@ function Factory(props) {
                         {
                           props.assignmentsSummary.map((as) => 
                             <td key={as.name} scope="col">
-                              {volumeSubtotalFromAssignmentsSummaryItem(as)}
+                              {signed(volumeSubtotalFromAssignmentsSummaryItem(as))}
                             </td>)
                         }
                       </tr>
@@ -116,8 +121,16 @@ function Factory(props) {
                         <th scope="col">Total</th>
                         <td scope="col" colSpan={props.assignmentsSummary.length}>
                           {
-                            sum(props.assignmentsSummary.map(volumeSubtotalFromAssignmentsSummaryItem))
+                            props.assignmentsSummary.map((as) =>
+                              `(${as.numRoles.produce} * ${volumeSubtotalFromAssignmentsSummaryItem(as)})`
+                          ).join(' + ')
                           }
+                          &nbsp;=&nbsp;
+                          <strong>
+                            {
+                              sum(props.assignmentsSummary.map((as) => as.numRoles.produce * volumeSubtotalFromAssignmentsSummaryItem(as)))
+                            }
+                          </strong>
                         </td>
                       </tr>
                     </tbody>
@@ -151,10 +164,14 @@ function Factory(props) {
                           filter((eq) => eq && eq.name != "Factory base").
                           map((eq) =>
                           <tr key={eq.name}>
-                            <th scope="col">{eq.name}</th>
+                            <th scope="col">
+                              <small className="form-text text-muted">
+                                {eq.name}
+                              </small>
+                            </th>
                             {
                               props.assignmentsSummary.map((as) => 
-                                <td key={as.name} scope="col">{as.numRoles.produce} * {eq.quality[as.name]}</td>)
+                                <td key={as.name} scope="col">{signed(eq.quality[as.name])}</td>)
                             }
                           </tr>)
                       }
@@ -177,8 +194,8 @@ function Factory(props) {
                           {
                             (
                               sum(props.assignmentsSummary.map((as) =>
-                                qualitySubtotalFromAssignmentsSummaryItem(as) * volumeSubtotalFromAssignmentsSummaryItem(as)
-                              )) / sum(props.assignmentsSummary.map(volumeSubtotalFromAssignmentsSummaryItem))
+                                qualitySubtotalFromAssignmentsSummaryItem(as) * as.numRoles.produce * volumeSubtotalFromAssignmentsSummaryItem(as)
+                              )) / sum(props.assignmentsSummary.map((as) => as.numRoles.produce * volumeSubtotalFromAssignmentsSummaryItem(as)))
                             ) || 0
                           }
                         </td>
@@ -269,7 +286,11 @@ function Factory(props) {
                       Object.values(props.allEquipments).map((equipment, i) =>
                         <div className="form-check" key={equipment.name} >
                           <input className="form-check-input" type="radio" name="equipmentRadios" id={`equipmentRadios${i}`} value={equipment.name}
-                            selected={selectedEquipment == equipment.name} onChange={(e) => setSelectedEquipment(e.target.value)}
+                            checked={selectedEquipment == equipment.name} onClick={(e) =>
+                                (selectedEquipment == equipment.name) ?
+                                  setSelectedEquipment(null) :
+                                  setSelectedEquipment(equipment.name)
+                            }
                             disabled={
                               (context.cash < equipment.install)
                                 ? "disabled"
