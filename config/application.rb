@@ -7,7 +7,7 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 module GenericFactoryGame
-  RELEASE_DATE = Date.parse('2020-05-16')
+  RELEASE_DATE = Date.parse('2020-05-29')
   VERSION = '1.0.0'
   PREVIOUS_VERSION = '1.0.0-preview'
 
