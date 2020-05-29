@@ -202,6 +202,10 @@ function Factory(props) {
                       </tr>
                     </tbody>
                   </table>
+                  {
+                    selectedEquipment &&
+                      <img src={`/images/${props.allEquipments[selectedEquipment].image.src}`} />
+                  }
                 </div>
                 <div className="col">
                   <h6>Assign tasks</h6>
