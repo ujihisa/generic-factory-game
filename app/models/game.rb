@@ -226,8 +226,12 @@ class Game < ApplicationRecord
     # overflow
     if self.storage < self.ingredient + self.product
       diff = self.ingredient - (self.storage - self.product)
-      messages << "🗑️ Dispose #{diff}t ingredient due to overflow"
+      penalty = diff / 5
+
+      alerts << "🗑️ Dispose #{diff}t ingredient due to overflow"
+      alerts << "🗑️ Pay $#{penalty}K penalty for the ingredient overflow"
       self.ingredient -= diff
+      self.cash -= penalty
     end
 
     if self.cash < 0

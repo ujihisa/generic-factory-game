@@ -1,5 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
+import GFG from '../gfg'
+
 class SubscribeIngredient extends React.Component {
   constructor(props) {
     super(props);
@@ -11,7 +13,7 @@ class SubscribeIngredient extends React.Component {
   render () {
     const volBefore = this.props.ingredientSubscription
     const volAfter = this.state.ingredientSubscription
-    const changeFee = Math.max((volAfter - volBefore) * 0.1, 0)
+    const changeFee = Math.abs((volAfter - volBefore) * 0.1)
     // const maxVol = volBefore + this.props.cash / 0.1
     const maxVol = this.props.storage
 
@@ -36,7 +38,11 @@ class SubscribeIngredient extends React.Component {
           Change fee: ${changeFee}K
         </div>
         <div className="modal-footer">
-          <input type="submit" value="Subscribe" className="btn btn-primary" />
+          {
+            changeFee == 0
+              ? <input type="submit" value="Cancel" disabled className="btn btn-primary" />
+              : <input type="submit" value={`Pay ${GFG.numberToCurrency(changeFee)} to subscribe ${this.state.ingredientSubscription}t`} className="btn btn-primary" />
+          }
         </div>
       </React.Fragment>
     );
