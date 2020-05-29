@@ -13,7 +13,7 @@ function Storage(props) {
     (storage - context.storage) / 100;
 
   const min = context.storage;
-  const max = context.storage + context.cash * 100;
+  const max = Math.min(context.storage + context.cash * 100, min + 3000);
   return (
     <React.Fragment>
       {
