@@ -6,6 +6,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
+    @player = Player.find(params[:player_id])
     super {|user|
       user.player_id = params[:player_id]
     }
@@ -13,6 +14,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+    @player = Player.find(params[:user][:player_id])
     super
   end
 

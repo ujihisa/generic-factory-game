@@ -59,8 +59,16 @@
 
                 <%= form_with(model: game, local: true) do |form| %>
                   <%= hidden_field_tag :'game[player_id]', player.id %>
+                  <%= hidden_field_tag :'game[mode]', 'easy' %>
+                  <%= form.submit "Start game (EASY)", class: 'btn btn-lg btn-block btn-primary' %>
+                <% end %>
+
+                <br/>
+
+                <%= form_with(model: game, local: true) do |form| %>
+                  <%= hidden_field_tag :'game[player_id]', player.id %>
                   <%= hidden_field_tag :'game[mode]', 'normal' %>
-                  <%= form.submit "Start game", class: 'btn btn-lg btn-block btn-primary' %>
+                  <%= form.submit "Start game (NORMAL)", class: 'btn btn-lg btn-block btn-primary' %>
                 <% end %>
               </div>
             <%- end %>

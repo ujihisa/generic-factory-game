@@ -4,26 +4,31 @@
 
 <h2>Version <%= GenericFactoryGame::VERSION %></h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Shortest months to win</th>
-      <th>Victory date</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @games.each do |game| %>
-      <%- player = game.player %>
+<%- ['easy', 'normal'].each do |mode| %>
+  <h3><%= mode.capitalize %> mode</h3>
+  <table>
+    <thead>
       <tr>
-        <td><%= player.name %></td>
-        <td><%= game.month %> months</td>
-        <td><%= game.updated_at.in_time_zone('America/Vancouver').iso8601 %></td>
+        <th>Name</th>
+        <th>Shortest months to win</th>
+        <th>Victory date</th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% @games[mode].each do |game| %>
+        <%- player = game.player %>
+        <tr>
+          <td><%= player.name %></td>
+          <td><%= game.month %> months</td>
+          <td><%= game.updated_at.in_time_zone('America/Vancouver').iso8601 %></td>
+          <td><%= link_to 'Details', game %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<%- end %>
 
 <br>
 

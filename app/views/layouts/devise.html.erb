@@ -11,33 +11,86 @@
 
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   </head>
 
   <body>
-  <div class="container">
-    <%- if notice %>
-      <div class="alert alert-info" role="alert">
-        <%= notice %>
-      </div>
-    <%- end %>
-    <%- if alert %>
-      <div class="alert alert-danger" role="alert">
-        <%= alert %>
-      </div>
-    <%- end %>
+    <nav class="navbar navbar-expand-md navbar-light fixed-top" style="background-color: #beb3ab;">
+      <%= link_to '/', class: 'navbar-brand' do %>
+        <img src="/images/generic-factory-game.png" style="height: 1em" />
+        GenericFactoryGame
+      <%- end %>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-  <%= yield %>
-  </div>
-  <hr>
-  <%= link_to 'GenericFactoryGame', '/' %>
-  |
-  <%= link_to 'Contribute me!', 'https://github.com/ujihisa/generic-factory-game' %>
-  |
-  <%- if current_user %>
-    <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
-  <%- else %>
-    <%= link_to 'Sign in', new_user_session_path %>
-  <%- end %>
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <!--
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          </li>
+          -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Menu
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <%= link_to 'List saved games', games_path, class: 'dropdown-item' %>
+              <%= link_to 'High score', games_highscore_path, class: 'dropdown-item' %>
+              <%= link_to 'Start a new game', new_game_path, class: 'dropdown-item' %>
+              <%= link_to 'Contribute', 'https://github.com/ujihisa/generic-factory-game', class: 'dropdown-item' %>
+              <%= link_to 'Changelog', 'https://github.com/ujihisa/generic-factory-game/blob/master/CHANGELOG.md', class: 'dropdown-item' %>
+            </div>
+          </li>
+          <%- if @game&.persisted? %>
+            <li class="nav-item active">
+              <div class="nav-link disabled">
+                <b><%= @game.player.name %></b>'s game <b><%= @game.id %></b>
+                /
+                month <b><%= @game.month %></b>
+                /
+                <%= @game.status %>
+                /
+                VERSION <%= @game.version %>
+              </div>
+            </li>
+          <%- end %>
+        </ul>
+        <%- if current_user %>
+          <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'btn btn-outline-secondary' %>
+        <%- else %>
+          <%= link_to 'Log in', new_user_session_path, class: 'btn btn-outline-primary' %>
+        <%- end %>
+      </div>
+    </nav>
+    <br/>
+    <br/>
+    <br/>
+
+    <main role="main">
+      <div class="container">
+        <%- if notice %>
+          <div class="alert alert-info" role="alert">
+            <%= notice %>
+          </div>
+        <%- end %>
+        <%- if alert %>
+          <div class="alert alert-danger" role="alert">
+            <%= alert %>
+          </div>
+        <%- end %>
+        <%= yield %>
+      </div>
+    </main>
 
   </body>
 </html>

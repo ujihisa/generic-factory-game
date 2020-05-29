@@ -7,13 +7,16 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @current_games = Game.latest.where(version: GenericFactoryGame::VERSION, mode: 'normal').order(updated_at: :desc)
+    @current_games = Game.latest.where(version: GenericFactoryGame::VERSION, mode: ['easy', 'normal']).order(updated_at: :desc)
     @archived_games = Game.latest.where.not(version: GenericFactoryGame::VERSION).order(version: :desc, updated_at: :desc)
   end
 
   def highscore
-    @games = Game.best_games(GenericFactoryGame::VERSION)
-    @old_games = Game.best_games(GenericFactoryGame::PREVIOUS_VERSION)
+    @games = {
+      'easy' => Game.best_games(GenericFactoryGame::VERSION, 'easy'),
+      'normal' => Game.best_games(GenericFactoryGame::VERSION, 'normal'),
+    }
+    @old_games = Game.best_games(GenericFactoryGame::PREVIOUS_VERSION, 'normal')
   end
 
   # GET /games/1
@@ -43,13 +46,16 @@ class GamesController < ApplicationController
     end
 
     if @game.mode == 'tutorial'
+      @game.month = 3
       @game.cash = 999
-      @game.storage = 500
-      @game.ingredient = 500
-      @game.ingredient_subscription = 500
+      @game.storage = 200
+      @game.ingredient = 100
+      @game.ingredient_subscription = 100
       @game.equipments = [Factory.lookup(equipment_name: :'Factory base')]
-      @game.assignments = [Assignment.new(:produce, :Intermediate, 24)]
-      @game.employee_groups_raw = {'Intermediate' => 24}.to_json
+      @game.assignments = [Assignment.new(:produce, :Intermediate, 4)]
+      @game.employee_groups_raw = {'Intermediate' => 4}.to_json
+      @game.signed_contracts = {'Tutorial': 0}
+
       @game.messages = <<~EOS.lines.to_a
         Welcome to GenericFactoryGame!
         In this tutorial I'd love you to understand "End month" before starting actual game.
@@ -69,11 +75,6 @@ class GamesController < ApplicationController
     @players = Player.all
 
     if @game.save
-      if @game.mode == 'tutorial'
-        @game.signed_contracts = {'Y': 0}
-        @game.save!(validate: false)
-      end
-
       redirect_to @game, alert: @game.messages.join("\n")
     else
       render :new

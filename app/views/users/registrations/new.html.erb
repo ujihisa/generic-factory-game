@@ -18,7 +18,8 @@
 
   <div class="field">
     <%= f.label :player_id %><br />
-    <%= f.number_field :player_id %>
+    <%= f.hidden_field :player_id %>
+    <input type="text" disabled value="<%= @player.name %>" />
   </div>
 
   <div class="actions">

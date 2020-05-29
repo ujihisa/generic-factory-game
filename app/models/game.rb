@@ -6,7 +6,7 @@ class Game < ApplicationRecord
   latest_columns = column_names.map(&:to_sym) - [:messages_raw, :portfolios_raw]
   scope :latest, -> { includes(:player).select(latest_columns) }
 
-  validates :mode, inclusion: { in: %w(normal tutorial) }
+  validates :mode, inclusion: { in: %w(easy normal tutorial) }
   validate :validate_assignments
   validate :validate_factory_equipments
   validate :validate_ingredient_and_product
@@ -251,11 +251,11 @@ class Game < ApplicationRecord
     [[0, credit].max, 100].min
   end
 
-  def self.best_games(game_version)
+  def self.best_games(game_version, mode)
     Game.
       latest.
       includes(:player).
-      where(%q[version = ? AND 1000 <= cash AND mode = 'normal'], game_version).
+      where(%q[version = ? AND 1000 <= cash AND mode = ?], game_version, mode).
       order(month: :asc)
   end
 
