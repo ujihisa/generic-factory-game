@@ -23,7 +23,7 @@ class PlayersController < ApplicationController
     @player = Player.new(player_params)
 
     if @player.save
-      redirect_to '/', notice: "Player #{@player.name} was successfully created."
+      redirect_to new_user_registration_path(player_id: @player.id), notice: "Player #{@player.name} was successfully created."
     else
       render :new
     end

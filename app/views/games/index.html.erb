@@ -7,13 +7,10 @@
 <table class="table table-hover table-xl">
   <thead>
     <tr>
-      <th scope="col">Game ID</th>
       <th scope="col">Player</th>
+      <th scope="col">Game Mode</th>
       <th scope="col">Months spent</th>
       <th scope="col">Money</th>
-      <th scope="col">Storage</th>
-      <th scope="col">Ingredient</th>
-      <th scope="col">Product</th>
       <th scope="col">Last update</th>
       <th scope="col">Status</th>
     </tr>
@@ -22,8 +19,14 @@
   <tbody class="table">
     <% @current_games.each do |game| %>
       <tr>
-        <td><%= game.id %></td>
-        <td><%= game.player.name %></td>
+        <td>
+          <%- if current_user&.player == game.player %>
+            <b><%= game.player.name %></b>
+          <%- else %>
+            <%= game.player.name %>
+          <%- end %>
+        </td>
+        <td><%= game.mode.capitalize %></td>
         <td><%= game.month %></td>
         <td>
           <%= number_to_currency(game.cash, precision: 0, format: '%u%nK') %>
@@ -34,9 +37,6 @@
             <%= number_to_currency(game.cash - game.debt, precision: 0, format: '%u%nK') %>
           </font>
         </td>
-        <td><%= game.storage %></td>
-        <td><%= game.ingredient %></td>
-        <td><%= game.product %></td>
         <td><%= game.updated_at.in_time_zone('America/Vancouver').iso8601 %></td>
         <td><b><%= link_to game.status.to_s.capitalize, game %></b></td>
       </tr>

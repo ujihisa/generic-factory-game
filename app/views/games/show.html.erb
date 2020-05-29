@@ -1,6 +1,3 @@
-<b><%= @game.player.name %></b>'s game <b><%= @game.id %></b> / month <b><%= @game.month %></b> / <%= @game.status %> / VERSION <%= @game.version %>
-<hr>
-
 <%- case @game.status %>
 <%- when :game_over %>
   <h1 class='display-3 jumbotron'>
@@ -67,7 +64,7 @@
       quality: @game.quality,
       createContractUrl: game_contracts_path(@game.id),
       cancelContractUrl: contracts_cancel_game_path(@game.id),
-      contractDump: Contract.dump,
+      contractDump: Contract.dump(@game.mode),
       signedContracts: @game.signed_contracts.as_json,
       buy_ingredients_game_url: buy_ingredients_game_url,
       notice: notice,
