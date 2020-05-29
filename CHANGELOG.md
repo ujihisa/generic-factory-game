@@ -15,7 +15,6 @@
     * Contracts
         * Less product volume contracts tend to be high sales performance
         * It's harder to fullfill minimal credit for better contracts
-* "Easy mode"
 * Factory equipments may "deprecate" older version
     * When you buy an equipment, it may remove an older version of it
     * You can skip older version if you want
@@ -23,7 +22,11 @@
         * If you buy "Fullauto machines", you can't buy "Semiauto machines"
         * If you already have "Semiauto machines", buying "Fullauto machines" removes "Semiauto machines"
             * After you get "Fullauto machines", you don't have to pay monthly cost of "Semiauto machines", since it doesn't exist now
-* Factory equipments now have images
+* Ingredient overflow costs $1 for 5t
+* SubscribeIngredient change fee applies also when you reduce the subscription volume
+* Added "Easy mode"
+* UIs
+    * Factory equipments now have images
 
 ## 1.0.0-preview
 

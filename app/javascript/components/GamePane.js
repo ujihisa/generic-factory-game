@@ -17,15 +17,17 @@ function GamePane(props) {
       if (!e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
         if (e.key == "s")
           $('#storageModal').modal('show')
-        else if (e.key == "b")
-          $('#buyIngredientModal').modal('show')
         else if (e.key == "h")
           $('#hiringModal').modal('show')
         else if (e.key == "c")
           $('#contractsModal').modal('show')
         else if (e.key == "f")
           $('#factoryModal').modal('show')
-        else if (e.key == "a" && 10 <= context.credit)
+        else if (e.key == "b" && 1 <= props.credit)
+          $('#bankModal').modal('show')
+        else if (e.key == "i" && 10 <= props.credit)
+          $('#subscribeIngredientModal').modal('show')
+        else if (e.key == "a" && 10 <= props.credit)
           $('#advertiseModal').modal('show')
       }
     })
@@ -104,7 +106,7 @@ function GamePane(props) {
 
         {
           (0 < props.credit || 0 < props.debt)
-            ? <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
+            ? <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#bankModal">
               🏦 Bank
             </button>
             : <span className="d-inline-block" data-toggle="popover"
@@ -116,7 +118,7 @@ function GamePane(props) {
             </span>
         }
 
-        <div className="modal" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal" id="bankModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <form action={props.action} acceptCharset="UTF-8" data-remote="true" method="post">
