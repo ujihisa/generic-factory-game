@@ -14,7 +14,9 @@
 
 <h2>MENU</h2>
 <ul>
-  <li><%= link_to 'Create a new player', new_player_path %>
+  <%- unless current_user %>
+    <li><%= link_to 'Create a new player', new_player_path %>
+  <%- end %>
   <li><%= link_to 'Start a new game', new_game_path %>
   <li><%= link_to 'List saved games', games_path %>
   <li><%= link_to 'High score', games_highscore_path %>
