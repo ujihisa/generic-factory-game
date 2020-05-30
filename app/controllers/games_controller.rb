@@ -31,7 +31,7 @@ class GamesController < ApplicationController
   # GET /games/new
   def new
     @game = Game.new
-    @players = Player.all
+    @players = Player.all.reject(&:user)
   end
 
   # POST /games
@@ -72,7 +72,7 @@ class GamesController < ApplicationController
       @game.cash = 300
       @game.messages = ['You started your own business from nothing but $300K.']
     end
-    @players = Player.all
+    @players = Player.all.reject(&:user)
 
     if @game.save
       redirect_to @game, alert: @game.messages.join("\n")
