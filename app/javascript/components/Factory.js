@@ -23,7 +23,7 @@ function Factory(props) {
   ]
   */
 
-  const sum = (xs) => xs.reduce((a, b) => a + b, 0);
+  const sum = GFG.sum;
 
   const signed = (n) => (n < 0) ? `${n}` : `+${n}`;
 

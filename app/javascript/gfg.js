@@ -13,6 +13,10 @@ const GFG = {
 
   numberToCurrency(n) {
     return `$${n}K`;
+  },
+
+  sum(xs) {
+    return xs.reduce((a, b) => a + b, 0);
   }
 };
 

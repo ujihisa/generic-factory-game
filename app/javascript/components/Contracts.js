@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from "prop-types"
 import GFG from '../gfg'
 
-var chart;
+let chart;
 
 function Contracts(props) {
   const context = useContext(GFG.GameContext);
@@ -42,6 +42,15 @@ function Contracts(props) {
 
   useEffect(() => {
     const ctx = chartRef.current.getContext("2d");
+
+    const labelF = (tooltipItem, data) => {
+      const total = GFG.sum(
+        data.datasets.map((dataset) => 
+          dataset.data[tooltipItem.index]
+        ));
+      return `${data.datasets[tooltipItem.datasetIndex].label}: ${tooltipItem.yLabel}t (total: ${total}t)`;
+    };
+
     chart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -63,7 +72,7 @@ function Contracts(props) {
         },
         tooltips: {
           callbacks: {
-            label: (tooltipItem, data) => `${data.datasets[tooltipItem.datasetIndex].label}: ${tooltipItem.yLabel}t`,
+            label: labelF,
           }
         }
       }
@@ -109,9 +118,9 @@ function Contracts(props) {
                         <div className={`card ${signed ? "border-light" : locked ? "text-white bg-dark" : selected ? "text-white bg-primary" : "border-info"} mb-3`}
                           onClick={(_) => {
                             setContract(selected ? null : name) 
-                            if (!chart) {
+                            /*if (!chart) {
                               // !?
-                            } else if (selected) {
+                            } else*/ if (selected) {
                               chart.data.datasets = chartDefaultDatasets;
 
                               chart.update();
