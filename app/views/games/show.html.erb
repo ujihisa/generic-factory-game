@@ -1,3 +1,6 @@
+<%- if @game.version == '1.0.0-preview'
+  @ujihisa is working on fixing this older version view
+<%- else %>
 <%- case @game.status %>
 <%- when :game_over %>
   <h1 class='display-3 jumbotron'>
@@ -168,4 +171,5 @@
     <dd>Employee groups:</dd>
     <dt><code><%= @game.employee_groups_raw %></code></dt>
   </dl>
+<%- end %>
 <%- end %>
