@@ -44,11 +44,11 @@
               Menu
             </a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <%= link_to 'Start a new game', new_game_path, class: 'dropdown-item' %>
               <%= link_to 'List saved games', games_path, class: 'dropdown-item' %>
               <%= link_to 'High score', games_highscore_path, class: 'dropdown-item' %>
-              <%= link_to 'Start a new game', new_game_path, class: 'dropdown-item' %>
               <%= link_to 'Contribute', 'https://github.com/ujihisa/generic-factory-game', class: 'dropdown-item' %>
-              <%= link_to 'Changelog', 'https://github.com/ujihisa/generic-factory-game/blob/master/CHANGELOG.md', class: 'dropdown-item' %>
+              <%= link_to 'Changelog', 'https://github.com/ujihisa/generic-factory-game/blob/master/CHANGELOG.md#100', class: 'dropdown-item' %>
             </div>
           </li>
           <%- if @game&.persisted? %>

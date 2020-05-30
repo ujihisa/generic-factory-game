@@ -6,7 +6,7 @@
 
 <% if @game.errors.any? %>
   <div id="error_explanation">
-    <h2><%= pluralize(@game.errors.count, "error") %> prohibited this @game from being saved:</h2>
+    <h2><%= pluralize(@game.errors.count, "error") %> prohibited this game from being saved:</h2>
 
     <ul>
       <% @game.errors.full_messages.each do |message| %>
@@ -51,30 +51,30 @@
 
                 <br/><br/>
 
-                <%= submit_tag "Start @game", class: 'btn btn-lg btn-block btn-primary', disabled: true %>
+                <%= submit_tag "Start game", class: 'btn btn-lg btn-block btn-primary', disabled: true %>
               </div>
             <%- else %>
               <div>
                 <%= form_with(model: @game, local: true) do |form| %>
-                  <%= hidden_field_tag :'@game[player_id]', player.id %>
-                  <%= hidden_field_tag :'@game[mode]', 'tutorial' %>
+                  <%= hidden_field_tag :'game[player_id]', player.id %>
+                  <%= hidden_field_tag :'game[mode]', 'tutorial' %>
                   <%= form.submit "Try tutorial", class: 'btn btn btn-secondary' %>
                 <% end %>
 
                 <br/>
 
                 <%= form_with(model: @game, local: true) do |form| %>
-                  <%= hidden_field_tag :'@game[player_id]', player.id %>
-                  <%= hidden_field_tag :'@game[mode]', 'easy' %>
-                  <%= form.submit "Start @game (EASY)", class: 'btn btn-lg btn-block btn-primary' %>
+                  <%= hidden_field_tag :'game[player_id]', player.id %>
+                  <%= hidden_field_tag :'game[mode]', 'easy' %>
+                  <%= form.submit "Start game (EASY)", class: 'btn btn-lg btn-block btn-primary' %>
                 <% end %>
 
                 <br/>
 
                 <%= form_with(model: @game, local: true) do |form| %>
-                  <%= hidden_field_tag :'@game[player_id]', player.id %>
-                  <%= hidden_field_tag :'@game[mode]', 'normal' %>
-                  <%= form.submit "Start @game (NORMAL)", class: 'btn btn-lg btn-block btn-primary', disabled: Rails.env.production? %>
+                  <%= hidden_field_tag :'game[player_id]', player.id %>
+                  <%= hidden_field_tag :'game[mode]', 'normal' %>
+                  <%= form.submit "Start game (NORMAL)", class: 'btn btn-lg btn-block btn-primary', disabled: Rails.env.production? %>
                   (NORMAL MODE UNDER DEVELOPMENT)
                 <% end %>
               </div>
