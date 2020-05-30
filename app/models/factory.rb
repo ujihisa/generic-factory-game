@@ -2,7 +2,19 @@
 
 class Factory
   EQUIPMENTS = {
+    'Old factory base': {
+      type: 'base',
+      install: 0,
+      cost: 40,
+      production: { Junior: 0, Intermediate: 0, Senior: 0 },
+      quality: { Junior: 0, Intermediate: 0, Senior: 0 },
+      deprecate: [],
+      description: "It doesn't help you producing but without it you can't produce anything. The rent is not cheap too.",
+      image: {z: 0, src: 'factory-base.png'},
+      modes: ['normal'],
+    }.freeze,
     'Factory base': {
+      type: 'base',
       install: 10,
       cost: 20,
       production: { Junior: 0, Intermediate: 0, Senior: 0 },
@@ -20,7 +32,7 @@ class Factory
       deprecate: [],
       description: "Leverage skilled craftspersons. Minor upgrade for experienced employees",
       image: {z: 1, src: 'cheap-toolsets.png'},
-      modes: ['easy'],
+      modes: ['easy', 'normal'],
     }.freeze,
     Conveyor: {
       install: 100,
@@ -30,7 +42,18 @@ class Factory
       deprecate: [],
       description: "Now staff don't have to walk around, but stuff walk around instead.",
       image: {z: 1, src: 'conveyor.png'},
-      modes: ['easy'],
+      modes: ['easy', 'normal'],
+    }.freeze,
+    'New factory base': {
+      type: 'base',
+      install: 100,
+      cost: 20,
+      production: { Junior: 0, Intermediate: 0, Senior: 0 },
+      quality: { Junior: 0, Intermediate: 0, Senior: 0 },
+      deprecate: [:'Old factory base'],
+      description: "It doesn't help you producing but without it you can't produce anything. The rent is not cheap too.",
+      image: {z: 0, src: 'factory-base.png'},
+      modes: ['normal'],
     }.freeze,
     'Advanced toolsets': {
       install: 150,
@@ -101,7 +124,7 @@ class Factory
   end
 
   def production_volume
-    if @equipments.find { _1[:name] == :'Factory base' }
+    if have_base?
       @assignments.sum { production_vol(_1, self.class.__reject_deprecated(@equipments)) }
     else
       0
@@ -128,7 +151,7 @@ class Factory
   end
 
   def production_quality
-    if @equipments.find { _1[:name] == :'Factory base' }
+    if have_base?
       x = self.class.__production_quavol(@assignments, self.class.__reject_deprecated(@equipments)) / production_volume.to_f
       x.nan? ? 0 : x
     else
@@ -169,5 +192,13 @@ class Factory
 
   def self.__reject_deprecated(equipments)
     equipments.reject {|equipment| equipments.any? { _1[:deprecate].include?(equipment[:name]) } }
+  end
+
+  def have_base?
+    @equipments.find { _1[:type] == 'base' }
+  end
+
+  def equipments_cost
+    self.class.__reject_deprecated(@equipments).sum {|eqt| eqt[:cost] }
   end
 end

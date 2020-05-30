@@ -103,17 +103,21 @@ class Contract < Struct.new(:name, :mode, :required_credit, :description, :trade
     #   default: Trade.new(800, 400),
     # }),
     'K' => new('K', 'normal', 0, 'They have a big sale in Oct.', {
-      default: Trade.new(20, 27), # Math.sqrt(20) * 6 = 27
-      October: Trade.new(40, 38), # Math.sqrt(40) * 6 = 38
+      default: Trade.new(40, 38), # Math.sqrt(40) * 6 = 38
+      October: Trade.new(120, 66), # Math.sqrt(120) * 6 = 66
     }),
     'L' => new('L', 'normal', 0, 'WIP', {
-      default: Trade.new(21, 26), # Math.sqrt(21) * 6 = 27
+      default: Trade.new(40, 38), # Math.sqrt(40) * 6 = 38
     }),
     'M' => new('M', 'normal', 0, 'WIP', {
-      default: Trade.new(30, 32), # Math.sqrt(30) * 6 = 33
+      default: Trade.new(80, 54), # Math.sqrt(80) * 6 = 54
     }),
-    'N' => new('N', 'normal', 25, 'WIP', {
-      default: Trade.new(19, 25), # Math.sqrt(19) * 6 = 26
+    'N' => new('N', 'normal', 0, 'They require products quarterly, but pay sales monthly (average 100t/month)', {
+      default: Trade.new(0, 60),
+      January: Trade.new(300, 60), # Math.sqrt(100) * 6 = 60
+      April: Trade.new(300, 60), # Math.sqrt(100) * 6 = 60
+      July: Trade.new(300, 60), # Math.sqrt(100) * 6 = 60
+      October: Trade.new(300, 60), # Math.sqrt(100) * 6 = 60
     }),
   }
   private_constant :ALL

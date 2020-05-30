@@ -11,6 +11,11 @@ function Factory(props) {
   const equipmentsForEstimate = props.allEquipments[selectedEquipment]
     ? [...context.equipments, props.allEquipments[selectedEquipment]]
     : context.equipments;
+
+  const equipmentsForEstimateWithoutDeprecated =
+    equipmentsForEstimate.
+    filter((eq) => !equipmentsForEstimate.some((e) => e.deprecate.includes(eq.name)));
+
   /*
   const assignmentsSummary = [
     {
@@ -30,8 +35,7 @@ function Factory(props) {
   const volumeSubtotalFromAssignmentsSummaryItem = (as) => 
     context.employees[as.name].volume +
       sum(
-        equipmentsForEstimate.
-        filter((eq) => !equipmentsForEstimate.some((e) => e.deprecate.includes(eq.name))).
+        equipmentsForEstimateWithoutDeprecated.
         map((eq) => eq.production[as.name]));
 
   const qualitySubtotalFromAssignmentsSummaryItem = (as) => 
@@ -39,8 +43,7 @@ function Factory(props) {
       ? (
         context.employees[as.name].quality +
         sum(
-          equipmentsForEstimate.
-          filter((eq) => !equipmentsForEstimate.some((e) => e.deprecate.includes(eq.name))).
+          equipmentsForEstimateWithoutDeprecated.
           map((eq) => eq.quality[as.name])))
     : 0;
 
@@ -217,11 +220,11 @@ function Factory(props) {
                   <p>
                     <code>
                       {
-                        equipmentsForEstimate.map((e) => e.cost).join(" + ")
+                        equipmentsForEstimateWithoutDeprecated.map((e) => e.cost).join(" + ")
                       }
                       &nbsp;=&nbsp;
                       {
-                        GFG.numberToCurrency(sum(equipmentsForEstimate.map((e) => e.cost)))
+                        GFG.numberToCurrency(sum(equipmentsForEstimateWithoutDeprecated.map((e) => e.cost)))
                       }
                     </code>
                   </p>

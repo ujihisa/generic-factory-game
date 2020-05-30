@@ -147,7 +147,7 @@ function CurrentStatus(props) {
                 }
                 <div>
                   {
-                    (context.equipments.some((e) => e.name == 'Factory base'))
+                    (context.equipments.some((e) => e.type == 'base'))
                       ? <ul className="list-unstyled">
                         {
                           context.equipments.map((e) =>

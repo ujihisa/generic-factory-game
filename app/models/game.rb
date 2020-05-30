@@ -212,7 +212,7 @@ class Game < ApplicationRecord
     self.cash -= self.interest
     messages << "🏦 Pay $#{self.interest}K for interest" if 0 < interest
 
-    equipments_cost = self.equipments.sum {|eqt| eqt[:cost] }
+    equipments_cost = self.factory.equipments_cost
     self.cash -= equipments_cost
     messages << "🏭 Pay $#{equipments_cost}K for factory equipments" if 0 < equipments_cost
 
@@ -386,5 +386,65 @@ class Game < ApplicationRecord
     unless self.version == GenericFactoryGame::VERSION
       self.errors.add(:version, "You can't play a game from old version")
     end
+  end
+
+  def hint(estimate)
+    case
+    when self.ingredient < self.signed_contracts.product_required(self.next_month)
+      if 10 <= self.credit
+          {
+            fact: "You are missing products because you don't have enough ingredient.",
+            suggestion: "Buy ingredient now. Also, subscribe some ingredients to prevent this to happen again.",
+          }
+      else
+        {
+          fact: "You are missing products because you don't have enough ingredient.",
+          suggestion: "Buy ingredient now.",
+        }
+      end
+    when self.factory.production_volume < self.signed_contracts.product_required(self.current_month)
+      if !self.factory.have_base?
+        {
+          fact: "You have enough ingredients, but your factory doesn't produce anything without a factory base.",
+          suggestion: "Buy&instal a factory base.",
+        }
+      elsif self.assignments.sum(&:num) == 0
+        {
+          fact: "You have enough ingredients, but your factory can't produce enough products the contracts require.",
+          suggestion: "Hire more employees",
+        }
+      elsif 0 < self.assignments.select {|a| a.role == :mentor }.sum(&:num)
+        {
+          fact: "You have enough ingredients, but your factory can't produce enough products the contracts require.",
+          suggestion: "Hire more employees, buy&install more factory equipments, or let mentors produce instead.",
+        }
+      else
+        {
+          fact: "You have enough ingredients, but your factory can't produce enough products the contracts require.",
+          suggestion: "Hire more employees, or buy&install more factory equipments",
+        }
+      end
+    when estimate.cash < 0
+      if estimate.alerts.grep_v(/Cash balance/).present?
+        {
+          fact: "Next month, your cash will run out",
+          suggestion: "Try resolving the warnings",
+        }
+      elsif self.debt < self.max_debt
+        {
+          fact: "Next month, your cash will run out",
+          suggestion: "Borrow money from Bank",
+        }
+      else
+        {
+          fact: "Next month, your cash will run out",
+          suggestion: "Oh... no...",
+        }
+      end
+    end
+  end
+
+  def max_debt
+    credit * 10
   end
 end

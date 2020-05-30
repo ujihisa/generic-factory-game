@@ -28,36 +28,7 @@ class GamesController < ApplicationController
       game.settlement()
     end
 
-    @game_hint = game_hint()
-  end
-
-  private def game_hint
-    case
-    when @game.ingredient < @game.signed_contracts.product_required(@game.current_month)
-      if 10 <= @game.credit
-          {
-            fact: "You are missing products because you don't have enough ingredient.",
-            suggestion: "Buy ingredient now. Also, subscribe some ingredients to prevent this to happen again.",
-          }
-      else
-        {
-          fact: "You are missing products because you don't have enough ingredient.",
-          suggestion: "Buy ingredient now.",
-        }
-      end
-    when @game.factory.production_volume < @game.signed_contracts.product_required(@game.current_month)
-      if 0 < @game.assignments.select {|a| a.role == 'mentor' }.sum(&:num)
-        {
-          fact: "You have enough ingredients, but your factory can't produce enough products the contracts require.",
-          suggestion: "Hire more employees, buy&install more factory equipments, or let mentors produce instead.",
-        }
-      else
-        {
-          fact: "You have enough ingredients, but your factory can't produce enough products the contracts require.",
-          suggestion: "Hire more employees, or buy&install more factory equipments",
-        }
-      end
-    end
+    @game_hint = @game.hint(@estimate)
   end
 
   # GET /games/new
@@ -107,12 +78,22 @@ class GamesController < ApplicationController
       @game.cash = 0
       @game.credit = 10
       @game.storage = 100
-      @game.ingredient = 20
-      @game.ingredient_subscription = 20
-      @game.quality = 10
-      @game.assignments = [Assignment.new(:produce, :Senior, 1)]
-      @game.employee_groups_raw = {'Senior' => 1}.to_json
-      @game.equipments = [Factory.lookup(equipment_name: :'Factory base')]
+      @game.ingredient = 40
+      @game.ingredient_subscription = 40
+      @game.quality = 14
+      @game.assignments = [
+        Assignment.new(:produce, :Junior, 1),
+        Assignment.new(:produce, :Intermediate, 1),
+        Assignment.new(:produce, :Senior, 1),
+      ]
+      @game.employee_groups_raw = {
+        'Junior' => 1,
+        'Intermediate' => 1,
+        'Senior' => 1,
+      }.to_json
+      @game.equipments = [
+        Factory.lookup(equipment_name: :'Old factory base'),
+      ]
       @game.signed_contracts = {'K': -2}
     end
     @players = Player.all.reject(&:user)
@@ -198,7 +179,9 @@ class GamesController < ApplicationController
 
   def borrow_money
     new_debt = params[:debt].to_i
-    if @game.credit * 10 < new_debt
+
+    # This validation can't be in game model, since this is only when to borrow money
+    if @game.max_debt < new_debt
       return redirect_to @game, alert: "You can't borrow cash more than your credit * 10"
     end
 
