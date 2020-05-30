@@ -48,11 +48,8 @@
       <tr>
         <td><%= player.name %></td>
         <td>
-          <%- if player.previous_best_game %>
-            <%= player.previous_best_game.month %> months</td>
-          <%- else %>
-            N/A
-          <%- end %>
+          <%= game.month %> months
+        </td>
       </tr>
     <% end %>
   </tbody>
