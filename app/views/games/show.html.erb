@@ -29,8 +29,8 @@
           <div class="card-body">
             <%= form_with(url: games_path, method: :post) do |form| %>
               <%= hidden_field_tag :'game[player_id]', @game.player.id %>
-              <%= hidden_field_tag :'game[mode]', 'normal' %>
-              <%= form.submit "Start game", class: 'btn btn-lg btn-block btn-primary' %>
+              <%= hidden_field_tag :'game[mode]', 'easy' %>
+              <%= form.submit "Start game (EASY MODE)", class: 'btn btn-lg btn-block btn-primary' %>
             <% end %>
           </div>
         </div>
