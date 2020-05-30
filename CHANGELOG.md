@@ -25,6 +25,7 @@
 * Ingredient overflow costs $1 for 5t
 * SubscribeIngredient change fee applies also when you reduce the subscription volume
 * Added "Easy mode"
+    * Each mode has its own Contracts / Factory equipments
 * UIs
     * Factory equipments now have images
 
