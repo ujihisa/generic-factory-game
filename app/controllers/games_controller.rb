@@ -26,9 +26,6 @@ class GamesController < ApplicationController
     @estimate = Game.find(params[:id]).tap do |game|
       game.settlement()
     end
-  rescue => e
-    Rails.logger.error(e)
-    render plain: '@ujihisa is working on fixing this older version view'
   end
 
   # GET /games/new

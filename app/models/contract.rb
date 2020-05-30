@@ -107,7 +107,10 @@ class Contract < Struct.new(:name, :mode, :required_credit, :description, :trade
 
   # ActiveRecord'ish UIs
   def self.find(name:)
-    ALL[name]
+    ALL[name] ||
+      new('DUMMY', 'easy', 0, 'Dummy contract', {
+        default: Trade.new(1, 1),
+      })
   end
 
   def self.dump(mode)
