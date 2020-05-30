@@ -62,7 +62,7 @@
       ingredient: @game.ingredient,
       product: @game.product,
       quality: @game.quality,
-      createContractUrl: game_contracts_path(@game.id),
+      createContractUrl: contracts_create_game_path(@game.id),
       cancelContractUrl: contracts_cancel_game_path(@game.id),
       contractDump: Contract.dump(@game.mode),
       signedContracts: @game.signed_contracts.as_json,

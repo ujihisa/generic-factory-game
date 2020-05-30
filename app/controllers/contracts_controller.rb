@@ -1,7 +1,8 @@
 class ContractsController < ApplicationController
+  before_action :game_with_user
+
   def create
     # @contract = Contract.new(game_id: params[:game_id], **contract_params)
-    @game = Game.find(params[:game_id])
 
     @game.signed_contracts.sign(@game.month, params[:name])
 
@@ -26,5 +27,13 @@ class ContractsController < ApplicationController
   # Only allow a list of trusted parameters through.
   private def contract_params
     params.require(:contract).permit(:game_id, :name)
+  end
+
+  private def game_with_user
+    @game = Game.find(params[:id])
+
+    if @game.player.user && @game.player.user != current_user
+      redirect_to :new_game, alert: 'Invalid game/user'
+    end
   end
 end

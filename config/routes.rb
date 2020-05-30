@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       post 'factory_buyinstall'
 
       post 'contracts/cancel', to: 'contracts#cancel'
+      post 'contracts/create', to: 'contracts#create'
     end
 
     resources :contracts, only: [:create]
