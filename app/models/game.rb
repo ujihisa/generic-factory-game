@@ -11,6 +11,7 @@ class Game < ApplicationRecord
   validate :validate_factory_equipments
   validate :validate_ingredient_and_product
   validate :validate_signed_contracts
+  validate :validate_latest
 
   MONTHS = [
     'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
@@ -369,6 +370,12 @@ class Game < ApplicationRecord
             self.errors.add(:signed_contracts, "#{c.name} has been signed at month #{m}")
           end
       end
+    end
+  end
+
+  private def validate_latest
+    unless self.version == GenericFactoryGame::VERSION
+      self.errors.add(:version, "You can't a game from old version")
     end
   end
 end
