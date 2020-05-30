@@ -314,7 +314,8 @@ function Factory(props) {
                       Object.values(props.allEquipments).map((equipment, i) =>
                         <div className="form-check" key={equipment.name} >
                           <input className="form-check-input" type="radio" name="equipmentRadios" id={`equipmentRadios${i}`} value={equipment.name}
-                            checked={selectedEquipment == equipment.name} onChange={(_) => 0} onClick={(e) =>
+                            checked={selectedEquipment == equipment.name} onChange={(_) => 0}
+                            onClick={(e) =>
                                 (selectedEquipment == equipment.name) ?
                                   setSelectedEquipment(null) :
                                   setSelectedEquipment(equipment.name)

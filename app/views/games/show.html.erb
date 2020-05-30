@@ -79,7 +79,7 @@
       factory_buyinstall_game_path: factory_buyinstall_game_path,
       advertise_game_path: advertise_game_path,
       productRequiredNextMonth: @game.signed_contracts.product_required(@game.next_month),
-      allEquipments: Factory::EQUIPMENTS,
+      allEquipments: Factory::EQUIPMENTS.select {|_, v| v[:modes].include?(@game.mode) },
       assignmentsSummary: EmployeeGroup::ALL.values.map(&:category).uniq.map {|category|
         {
           name: category,

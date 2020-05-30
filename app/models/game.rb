@@ -318,10 +318,18 @@ class Game < ApplicationRecord
   end
 
   private def validate_factory_equipments
+    # Duplicates
     dups = self.equipments.map { _1[:name] }.tally.select {|_, v| 1 < v}.keys
     if dups.present?
       self.errors.add(:equipments, "Duplicate equipments: #{dups.join(', ')}")
     end
+
+    # Mode
+    self.equipments.
+      reject {|equipment| equipment[:modes].include?(self.mode) }.
+      each do |equipment|
+        self.errors.add(:equipments, "Not allowed for your game mode #{self.mode}")
+      end
   end
 
   def buyinstall_equipment(equipment)

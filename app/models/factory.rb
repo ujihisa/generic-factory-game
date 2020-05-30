@@ -7,9 +7,10 @@ class Factory
       cost: 20,
       production: { Junior: 0, Intermediate: 0, Senior: 0 },
       quality: { Junior: 0, Intermediate: 0, Senior: 0 },
-      deprecate: [:'Factory base'],
+      deprecate: [],
       description: "It doesn't help you producing but without it you can't produce anything. The rent is not cheap too.",
       image: {z: 0, src: 'factory-base.png'},
+      modes: ['tutorial', 'easy'],
     }.freeze,
     'Cheap toolsets': {
       install: 50,
@@ -19,6 +20,7 @@ class Factory
       deprecate: [],
       description: "Leverage skilled craftspersons. Minor upgrade for experienced employees",
       image: {z: 1, src: 'cheap-toolsets.png'},
+      modes: ['easy'],
     }.freeze,
     Conveyor: {
       install: 100,
@@ -28,6 +30,7 @@ class Factory
       deprecate: [],
       description: "Now staff don't have to walk around, but stuff walk around instead.",
       image: {z: 1, src: 'conveyor.png'},
+      modes: ['easy'],
     }.freeze,
     'Advanced toolsets': {
       install: 150,
@@ -37,6 +40,7 @@ class Factory
       deprecate: [:'Cheap toolsets'],
       description: "Leverage skilled craftspersons. Advanced people need advanced tools.",
       image: {z: 1, src: 'advanced-toolsets.png'},
+      modes: ['easy'],
     }.freeze,
     'Free space': {
       install: 100,
@@ -46,6 +50,7 @@ class Factory
       deprecate: [],
       description: "Enjoy your relaxed time",
       image: {z: 4, src: 'free-space.png'},
+      modes: ['easy', 'normal'],
     }.freeze,
     'Computers': {
       install: 200,
@@ -55,6 +60,7 @@ class Factory
       deprecate: [],
       description: "Helps you archtechting, designing, sharing knowledge, and many more",
       image: {z: 1, src: 'computers.png'},
+      modes: ['easy', 'normal'],
     }.freeze,
     'Semiauto machines': {
       install: 200,
@@ -64,6 +70,7 @@ class Factory
       deprecate: [],
       description: "Industrialization",
       image: {z: 2, src: 'semiauto-machines.png'},
+      modes: ['easy', 'normal'],
     }.freeze,
     'Anormal detector': {
       install: 300,
@@ -73,6 +80,7 @@ class Factory
       deprecate: [],
       description: "It has better eyes than human's",
       image: {z: 2, src: 'anormal-detector.png'},
+      modes: ['normal'],
     }.freeze,
     'Fullauto machines': {
       install: 400,
@@ -82,6 +90,7 @@ class Factory
       deprecate: [:'Semiauto machines'],
       description: "Let the machines do all the jobs",
       image: {z: 3, src: 'fullauto-machines.png'},
+      modes: ['normal'],
     }.freeze,
   }.to_h {|k, v| [k, v.merge(name: k)] }.freeze
 
