@@ -45,8 +45,8 @@ class GamesController < ApplicationController
       return redirect_to :new_game, alert: 'Invalid game/user'
     end
 
-    if @game.mode == 'tutorial'
-      @game.month = 3
+    case @game.mode
+    when 'tutorial'
       @game.cash = 999
       @game.storage = 200
       @game.ingredient = 100
@@ -54,7 +54,7 @@ class GamesController < ApplicationController
       @game.equipments = [Factory.lookup(equipment_name: :'Factory base')]
       @game.assignments = [Assignment.new(:produce, :Intermediate, 4)]
       @game.employee_groups_raw = {'Intermediate' => 4}.to_json
-      @game.signed_contracts = {'Tutorial': 0}
+      @game.signed_contracts = {'Tutorial': -2}
 
       @game.messages = <<~EOS.lines.to_a
         Welcome to GenericFactoryGame!
@@ -68,9 +68,20 @@ class GamesController < ApplicationController
 
         このゲームのクリア条件は、資産を$1,000Kにすることです。 (資産=現金-借金)
       EOS
-    else
+    when 'easy'
       @game.cash = 300
       @game.messages = ['You started your own business from nothing but $300K.']
+    else # 'normal'
+      @game.cash = 0
+      @game.credit = 10
+      @game.storage = 100
+      @game.ingredient = 20
+      @game.ingredient_subscription = 20
+      @game.quality = 10
+      @game.assignments = [Assignment.new(:produce, :Senior, 1)]
+      @game.employee_groups_raw = {'Senior' => 1}.to_json
+      @game.equipments = [Factory.lookup(equipment_name: :'Factory base')]
+      @game.signed_contracts = {'K': -2}
     end
     @players = Player.all.reject(&:user)
 

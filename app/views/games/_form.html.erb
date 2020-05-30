@@ -68,7 +68,7 @@
                 <%= form_with(model: game, local: true) do |form| %>
                   <%= hidden_field_tag :'game[player_id]', player.id %>
                   <%= hidden_field_tag :'game[mode]', 'normal' %>
-                  <%= form.submit "Start game (NORMAL)", class: 'btn btn-lg btn-block btn-primary', disabled: true %>
+                  <%= form.submit "Start game (NORMAL)", class: 'btn btn-lg btn-block btn-primary', disabled: Rails.env.production? %>
                   (NORMAL MODE UNDER DEVELOPMENT)
                 <% end %>
               </div>

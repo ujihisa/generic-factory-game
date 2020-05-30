@@ -7,7 +7,7 @@ class Factory
       cost: 20,
       production: { Junior: 0, Intermediate: 0, Senior: 0 },
       quality: { Junior: 0, Intermediate: 0, Senior: 0 },
-      deprecate: [],
+      deprecate: [:'Factory base'],
       description: "It doesn't help you producing but without it you can't produce anything. The rent is not cheap too.",
       image: {z: 0, src: 'factory-base.png'},
     }.freeze,
