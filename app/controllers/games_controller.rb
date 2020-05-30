@@ -23,8 +23,40 @@ class GamesController < ApplicationController
   # GET /games/1.json
   def show
     @game = Game.find(params[:id])
+
     @estimate = Game.find(params[:id]).tap do |game|
       game.settlement()
+    end
+
+    @game_hint = game_hint()
+  end
+
+  private def game_hint
+    case
+    when @game.ingredient < @game.signed_contracts.product_required(@game.current_month)
+      if 10 <= @game.credit
+          {
+            fact: "You are missing products because you don't have enough ingredient.",
+            suggestion: "Buy ingredient now. Also, subscribe some ingredients to prevent this to happen again.",
+          }
+      else
+        {
+          fact: "You are missing products because you don't have enough ingredient.",
+          suggestion: "Buy ingredient now.",
+        }
+      end
+    when @game.factory.production_volume < @game.signed_contracts.product_required(@game.current_month)
+      if 0 < @game.assignments.select {|a| a.role == 'mentor' }.sum(&:num)
+        {
+          fact: "You have enough ingredients, but your factory can't produce enough products the contracts require.",
+          suggestion: "Hire more employees, buy&install more factory equipments, or let mentors produce instead.",
+        }
+      else
+        {
+          fact: "You have enough ingredients, but your factory can't produce enough products the contracts require.",
+          suggestion: "Hire more employees, or buy&install more factory equipments",
+        }
+      end
     end
   end
 

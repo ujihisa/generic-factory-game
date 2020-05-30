@@ -98,6 +98,16 @@
       #   end
       # }.sort_by { [:Junior, :Intermediate, :Senior].index(_1[:name]) }
     }) %>
+
+    <%- if Rails.env.development? %>
+      <%- if @game_hint %>
+        <h2>Game hint</h5>
+        <div>
+            <p><%= @game_hint[:fact] %></p>
+            <p><%= @game_hint[:suggestion] %></p>
+        </div>
+      <%- end %>
+    <%- end %>
   </div>
   <div class="col-md-3 themed-grid-col">
   <h2>Calendar</h2>
@@ -120,13 +130,13 @@
     <%- end %>
   </ul>
 
-    <hr>
-    <%- if notice %>
-      <p id="notice">
-      🆕
-      <%= notice %>
-      </p>
-    <%- end %>
+  <hr>
+  <%- if notice %>
+    <p id="notice">
+    🆕
+    <%= notice %>
+    </p>
+  <%- end %>
 
       <h3>Factory</h3>
       <!--
