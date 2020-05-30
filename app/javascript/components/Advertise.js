@@ -34,8 +34,14 @@ function Advertise(props) {
               <li>You get +10 credit in the next month</li>
               <li>You can only advertise once a month</li>
             </ul>
+          </div>
+          <div className="modal-footer">
             <form action={props.advertise_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
-              <input type="submit" value={`Yes`} className="btn btn-primary" />
+              {
+                100 <= context.cash
+                  ? <input type="submit" value="Pay $100K to advertise" className="btn btn-primary" />
+                  : <input type="submit" value="Not enough cash" className="btn btn-primary" disabled />
+              }
             </form>
           </div>
         </div>

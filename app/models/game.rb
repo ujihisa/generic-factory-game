@@ -170,6 +170,7 @@ class Game < ApplicationRecord
       messages << "📜 Gain $#{sales_total}K sales"
     end
 
+    credit_diff = 0
     if 0 < delivery_total
       credit_diff =
         case quality - credit
