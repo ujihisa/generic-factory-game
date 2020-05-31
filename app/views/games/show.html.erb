@@ -90,6 +90,8 @@
           }
         }
       },
+      minCashForNextMonth: -@estimate.cash,
+      mode: @game.mode,
       # assignmentsSummary: @game.assignments.each_with_object([]) {|a, memo|
       #   if x = memo.find {|x| x[:name] == a.employee_group_name }
       #     x[:numRoles][a.role] = a.num

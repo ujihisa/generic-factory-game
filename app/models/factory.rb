@@ -10,7 +10,7 @@ class Factory
       quality: { Junior: 0, Intermediate: 0, Senior: 0 },
       deprecate: [],
       description: "It doesn't help you producing but without it you can't produce anything. The rent is not cheap too.",
-      image: {z: 0, src: 'factory-base.png'},
+      image: {z: 0, src: 'old-factory-base.png'},
       modes: ['normal'],
     }.freeze,
     'Factory base': {

@@ -40,6 +40,7 @@ class Contract < Struct.new(:name, :mode, :required_credit, :description, :trade
     'Tutorial' => new('Tutorial', 'tutorial', 0, 'Just a tutorial dummy contract', {
       default: Trade.new(100, 95), # Math.sqrt(18) * 6 = 25
     }),
+
     'A' => new('A', 'easy', 0, 'They have a big sale in Nov.', {
       default: Trade.new(18, 28), # Math.sqrt(18) * 6 = 25
       November: Trade.new(38, 40), # Math.sqrt(38) * 6 = 37
@@ -87,41 +88,53 @@ class Contract < Struct.new(:name, :mode, :required_credit, :description, :trade
       December: Trade.new(200, 85), # Math.sqrt(200) * 6 = 85
     }),
 
-    # 'J' => new('J', 40, 'They are busy in winter season', {
-    #   default: Trade.new(100, 45),
-    #   November: Trade.new(200, 90),
-    #   December: Trade.new(200, 90),
-    #   January: Trade.new(200, 90),
-    #   February: Trade.new(200, 90),
-    # }),
-    #
-    # 'Y' => new('Y', 80, "City project", {
-    #   default: Trade.new(500, 250),
-    # }),
-    #
-    # 'Z' => new('Z', 90, "National project", {
-    #   default: Trade.new(800, 400),
-    # }),
-    'K' => new('K', 'normal', 0, 'They have a big sale in Oct.', {
-      default: Trade.new(40, 50), # Math.sqrt(40) * 6 = 38
-      October: Trade.new(120, 66), # Math.sqrt(120) * 6 = 66
+    # normal
+    'NormalA' => new('A', 'normal', 0, 'They have a big sale in Nov.', {
+      default: Trade.new(40, 28),
+      November: Trade.new(140, 40),
     }),
-    'L' => new('L', 'normal', 0, 'WIP', {
-      default: Trade.new(40, 38), # Math.sqrt(40) * 6 = 38
+
+    'NormalB' => new('B', 'normal', 0, 'Their business is constant', {
+      default: Trade.new(56, 30), # Math.sqrt(56) * 6 = 45
     }),
-    'M' => new('M', 'normal', 0, 'WIP', {
-      default: Trade.new(80, 54), # Math.sqrt(80) * 6 = 54
+
+    'NormalC' => new('C', 'normal', 0, 'Their business is constant', {
+      default: Trade.new(100, 40), # Math.sqrt(100) * 6 = 60
     }),
-    'N' => new('N', 'normal', 20, 'They require products quarterly, but pay sales monthly (average 100t/month)', {
-      default: Trade.new(0, 60),
-      January: Trade.new(300, 60), # Math.sqrt(100) * 6 = 60
-      April: Trade.new(300, 60), # Math.sqrt(100) * 6 = 60
-      July: Trade.new(300, 60), # Math.sqrt(100) * 6 = 60
-      October: Trade.new(300, 60), # Math.sqrt(100) * 6 = 60
+
+    'NormalD' => new('D', 'normal', 15, 'They close business only in January', {
+      default: Trade.new(10, 18), # Math.sqrt(10) * 6 = 19
+      January: Trade.new(0, 0),
     }),
-    'O' => new('O', 'normal', 20, 'WIP', {
-      default: Trade.new(40, 38), # Math.sqrt(40) * 6 = 38
-    })
+
+    'NormalE' => new('E', 'normal', 15, 'They have a sale in Dec.', {
+      default: Trade.new(40, 37), # Math.sqrt(40) * 6 = 38
+      December: Trade.new(80, 53), # Math.sqrt(80) * 6 = 54
+    }),
+
+    'NormalF' => new('F', 'normal', 15, 'They have a big sale in Dec.', {
+      default: Trade.new(80, 53), # Math.sqrt(80) * 6 = 54
+      December: Trade.new(100, 59), # Math.sqrt(100) * 6 = 60
+    }),
+
+    'NormalG' => new('G', 'normal', 30, 'They close business only in January', {
+      default: Trade.new(20, 27), # Math.sqrt(20) * 6 = 27
+      January: Trade.new(0, 0),
+    }),
+
+    'NormalH' => new('H', 'normal', 30, 'Their business is constant', {
+      default: Trade.new(60, 46), # Math.sqrt(60) * 6 = 46
+    }),
+
+    'NormalI' => new('I', 'normal', 30, 'Their business is constant', {
+      default: Trade.new(120, 66), # Math.sqrt(120) * 6 = 66
+    }),
+
+    'NormalJ' => new('J', 'normal', 45, 'They only need twice a year', {
+      default: Trade.new(0, 0),
+      July: Trade.new(200, 85), # Math.sqrt(200) * 6 = 85
+      December: Trade.new(200, 85), # Math.sqrt(200) * 6 = 85
+    }),
   }
   private_constant :ALL
 

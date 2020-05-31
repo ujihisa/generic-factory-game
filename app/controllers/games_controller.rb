@@ -94,7 +94,7 @@ class GamesController < ApplicationController
       @game.equipments = [
         Factory.lookup(equipment_name: :'Old factory base'),
       ]
-      @game.signed_contracts = {'K': -2}
+      @game.signed_contracts = {'NormalA': -2}
     end
     @players = Player.all.reject(&:user)
 

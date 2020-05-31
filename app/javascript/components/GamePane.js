@@ -79,6 +79,8 @@ function GamePane(props) {
           equipments: props.equipments,
           employees: props.employees,
           employeeGroups: props.employeeGroups,
+          contractDump: props.contractDump,
+          mode: props.mode,
         }}>
           <Storage
             productionVolume={props.productionVolume}
@@ -102,7 +104,7 @@ function GamePane(props) {
             allEquipments={props.allEquipments} />
         <br/><br/>
 
-        <Contracts contractDump={props.contractDump} createContractUrl={props.createContractUrl} cancelContractUrl={props.cancelContractUrl} />
+        <Contracts createContractUrl={props.createContractUrl} cancelContractUrl={props.cancelContractUrl} />
 
         {
           (0 < props.credit || 0 < props.debt)
@@ -130,7 +132,7 @@ function GamePane(props) {
                   </button>
                 </div>
                 <GFG.GameContext.Provider value={props}>
-                  <Bank />
+                  <Bank minCashForNextMonth={props.minCashForNextMonth} />
                 </GFG.GameContext.Provider>
               </form>
             </div>
@@ -199,6 +201,7 @@ function GamePane(props) {
       equipments: props.equipments,
       month: props.month,
       employeeGroups: props.employeeGroups,
+      contractDump: props.contractDump,
     }}>
       <div className="row">
         <div className="col-md-5 themed-grid-col">
@@ -256,5 +259,7 @@ GamePane.propTypes = {
   factory_buyinstall_game_path: PropTypes.string,
   advertise_game_path:PropTypes.string, 
   assignmentsSummary: PropTypes.array,
+  minCashForNextMonth: PropTypes.number,
+  mode: PropTypes.string,
 };
 export default GamePane

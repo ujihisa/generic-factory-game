@@ -167,7 +167,7 @@ function CurrentStatus(props) {
             <th scope="col"><strong>Contracts</strong></th>
             <td scope="col">
               {
-                Object.keys(context.signedContracts).join(", ")
+                Object.keys(context.signedContracts).map((c) => context.contractDump[c].name).join(", ")
               }
               <br/>
               <small className="form-text text-muted">

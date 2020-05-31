@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
+import PropTypes from "prop-types"
 import GFG from '../gfg'
 
-function Bank() {
+function Bank(props) {
   const context = useContext(GFG.GameContext);
   const [debt, setDebt] = useState(context.debt);
 
@@ -64,13 +65,39 @@ function Bank() {
         </div>
         <br/>
 
+        {
+          context.mode == 'normal' &&
+            <div>
+              <button type="button" className="btn btn-outline-secondary btn-sm" 
+                disabled={debt == 0}
+                onClick={(_) =>
+                    setDebt(Math.max(0, context.debt - context.cash))
+                }>
+                Min
+              </button>
+              <button type="button" className="btn btn-outline-secondary btn-sm" 
+                onClick={(_) =>
+                    setDebt(context.debt + props.minCashForNextMonth + Math.ceil(props.minCashForNextMonth * interest_rate / 100))
+                }>
+                Smart pay
+              </button>
+              <button type="button" className="btn btn-outline-secondary btn-sm" 
+                disabled={debt == upper_limit}
+                onClick={(_) =>
+                    setDebt(upper_limit)
+                }>
+                Max
+              </button>
+            </div>
+        }
+
         <input
-        type="range" className="custom-range" id="form-range-bank"
-        name="debt" value={debt}
-        min="0" max={upper_limit}
-        onChange={(event) =>
-          setDebt(event.target.value)
-        }/>
+          type="range" className="custom-range" id="form-range-bank"
+          name="debt" value={debt}
+          min="0" max={upper_limit}
+          onChange={(event) =>
+              setDebt(event.target.value)
+          }/>
         <br/>
 
         {bankProgress}
@@ -104,5 +131,9 @@ function Bank() {
     </React.Fragment>
   );
 }
+
+Bank.propTypes = {
+  minCashForNextMonth: PropTypes.number,
+};
 
 export default Bank

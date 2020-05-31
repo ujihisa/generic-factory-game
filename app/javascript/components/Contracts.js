@@ -28,7 +28,7 @@ function Contracts(props) {
     ]
   const chartDefaultDatasets =
       Object.keys(context.signedContracts).map((name, i) => {
-        const contract2 = props.contractDump[name];
+        const contract2 = context.contractDump[name];
         return {
           label: name,
           data: (Object.keys(context.signedContracts).includes(name)
@@ -109,7 +109,7 @@ function Contracts(props) {
               
               <div className="row">
                 {
-                  Object.entries(props.contractDump).map(([name, c]) => {
+                  Object.entries(context.contractDump).map(([name, c]) => {
                     const signed = Object.keys(context.signedContracts).includes(name);
                     const locked = context.credit < c.required_credit;
                     const selected = name == contract;
@@ -130,7 +130,7 @@ function Contracts(props) {
                                 {
                                   backgroundColor: '#007bff',
                                   borderColor: '#000000',
-                                  label: name,
+                                  label: c.name,
                                   borderWidth: 1,
                                   data: GFG.MONTHS.map((m) => c.trades[m].required_products),
                                 },
@@ -149,7 +149,7 @@ function Contracts(props) {
                             }
                           </div>
                           <div className="card-body">
-                            <h5 className="card-title">Contract {name}</h5>
+                            <h5 className="card-title">Contract {c.name}</h5>
                             {
                               c.describe.map((line) =>
                                 <p key={line}>{line}</p>)
@@ -177,19 +177,19 @@ function Contracts(props) {
                 {
                   !contract
                     ? <input type="submit" value="Cancel" className="btn btn-secondary" data-dismiss="modal" />
-                    : (context.credit < props.contractDump[contract].required_credit ||
+                    : (context.credit < context.contractDump[contract].required_credit ||
                       Object.keys(context.signedContracts).includes(contract))
                         ? <input type="submit" value="Cancel" className="btn btn-secondary" data-dismiss="modal" />
-                        : <input type="submit" value={`Sign Contract ${contract}`} className="btn btn-primary" />
+                        : <input type="submit" value={`Sign Contract ${context.contractDump[contract].name}`} className="btn btn-primary" />
                 }
               </form>
             </div>
             {
-              Object.entries(context.signedContracts).some(([_, signedMonth]) => signedMonth == context.month) &&
+              Object.values(context.signedContracts).some((signedMonth) => signedMonth == context.month) &&
                 <div className="modal-footer">
                   <form action={props.cancelContractUrl} acceptCharset="UTF-8" data-remote="true" method="post">
                     <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
-                    <input type="submit" value={`Cancel this month's signed contracts ${Object.entries(context.signedContracts).filter(([_, m]) => m == context.month).map(([c, _]) => c).join(', ')} (Cooling off)`} className="btn btn-primary" />
+                    <input type="submit" value={`Cancel this month's signed contracts ${Object.entries(context.signedContracts).filter(([_, m]) => m == context.month).map(([c, _]) => context.contractDump[c].name).join(', ')} (Cooling off)`} className="btn btn-primary" />
                   </form>
                 </div>
             }
@@ -200,7 +200,6 @@ function Contracts(props) {
 }
 
 Contracts.propTypes = {
-  contractDump: PropTypes.object,
   createContractUrl: PropTypes.string,
   cancelContractUrl: PropTypes.string,
 };
