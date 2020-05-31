@@ -73,7 +73,7 @@ function Bank(props) {
         <br/>
 
         {
-          context.mode == 'normal' &&
+          context.darklaunch['enable-bank-client-side-adjuetment-buttons'] &&
             <div>
               <button type="button" className="btn btn-outline-secondary btn-sm" 
                 disabled={debt == 0}

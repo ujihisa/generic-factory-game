@@ -81,6 +81,7 @@ function GamePane(props) {
           employeeGroups: props.employeeGroups,
           contractDump: props.contractDump,
           mode: props.mode,
+          darklaunch: props.darklaunch,
         }}>
           <Storage
             productionVolume={props.productionVolume}
@@ -254,5 +255,6 @@ GamePane.propTypes = {
   assignmentsSummary: PropTypes.array,
   minCashForNextMonth: PropTypes.number,
   mode: PropTypes.string,
+  darklaunch: PropTypes.object,
 };
 export default GamePane

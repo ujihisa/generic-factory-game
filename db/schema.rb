@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_23_201421) do
+ActiveRecord::Schema.define(version: 2020_05_31_185208) do
 
   create_table "contracts", force: :cascade do |t|
     t.integer "game_id", null: false
@@ -18,6 +18,13 @@ ActiveRecord::Schema.define(version: 2020_05_23_201421) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["game_id", "name"], name: "index_contracts_on_game_id_and_name", unique: true
+  end
+
+  create_table "darklaunches", force: :cascade do |t|
+    t.string "key", null: false
+    t.integer "player_id", null: false
+    t.index ["key"], name: "index_darklaunches_on_key"
+    t.index ["player_id"], name: "index_darklaunches_on_player_id", unique: true
   end
 
   create_table "factories", force: :cascade do |t|

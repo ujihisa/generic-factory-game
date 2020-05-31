@@ -92,6 +92,9 @@
       },
       minCashForNextMonth: -@estimate.cash,
       mode: @game.mode,
+      darklaunch: {
+        'enable-bank-client-side-adjuetment-buttons': Darklaunch.v1_variation('enable-bank-client-side-adjuetment-buttons', @game.player),
+      },
       # assignmentsSummary: @game.assignments.each_with_object([]) {|a, memo|
       #   if x = memo.find {|x| x[:name] == a.employee_group_name }
       #     x[:numRoles][a.role] = a.num
