@@ -78,8 +78,8 @@ class GamesController < ApplicationController
       @game.cash = 0
       @game.credit = 10
       @game.storage = 100
-      @game.ingredient = 40
-      @game.ingredient_subscription = 40
+      @game.ingredient = 50
+      @game.ingredient_subscription = 50
       @game.quality = 14
       @game.assignments = [
         Assignment.new(:produce, :Junior, 1),

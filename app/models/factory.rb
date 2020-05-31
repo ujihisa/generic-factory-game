@@ -5,7 +5,7 @@ class Factory
     'Old factory base': {
       type: 'base',
       install: 0,
-      cost: 40,
+      cost: 30,
       production: { Junior: 0, Intermediate: 0, Senior: 0 },
       quality: { Junior: 0, Intermediate: 0, Senior: 0 },
       deprecate: [],
@@ -46,7 +46,7 @@ class Factory
     }.freeze,
     'New factory base': {
       type: 'base',
-      install: 100,
+      install: 50,
       cost: 20,
       production: { Junior: 0, Intermediate: 0, Senior: 0 },
       quality: { Junior: 0, Intermediate: 0, Senior: 0 },
@@ -63,7 +63,7 @@ class Factory
       deprecate: [:'Cheap toolsets'],
       description: "Leverage skilled craftspersons. Advanced people need advanced tools.",
       image: {z: 1, src: 'advanced-toolsets.png'},
-      modes: ['easy'],
+      modes: ['easy', 'normal'],
     }.freeze,
     'Free space': {
       install: 100,
