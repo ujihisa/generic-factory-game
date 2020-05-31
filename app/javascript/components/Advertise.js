@@ -30,7 +30,7 @@ function Advertise(props) {
           <div className="modal-body" style={{overflowX: "auto"}}>
             <ul>
               <li>You need at least 5 credit</li>
-              <li>Cost: $100K</li>
+              <li>Cost: $80K</li>
               <li>You get +10 credit in the next month</li>
               <li>You can only advertise once a month</li>
             </ul>
@@ -38,8 +38,8 @@ function Advertise(props) {
           <div className="modal-footer">
             <form action={props.advertise_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
               {
-                100 <= context.cash
-                  ? <input type="submit" value="Pay $100K to advertise" className="btn btn-primary" />
+                80 <= context.cash
+                  ? <input type="submit" value="Pay $80K to advertise" className="btn btn-primary" />
                   : <input type="submit" value="Not enough cash" className="btn btn-primary" disabled />
               }
             </form>

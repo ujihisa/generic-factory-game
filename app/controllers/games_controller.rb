@@ -268,7 +268,7 @@ class GamesController < ApplicationController
       return redirect_to @game, alert: 'Not enough credit to advertise'
     end
 
-    @game.cash -= 100
+    @game.cash -= 80
 
     if @game.cash < 0
       return redirect_to @game, alert: 'Not enough cash to advertise'

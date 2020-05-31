@@ -15,6 +15,8 @@
     * Contracts
         * Less product volume contracts tend to be high sales performance
         * It's harder to fullfill minimal credit for better contracts
+    * Advertise
+        * Cost: $100K -> $80K
 * Factory equipments may "deprecate" older version
     * When you buy an equipment, it may remove an older version of it
     * You can skip older version if you want
@@ -26,6 +28,7 @@
 * SubscribeIngredient change fee applies also when you reduce the subscription volume
 * Added "Easy mode"
     * Each mode has its own Contracts / Factory equipments
+    * Normal mode may be harder than the previous version
 * UIs
     * Factory equipments now have images
 
