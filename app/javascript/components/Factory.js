@@ -384,9 +384,11 @@ function Factory(props) {
 
                     <div className="modal-footer">
                       {
-                        selectedEquipment
-                          ? <input type="submit" value={`Buy&install ${selectedEquipment}`} className="btn btn-primary" />
-                          : <input type="submit" value="Select what to buy&install" className="btn btn-primary" disabled />
+                        (selectedEquipment && context.cash < props.allEquipments[selectedEquipment].install)
+                          ? <input type="submit" value="Not enough cash" className="btn btn-primary" disabled />
+                          : selectedEquipment
+                            ? <input type="submit" value={`Buy&install ${selectedEquipment}`} className="btn btn-primary" />
+                            : <input type="submit" value="Select what to buy&install" className="btn btn-primary" disabled />
                       }
                     </div>
                   </form>
