@@ -228,7 +228,7 @@ class Game < ApplicationRecord
     # overflow
     if self.storage < self.ingredient + self.product
       diff = self.ingredient - (self.storage - self.product)
-      penalty = diff / 5
+      penalty = (diff / 5.0).ceil
 
       alerts << "🗑️ Dispose #{diff}t ingredient due to overflow"
       alerts << "🗑️ Pay $#{penalty}K penalty for the ingredient overflow"
