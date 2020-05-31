@@ -149,7 +149,7 @@ function Contracts(props) {
                             }
                           </div>
                           <div className="card-body">
-                            <h5 className="card-title">Contract {c.name}</h5>
+                            <h5 className="card-title">{c.name}</h5>
                             {
                               c.describe.map((line) =>
                                 <p key={line}>{line}</p>)
