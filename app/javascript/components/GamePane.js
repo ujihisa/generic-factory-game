@@ -124,13 +124,6 @@ function GamePane(props) {
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <form action={props.action} acceptCharset="UTF-8" data-remote="true" method="post">
-                <input type="hidden" name="authenticity_token" value={props.formAuthenticityToken} />
-                <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLabel">🏦 Bank</h5>
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
                 <GFG.GameContext.Provider value={props}>
                   <Bank minCashForNextMonth={props.minCashForNextMonth} />
                 </GFG.GameContext.Provider>

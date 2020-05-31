@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from "prop-types"
 import GFG from '../gfg'
 
@@ -26,6 +26,13 @@ function Bank(props) {
 
   return (
     <React.Fragment>
+      <input type="hidden" name="authenticity_token" value={props.formAuthenticityToken} />
+      <div className="modal-header">
+        <h5 className="modal-title" id="exampleModalLabel">🏦 Bank</h5>
+        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
       <div className="modal-body">
         <ul>
           <li>You can borrow cash up to $<code>10 * credit</code>K</li>
@@ -70,22 +77,31 @@ function Bank(props) {
             <div>
               <button type="button" className="btn btn-outline-secondary btn-sm" 
                 disabled={debt == 0}
-                onClick={(_) =>
-                    setDebt(Math.max(0, context.debt - context.cash))
-                }>
+                onClick={(event) => {
+                  setDebt(Math.max(0, context.debt - context.cash));
+                  $('#form-range-bank').focus()
+                }}>
                 Min
               </button>
+              &nbsp;
               <button type="button" className="btn btn-outline-secondary btn-sm" 
-                onClick={(_) =>
-                    setDebt(context.debt + props.minCashForNextMonth + Math.ceil(props.minCashForNextMonth * interest_rate / 100))
-                }>
-                Smart pay
+                onClick={(event) => {
+                  const adjustment =
+                    Math.ceil((context.debt + props.minCashForNextMonth) * interest_rate / 100) -
+                    Math.ceil(context.debt * interest_rate / 100);
+                  const ideal = context.debt + props.minCashForNextMonth + adjustment;
+                  setDebt(Math.min(ideal, upper_limit));
+                  $('#form-range-bank').focus()
+                }}>
+                便利
               </button>
+              &nbsp;
               <button type="button" className="btn btn-outline-secondary btn-sm" 
                 disabled={debt == upper_limit}
-                onClick={(_) =>
-                    setDebt(upper_limit)
-                }>
+                onClick={(event) => {
+                  setDebt(upper_limit);
+                  $('#form-range-bank').focus()
+                }}>
                 Max
               </button>
             </div>
