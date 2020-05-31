@@ -5,6 +5,10 @@ const capitalize = (s) =>
   s.charAt(0).toUpperCase() + s.slice(1)
 
 function Factory(props) {
+  useEffect(() => {
+    $('[data-toggle="tooltip"]').tooltip()
+  }, []);
+
   const [selectedEquipment, setSelectedEquipment] = useState(null);
   const context = useContext(GFG.GameContext);
 
@@ -235,87 +239,97 @@ function Factory(props) {
                   }
                 </div>
                 <div className="col">
-                  <h6>Assign tasks</h6>
-                  <table className="table table-hover table-sm">
-                    <thead>
-                      <tr>
-                        <th scope="col"></th>
+                  <h6>
+                    <>Assign </>
+                    <u href="#" data-toggle="tooltip" title="Each employees have their own tasks to be assigned.
+                      See Hiring page's glossary for the details.">
+                    tasks
+                    </u>
+                  </h6>
+                  <form action={props.factory_assign_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
+                    <table className="table table-hover table-sm">
+                      <thead>
+                        <tr>
+                          <th scope="col"></th>
+                          {
+                            Object.keys(props.assignmentsSummary[0].numRoles).map((roleName) =>
+                              <th scope="col" key={roleName}>{capitalize(roleName)}</th>)
+                          }
+                        </tr>
+                      </thead>
+                      <tbody className="table">
                         {
-                          Object.keys(props.assignmentsSummary[0].numRoles).map((roleName) =>
-                            <th scope="col" key={roleName}>{capitalize(roleName)}</th>)
+                          props.assignmentsSummary.map((assignment) => {
+                            const outerValid =
+                              sum(Object.values(numRoleDiffs[assignment.name]).map((n) => parseInt(n) || 0)) == 0;
+
+                            return <tr key={assignment.name}>
+                              <th scope="col">{assignment.name}</th>
+                              {
+                                Object.entries(assignment.numRoles).map(([roleName, roleNum]) => {
+                                  const innerValid =
+                                    (0 <= roleNum + parseInt(numRoleDiffs[assignment.name][roleName], 10));
+
+                                  if (!outerValid || !innerValid)
+                                    assignmentValid = false
+
+                                  return (
+                                    <td scope="col" key={roleName}>
+                                      <div className="input-group">
+                                        {
+                                          (roleName == "produce")
+                                            ? <>{roleNum} + {numRoleDiffs[assignment.name][roleName]}</>
+                                            : <>
+                                              <div className="input-group-prepend">
+                                                <span className="input-group-text">{roleNum} +</span>
+                                              </div>
+                                              <input type="number" className="form-control" required
+                                                min={-roleNum}
+                                                max={sum(Object.values(assignment.numRoles)) - roleNum}
+                                                value={numRoleDiffs[assignment.name][roleName]} onChange={(e) => {
+                                                  setNumRoleDiffs({
+                                                    ...numRoleDiffs,
+                                                    [assignment.name]: {
+                                                      ...numRoleDiffs[assignment.name],
+                                                      [roleName]: e.target.value,
+                                                      produce: -parseInt(e.target.value, 10),
+                                                    }
+                                                  });
+                                                }} />
+                                            </>
+                                        }
+                                      </div>
+                                    </td>
+                                  );
+                                })
+                              }
+                            </tr>
+                          })
                         }
-                      </tr>
-                    </thead>
-                    <tbody className="table">
-                      {
-                        props.assignmentsSummary.map((assignment) => {
-                          const outerValid =
-                            sum(Object.values(numRoleDiffs[assignment.name]).map((n) => parseInt(n) || 0)) == 0;
+                      </tbody>
+                    </table>
 
-                          return <tr key={assignment.name}>
-                            <th scope="col">{assignment.name}</th>
-                            {
-                              Object.entries(assignment.numRoles).map(([roleName, roleNum]) => {
-                                const innerValid =
-                                  (0 <= roleNum + parseInt(numRoleDiffs[assignment.name][roleName], 10));
-
-                                if (!outerValid || !innerValid)
-                                  assignmentValid = false
-
-                                return (
-                                  <td scope="col" key={roleName}>
-                                    <div className="input-group">
-                                      {
-                                        (roleName == "produce")
-                                          ? <>{roleNum} + {numRoleDiffs[assignment.name][roleName]}</>
-                                          : <>
-                                            <div className="input-group-prepend">
-                                              <span className="input-group-text">{roleNum} +</span>
-                                            </div>
-                                            <input type="number" className="form-control" required
-                                              min={-roleNum}
-                                              max={sum(Object.values(assignment.numRoles)) - roleNum}
-                                              value={numRoleDiffs[assignment.name][roleName]} onChange={(e) => {
-                                                setNumRoleDiffs({
-                                                  ...numRoleDiffs,
-                                                  [assignment.name]: {
-                                                    ...numRoleDiffs[assignment.name],
-                                                    [roleName]: e.target.value,
-                                                    produce: -parseInt(e.target.value, 10),
-                                                  }
-                                                });
-                                              }} />
-                                          </>
-                                      }
-                                    </div>
-                                  </td>
-                                );
-                              })
-                            }
-                          </tr>
-                        })
-                      }
-                    </tbody>
-                  </table>
-                  
-                  <div className="modal-footer">
-                    <form action={props.factory_assign_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
+                    <div className="modal-footer">
                       <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
                       <input type="hidden" name="num_role_diffs_json" value={JSON.stringify(numRoleDiffs)} />
                       <input type="submit" value="Assign" className="btn btn-primary" disabled={assignmentValid ? "" : "disabled"} />
-                    </form>
-                  </div>
+                    </div>
+                  </form>
 
-                  <h6>Buy&install an equipment</h6>
-                  <p>You can add these equipments into your factory to increase your employees' production volume and quality.
-                  These equipments themselves do not require any running fees, but effect permanently.</p>
-
+                  <h6>
+                    <>Buy&install an </>
+                    <u href="#" data-toggle="tooltip" title="You can add these equipments into your factory to increase
+                      your employees' production volumes and/or qualities.
+                      An equipment effects permanently until you buy an upgraded version of the same kind (see deprecates signs below).">
+                      equipment
+                    </u>
+                  </h6>
 
                   <form action={props.factory_buyinstall_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
                     <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
                     {
                       Object.values(props.allEquipments).map((equipment, i) =>
-                        <div className="form-check" key={equipment.name} >
+                        <div className="border-top form-check" key={equipment.name} >
                           <input className="form-check-input" type="radio" name="equipmentRadios" id={`equipmentRadios${i}`} value={equipment.name}
                             checked={selectedEquipment == equipment.name} onChange={(_) => 0}
                             onClick={(e) =>
@@ -324,19 +338,47 @@ function Factory(props) {
                                   setSelectedEquipment(equipment.name)
                             }
                             disabled={
-                              (context.cash < equipment.install)
+                              (context.equipments.some((e) => e.name == equipment.name || e.deprecate.includes(equipment.name)))
                                 ? "disabled"
-                                : (context.equipments.some((e) => e.name == equipment.name))
-                                  ? "disabled"
-                                  : ""
+                                : ""
                             } />
                           <label className="form-check-label" htmlFor={`equipmentRadios${i}`}>
-                            {equipment.name} ({GFG.numberToCurrency(equipment.install)}, {GFG.numberToCurrency(equipment.cost)}/m)
-                            { (context.equipments.some((e) => e.name == equipment.name)) && " ✔️" }
+                            <strong>{equipment.name} </strong>
+                            {
+                              (context.equipments.some((e) => e.deprecate.includes(equipment.name)) )
+                                ? <span className="badge badge-secondary">deprecated</span>
+                                : (context.equipments.some((e) => e.name == equipment.name)) 
+                                  ? <>
+                                    <span className="badge badge-secondary">installed</span>
+                                    <small className="text-muted">({GFG.numberToCurrency(equipment.cost)}/m)</small>
+                                  </>
+                                    : (context.cash < equipment.install)
+                                      ? <span className="badge badge-warning">
+                                        {GFG.numberToCurrency(equipment.install)}, {GFG.numberToCurrency(equipment.cost)}/m
+                                      </span>
+                                      : <span className="badge badge-primary">
+                                        {GFG.numberToCurrency(equipment.install)}, {GFG.numberToCurrency(equipment.cost)}/m
+                                      </span>
+                            }
                           </label>
-                          <small className="form-text text-muted">
-                            {equipment.description}
-                          </small>
+
+                          {
+                            (context.equipments.some((e) => e.deprecate.includes(equipment.name)))
+                              ? ""
+                              : <>
+                                {
+                                  equipment.deprecate.length
+                                    ? <small className="form-text text-muted">
+                                      <u href="#" data-toggle="tooltip" title=""
+                                        data-original-title="It cancels the effects and the monthly cost of specified equipment(s)">
+                                        Deprecates
+                                      </u> {equipment.deprecate.join(", ")}
+                                    </small>
+                                    : ""
+                                }
+                                <p>{ equipment.description }</p>
+                              </>
+                          }
                         </div>)
                     }
 
