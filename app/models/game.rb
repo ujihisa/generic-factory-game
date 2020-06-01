@@ -254,12 +254,12 @@ class Game < ApplicationRecord
   end
 
   def self.best_games(game_version, mode)
-    Game.
+    query = Game.
       latest.
       includes(:player).
-      group(:player_id).
       where(version: game_version, cash: (1000..), mode: mode).
       order(month: :asc)
+    query.to_a.uniq(&:player_id) # :(
   end
 
   # TODO: Move this to Game::Organization model, so that you can call @game.organization.hire
