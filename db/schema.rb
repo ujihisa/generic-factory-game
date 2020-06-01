@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_31_185208) do
+ActiveRecord::Schema.define(version: 2020_06_01_214455) do
 
   create_table "contracts", force: :cascade do |t|
     t.integer "game_id", null: false
@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 2020_05_31_185208) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "version", null: false
     t.integer "credit", default: 0, null: false
-    t.integer "debt", default: 0, null: false
+    t.integer "money", default: 0, null: false
     t.integer "ingredient_subscription", default: 0, null: false
     t.text "messages_raw", default: "[]", null: false
     t.text "portfolios_raw", default: "[]", null: false

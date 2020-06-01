@@ -70,7 +70,7 @@
 
             <p>
             <%- if best_game = player.best_game('easy') %>
-              Best score: <%= best_game.month %> months
+              Your best score: <%= best_game.month %> months
             <%- elsif player.games.empty? %>
               First time to try!
             <%- else %>
@@ -103,13 +103,14 @@
 
             <p>
             <%- if best_game = player.best_game('normal') %>
-              Best score: <%= best_game.month %> months
+              Your best score: <%= best_game.month %> months
             <%- elsif player.games.empty? %>
               First time to try!
             <%- else %>
               <%= link_to 'Working in progress', games_path %>
             <%- end %>
             </p>
+            <p>World best score: <%= @world_best_scores[:normal] %> months</p>
 
             <p class="card-text">
               The main game. Not too hard to play but can be challenging if you'd like to achieve a higher score.

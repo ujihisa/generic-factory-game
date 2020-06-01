@@ -35,6 +35,11 @@ class GamesController < ApplicationController
   def new
     @game = Game.new
     @players = Player.all.reject(&:user)
+
+    @world_best_scores = {
+      easy: Game.where(version: GenericFactoryGame::VERSION, money: (1000..), mode: 'easy').order(month: :asc).limit(1).pluck(:month).first,
+      normal: Game.where(version: GenericFactoryGame::VERSION, money: (1000..), mode: 'normal').order(month: :asc).limit(1).pluck(:month).first,
+    }
   end
 
   # POST /games

@@ -26,6 +26,11 @@ development:
   database: db/development.sqlite3
   pool: 5
   timeout: 5000
+  # <<: *default
+  # host: 127.0.0.1
+  # database: generic_factory_game_development
+  # username: postgres
+  # password: mysecretpassword
 
 test:
   adapter: sqlite3

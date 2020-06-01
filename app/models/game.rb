@@ -20,6 +20,14 @@ class Game < ApplicationRecord
 
   INGREDIENT2PRODUCT = 1
 
+  def debt
+    cash - money
+  end
+
+  def debt=(x)
+    self.money = cash - x
+  end
+
   def messages
     JSON.parse(messages_raw).freeze
   end
