@@ -21,18 +21,18 @@
   <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style='max-width: 700px'>
     <h1 class="display-4">Start a new game</h1>
     <%- if current_user %>
-      <p class="lead">Player <%= current_user&.player.name %></p>
+      <p class="lead">Choose the game difficulty</p>
     <%- end %>
   </div>
 
   <%- if current_user %>
     <%- player = current_user.player %>
     <div class="container" style='max-width: 960px;'>
-      <div class="card-deck mb-3 text-center">
+      <div class="card-deck mb-3">
         <!-- Tutorial -->
         <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
           <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Tutorial</h4>
+            <h4 class="my-0 font-weight-normal">Tutorial <%= player.best_game('tutorial') ? '✔️' : '' %></h4>
           </div>
           <div class="card-body">
             <%= form_with(model: @game, local: true) do |form| %>
@@ -40,6 +40,20 @@
               <%= hidden_field_tag :'game[mode]', 'tutorial' %>
               <%= form.submit "Try tutorial", class: 'btn btn-lg btn-secondary' %>
             <% end %>
+            <p></p>
+
+            <p class="card-text">
+              If it's first time coming here, try this first!
+            </p>
+            <p>
+              Many features are locked. Please use this to learn about the UI and the basics of the game.
+            </p>
+            <ul>
+              <li>Initial money: $999K</li>
+              <li>Goal: $1000K</li>
+              <li>Start from nothing: false</li>
+              <li>Usually it takes between 1sec to 1min</li>
+            </ul>
           </div>
         </div>
         <!-- Easy -->
@@ -56,13 +70,23 @@
 
             <p>
             <%- if best_game = player.best_game('easy') %>
-              <%= link_to "Best score: #{best_game.month} months", games_highscore_path %>
+              Best score: <%= best_game.month %> months
             <%- elsif player.games.empty? %>
               First time to try!
             <%- else %>
               <%= link_to 'Working in progress', games_path %>
             <%- end %>
             </p>
+
+            <p class="card-text">
+              The main game, but this is a lot easier. Use this difficulty setting to understand the game system!
+            </p>
+            <ul>
+              <li>Initial money: $300K</li>
+              <li>Goal: $1000K</li>
+              <li>Start from nothing: true</li>
+              <li>Usually it takes between 3mins to 5mins</li>
+            </ul>
           </div>
         </div>
         <!-- Normal -->
@@ -79,13 +103,23 @@
 
             <p>
             <%- if best_game = player.best_game('normal') %>
-              <%= link_to "Best score: #{best_game.month} months", games_highscore_path %>
+              Best score: <%= best_game.month %> months
             <%- elsif player.games.empty? %>
               First time to try!
             <%- else %>
               <%= link_to 'Working in progress', games_path %>
             <%- end %>
             </p>
+
+            <p class="card-text">
+              The main game. Not too hard to play but can be challenging if you'd like to achieve a higher score.
+            </p>
+            <ul>
+              <li>Initial money: $0K</li>
+              <li>Goal: $1000K</li>
+              <li>Start from nothing: false</li>
+              <li>Usually it takes between 5mins to 10mins</li>
+            </ul>
           </div>
         </div>
       </div>
