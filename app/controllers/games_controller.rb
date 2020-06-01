@@ -96,6 +96,7 @@ class GamesController < ApplicationController
       ]
       @game.signed_contracts = {'NormalA': -2}
     end
+    @game.portfolios += [@game.portfolio]
     @players = Player.all.reject(&:user)
 
     if @game.save

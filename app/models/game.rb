@@ -49,7 +49,10 @@ class Game < ApplicationRecord
       'month', 'cash', 'storage', 'ingredient', 'product', 'credit', 'debt',
       'ingredient_subscription',
     ]
-    pf = keys.zip(self.attributes.values_at(*keys)).to_h
+    pf = keys.zip(self.attributes.values_at(*keys)).to_h.merge(
+      'portfolio_version' => 0,
+    )
+    pf
   end
 
   serialize :signed_contracts, SignedContracts
@@ -131,6 +134,8 @@ class Game < ApplicationRecord
   def settlement
     messages = []
     alerts = []
+
+    self.portfolios += [self.portfolio]
 
     self.month += 1
 
