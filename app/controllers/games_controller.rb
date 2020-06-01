@@ -56,6 +56,7 @@ class GamesController < ApplicationController
     case @game.mode
     when 'tutorial'
       @game.cash = 999
+      @game.debt = 0
       @game.storage = 200
       @game.ingredient = 100
       @game.ingredient_subscription = 100
@@ -78,9 +79,11 @@ class GamesController < ApplicationController
       EOS
     when 'easy'
       @game.cash = 300
+      @game.debt = 0
       @game.messages = ['You started your own business from nothing but $300K.']
     else # 'normal'
       @game.cash = 0
+      @game.debt = 0
       @game.credit = 10
       @game.storage = 100
       @game.ingredient = 50

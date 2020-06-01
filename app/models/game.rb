@@ -28,6 +28,13 @@ class Game < ApplicationRecord
     self.money = cash - x
   end
 
+  def cash=(x)
+    diff = x - self[:cash]
+
+    self[:cash] += diff
+    self[:money] += diff
+  end
+
   def messages
     JSON.parse(messages_raw).freeze
   end
@@ -54,10 +61,11 @@ class Game < ApplicationRecord
 
   def portfolio
     keys = [
-      'month', 'cash', 'storage', 'ingredient', 'product', 'credit', 'debt',
+      'month', 'cash', 'storage', 'ingredient', 'product', 'credit',
       'ingredient_subscription',
     ]
     pf = keys.zip(self.attributes.values_at(*keys)).to_h.merge(
+      'debt' => debt,
       'portfolio_version' => 0,
     )
     pf
