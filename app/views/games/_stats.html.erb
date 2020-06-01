@@ -60,7 +60,7 @@
   <ul>
     <%- @game.signed_contracts.each do |contract, month| %>
       <li>
-        Contract <strong><%= contract.name %></strong> in <%= Game::MONTHS[month % 12] %> <%= 2020 + month / 12 %> (Month <%= month %>)
+        <strong><%= contract.name %></strong> in <%= Game::MONTHS[month % 12] %> <%= 2020 + month / 12 %> <code>(Month <%= month %>)</code>
       </li>
     <%- end %>
   </ul>
