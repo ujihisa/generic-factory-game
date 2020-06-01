@@ -19,10 +19,9 @@
 
     <tbody>
       <% @games[mode].each.with_index(1) do |game, index| %>
-        <%- player = game.player %>
         <tr>
           <td><%= index %></td>
-          <td><%= player.name %></td>
+          <td><%= game.player.name %></td>
           <td><%= game.month %> months</td>
           <td><small><%= game.updated_at.in_time_zone('America/Vancouver').iso8601 %></small></td>
           <td><small><%= link_to 'Details', game %></small></td>

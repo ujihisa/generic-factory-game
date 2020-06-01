@@ -257,7 +257,7 @@ class Game < ApplicationRecord
     Game.
       latest.
       includes(:player).
-      group(:player).
+      group(:player_id).
       where(version: game_version, cash: (1000..), mode: mode).
       order(month: :asc)
   end
