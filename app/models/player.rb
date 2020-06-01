@@ -4,10 +4,10 @@ class Player < ApplicationRecord
   has_many :games
   has_one :user
 
-  def best_game
+  def best_game(mode)
     Game.
       latest.
-      where(%q[version = ? AND player_id = ? AND 1000 <= cash AND mode = 'normal'], GenericFactoryGame::VERSION, id).
+      where(version: GenericFactoryGame::VERSION, player_id: id, cash: (1000..), mode: mode).
       order(month: :asc).
       limit(1).
       first
