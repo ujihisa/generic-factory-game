@@ -44,11 +44,35 @@
               Menu
             </a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <%= link_to 'List saved games', games_path, class: 'dropdown-item' %>
-              <%= link_to 'High score', games_highscore_path, class: 'dropdown-item' %>
-              <%= link_to 'Start a new game', new_game_path, class: 'dropdown-item' %>
-              <%= link_to 'Contribute', 'https://github.com/ujihisa/generic-factory-game', class: 'dropdown-item' %>
-              <%= link_to 'Changelog', 'https://github.com/ujihisa/generic-factory-game/blob/master/CHANGELOG.md', class: 'dropdown-item' %>
+              <%= link_to new_game_path, class: 'dropdown-item' do %>
+                <img src="/images/generic-factory-game.png" style="width: 1em" />
+                Start a new game
+              <%- end %>
+
+              <%= link_to games_path, class: 'dropdown-item' do %>
+                <img src="/images/generic-factory-game.png" style="width: 1em" />
+                List saved games
+              <%- end %>
+
+              <%= link_to games_highscore_path, class: 'dropdown-item' do %>
+                <img src="/images/generic-factory-game.png" style="width: 1em" />
+                High score
+              <%- end %>
+
+              <%= link_to 'https://github.com/ujihisa/generic-factory-game', class: 'dropdown-item' do %>
+                <img src="/images/GitHub-Mark-32px.png" style="width: 1em" style="width: 1em" />
+                Contribute
+              <%- end %>
+
+              <%= link_to 'https://github.com/ujihisa/generic-factory-game/blob/master/CHANGELOG.md#100', class: 'dropdown-item' do %>
+                <img src="/images/GitHub-Mark-32px.png" style="width: 1em" style="width: 1em" />
+                Changelog
+              <%- end %>
+
+              <%= link_to 'https://twitter.com/GenericFactory', class: 'dropdown-item' do %>
+                <img src="/images/Twitter_Social_Icon_Rounded_Square_Color.svg" style="width: 1em" />
+                GenericFactory
+              <%- end %>
             </div>
           </li>
           <%- if @game&.persisted? %>
