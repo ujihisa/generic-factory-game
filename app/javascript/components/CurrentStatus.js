@@ -44,7 +44,13 @@ function CurrentStatus(props) {
             <td scope="col"></td>
           </tr>
           <tr>
-            <th scope="col"><strong>Money</strong></th>
+            <th scope="col">
+              <strong>
+                <u data-toggle="tooltip" title="If your cash goes less than 0, the game is over. if your total money goes equal or more than 1000, this game ends with your victory.">
+                  Money
+                </u>
+              </strong>
+            </th>
             <td scope="col">
               {
                 (props.debt == 0)
@@ -60,7 +66,13 @@ function CurrentStatus(props) {
             <td scope="col"></td>
           </tr>
           <tr>
-            <th scope="col"><strong>Credit</strong></th>
+            <th scope="col">
+              <strong>
+                <u data-toggle="tooltip" title="Up to 100. It gradually increases/decreases to the production quality you deliver.">
+                  Credit
+                </u>
+              </strong>
+            </th>
             <td scope="col">
               { props.credit }
               <div className="progress">
@@ -124,7 +136,12 @@ function CurrentStatus(props) {
                   {
                     Object.values(context.employeeGroups).flatMap((employeeGroup) => 
                       Array(employeeGroup.num_hired).fill().map((_, i) =>
-                        <img key={`${employeeGroup.name}-${i}`} src={`/images/${employeeGroup.image}`} style={{height: "2.0em"}} />)
+                        <img
+                          key={`${employeeGroup.name}-${i}`}
+                          src={`/images/${employeeGroup.image}`}
+                          style={{height: "2.0em"}}
+                          data-toggle="tooltip" title={`${employeeGroup.name} #${i + 1}`}
+                          />)
                     )
                   }
                   <br/>
@@ -150,8 +167,27 @@ function CurrentStatus(props) {
                     (context.equipments.some((e) => e.type == 'base'))
                       ? <ul className="list-unstyled">
                         {
-                          context.equipments.map((e) =>
-                            <li key={e.name}>{e.name}</li>)
+                          context.equipments.
+                            filter((e) => context.equipments.every((e2) => !e2.deprecate.includes(e.name))).
+                            map((e) =>
+                              <li key={e.name}>
+                                <u data-toggle="tooltip" title={
+                                  ['production', 'quality'].
+                                    flatMap((type) =>
+                                      Object.entries(e[type]).
+                                      filter(([_, v]) => v).
+                                      map(([k, v]) =>
+                                        type == 'production'
+                                          ? `${k} vol +${v}t`
+                                          : `${k} quality +${v}`
+                                      )
+                                    ).
+                                    concat(`${GFG.numberToCurrency(e.cost)}/m`).
+                                    join(", ")
+                                  }>
+                                  {e.name}
+                                </u>
+                              </li>)
                         }
                       </ul>
                       : <div className="alert alert-primary" role="alert">You must install Factory base first</div>
