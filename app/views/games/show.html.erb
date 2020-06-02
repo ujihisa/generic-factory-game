@@ -167,7 +167,7 @@
     <h2>DEVELOPMENT</h2>
     <%= form_with(url: force_change_game_url, method: 'post') do |form| %>
       Cash: <%= form.text_field :cash, value: @game.cash %><br/>
-      Debt: <%= form.text_field :debt, value: @game.debt %><br/>
+      Money: <%= form.text_field :money, value: @game.money %><br/>
       Credit: <%= form.text_field :credit, value: @game.credit %><br/>
       Storage: <%= form.text_field :storage, value: @game.storage %><br/>
       Product: <%= form.text_field :product, value: @game.product %><br/>

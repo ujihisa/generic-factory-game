@@ -174,7 +174,7 @@ class GamesController < ApplicationController
     if @game.save
       if @game.cash < 0
         redirect_to @game, notice: 'Game over!'
-      elsif 1000 <= @game.cash
+      elsif 1000 <= @game.money
         redirect_to @game, notice: 'Game clear!'
       elsif @game.month % 12 == 0
         redirect_to @game, alert: "It's #{2020 + @game.month / 12}. Happy new year!"

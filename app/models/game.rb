@@ -25,10 +25,12 @@ class Game < ApplicationRecord
   end
 
   def debt=(x)
+    x = x.to_i
     self.money = cash - x
   end
 
   def cash=(x)
+    x = x.to_i
     diff = x - self[:cash]
 
     self[:cash] += diff
