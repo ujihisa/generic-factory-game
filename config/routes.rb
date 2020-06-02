@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   get 'games/highscore'
 
-  resources :games do
+  resources :games, except: [:edit, :update] do
     member do
       post 'create_storages'
 
@@ -31,7 +31,7 @@ Rails.application.routes.draw do
     resources :contracts, only: [:create]
   end
 
-  resources :players
+  resources :players, only: [:new, :create]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   root 'home#index'

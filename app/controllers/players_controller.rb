@@ -1,17 +1,6 @@
 class PlayersController < ApplicationController
   before_action :set_player, only: [:show]
 
-  # GET /players
-  # GET /players.json
-  def index
-    redirect_to games_highscore_path # TODO remove this
-  end
-
-  # GET /players/1
-  # GET /players/1.json
-  def show
-  end
-
   # GET /players/new
   def new
     @player = Player.new

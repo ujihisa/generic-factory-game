@@ -1,5 +1,27 @@
-<div class="text-center"%>
-<%= render 'form', player: @player %>
-</div>
+<div>
+  <%= form_with(model: @player, local: true, class: 'form-signin') do |form| %>
+    <h2 class="h3 mb-3 font-weight-normal">Create a new player</h2>
 
-<%= link_to 'Back', players_path %>
+    <% if @player.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@player.errors.count, "error") %> prohibited this player from being saved:</h2>
+
+        <ul>
+          <% @player.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= form.text_field :name, class: 'form-control', placeholder: 'Your name', required: true, autofocus: true %>
+    </div>
+
+    <br/>
+
+    <div class="actions">
+      <%= form.submit class: 'btn btn-primary btn-block' %>
+    </div>
+  <% end %>
+</div>
