@@ -16,19 +16,19 @@ function GamePane(props) {
     $(document.body).keydown((e) => {
       if (!e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
         if (e.key == "s")
-          $('#storageModal').modal('show')
+          $('#storageModal').modal('toggle')
         else if (e.key == "h")
-          $('#hiringModal').modal('show')
+          $('#hiringModal').modal('toggle')
         else if (e.key == "c")
-          $('#contractsModal').modal('show')
+          $('#contractsModal').modal('toggle')
         else if (e.key == "f")
-          $('#factoryModal').modal('show')
+          $('#factoryModal').modal('toggle')
         else if (e.key == "b" && 1 <= props.credit)
-          $('#bankModal').modal('show')
+          $('#bankModal').modal('toggle')
         else if (e.key == "i" && 10 <= props.credit)
-          $('#subscribeIngredientModal').modal('show')
+          $('#subscribeIngredientModal').modal('toggle')
         else if (e.key == "a" && 10 <= props.credit)
-          $('#advertiseModal').modal('show')
+          $('#advertiseModal').modal('toggle')
       }
     })
 
