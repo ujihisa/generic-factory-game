@@ -85,6 +85,7 @@ function Bank(props) {
               </button>
               &nbsp;
               <button type="button" className="btn btn-outline-secondary btn-sm" 
+                title="(Experimental) Take enough debt so that you do not go bankrupt"
                 onClick={(event) => {
                   const adjustment =
                     Math.ceil((context.debt + props.minCashForNextMonth) * interest_rate / 100) -
@@ -93,7 +94,7 @@ function Bank(props) {
                   setDebt(Math.min(ideal, upper_limit));
                   $('#form-range-bank').focus()
                 }}>
-                便利
+                Cover deficits
               </button>
               &nbsp;
               <button type="button" className="btn btn-outline-secondary btn-sm" 
