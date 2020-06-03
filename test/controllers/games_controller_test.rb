@@ -2,7 +2,7 @@ require 'test_helper'
 
 class GamesControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @game = games(:one)
+    @game = games(:playing)
   end
 
   test "should get index" do
@@ -17,7 +17,12 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create game" do
     assert_difference('Game.count') do
-      post games_url, params: { game: { ingredient: @game.ingredient, money: @game.money, month: @game.month, player: @game.player, product: @game.product, storage: @game.storage } }
+      post games_url, params: {
+        game: {
+          player_id: @game.player.id,
+          mode: 'normal',
+        },
+      }
     end
 
     assert_redirected_to game_url(Game.last)
@@ -26,23 +31,5 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
   test "should show game" do
     get game_url(@game)
     assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_game_url(@game)
-    assert_response :success
-  end
-
-  test "should update game" do
-    patch game_url(@game), params: { game: { ingredient: @game.ingredient, money: @game.money, month: @game.month, player: @game.player, product: @game.product, storage: @game.storage } }
-    assert_redirected_to game_url(@game)
-  end
-
-  test "should destroy game" do
-    assert_difference('Game.count', -1) do
-      delete game_url(@game)
-    end
-
-    assert_redirected_to games_url
   end
 end

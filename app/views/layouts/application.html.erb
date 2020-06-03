@@ -78,7 +78,7 @@
           <%- if @game&.persisted? %>
             <li class="nav-item active">
               <div class="nav-link disabled">
-                <b><%= @game.player.name %></b>'s game <b><%= @game.id %></b>
+                <b><%= @game.player.name %></b>'s <%= @game.mode %> game
                 /
                 month <b><%= @game.month %></b>
                 /

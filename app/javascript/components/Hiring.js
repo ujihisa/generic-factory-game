@@ -73,58 +73,58 @@ function Hiring(props) {
     <div className="modal" id="hiringModal" tabIndex="-1" role="dialog" aria-labelledby="hiringModalLabel" aria-hidden="true">
       <div className="modal-dialog modal-lg" role="document">
         <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title" id="contractModalLabel">💼 Hiring</h5>
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body" style={{overflowX: "auto"}}>
-            { modalTable }
-          <div className="modal-footer" style={{overflowX: "auto"}}>
-            <form action={props.hire_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
-              <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
-              <input type="hidden" name="num_employees_json" value={JSON.stringify(numEmployees)} />
-              { modalSubmit }
-            </form>
-          </div>
-            <hr/>
+          <form action={props.hire_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
+            <div className="modal-header">
+              <h5 className="modal-title" id="contractModalLabel">💼 Hiring</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body" style={{overflowX: "auto"}}>
+              { modalTable }
+              <div className="modal-footer" style={{overflowX: "auto"}}>
+                <input type="hidden" name="authenticity_token" value={context.formAuthenticityToken} />
+                <input type="hidden" name="num_employees_json" value={JSON.stringify(numEmployees)} />
+                { modalSubmit }
+              </div>
+              <hr/>
 
-            <details>
-              <summary>Glossary</summary>
-              <dl>
-                <dt>Junior (workers)</dt>
-                <dd>Have few factory experience. Without others' help they can't work efficiently. In this game juniors are always juniors; they don't grow.</dd>
+              <details>
+                <summary>Glossary</summary>
+                <dl>
+                  <dt>Junior (workers)</dt>
+                  <dd>Have few factory experience. Without others' help they can't work efficiently. In this game juniors are always juniors; they don't grow.</dd>
 
-                <dt>Intermediate (workers)</dt>
-                <dd>Have some factory experiences. Same as juniors, intermediates don't grow.</dd>
+                  <dt>Intermediate (workers)</dt>
+                  <dd>Have some factory experiences. Same as juniors, intermediates don't grow.</dd>
 
-                <dt>Senior (workers)</dt>
-                <dd>Have a lot of experiences, but require farely expensive salary.</dd>
+                  <dt>Senior (workers)</dt>
+                  <dd>Have a lot of experiences, but require farely expensive salary.</dd>
 
-                <dt>Motivated intermediate / Passionated senior (workers)</dt>
-                <dd>Exactly same as intermediates/seniors but they love working at a higher class company rather than just for money</dd>
+                  <dt>Motivated intermediate / Passionated senior (workers)</dt>
+                  <dd>Exactly same as intermediates/seniors but they love working at a higher class company rather than just for money</dd>
 
-                <dt>Production volume (t)</dt>
-                <dd>Indicated how much this employee consumes ingredients and produces productions, assuming you have "Factory base"</dd>
+                  <dt>Production volume (t)</dt>
+                  <dd>Indicated how much this employee consumes ingredients and produces productions, assuming you have "Factory base"</dd>
 
-                <dt>Production quality</dt>
-                <dd>Helps getting more credit by selling high quality products to your customers. The product quality is calculated by the average of your employees production quality, weighted by each production volumes.</dd>
+                  <dt>Production quality</dt>
+                  <dd>Helps getting more credit by selling high quality products to your customers. The product quality is calculated by the average of your employees production quality, weighted by each production volumes.</dd>
 
-                <dt>Produce (role)</dt>
-                <dd>The default role for newly hired employees.</dd>
+                  <dt>Produce (role)</dt>
+                  <dd>The default role for newly hired employees.</dd>
 
-                <dt>Mentor (role)</dt>
-                <dd>Stops production and increase 3 other employees production qualities up to same as the mentor.</dd>
+                  <dt>Mentor (role)</dt>
+                  <dd>Stops production and increase 3 other employees production qualities up to same as the mentor.</dd>
 
-                <dt>Factory equipments</dt>
-                <dd>Enhances all your employees production and quality (see details at Equipment menu.) e.g. "Conveyor".</dd>
+                  <dt>Factory equipments</dt>
+                  <dd>Enhances all your employees production and quality (see details at Equipment menu.) e.g. "Conveyor".</dd>
 
-                <dt>Layoff</dt>
-                <dd>Not implemented yet.</dd>
-              </dl>
-            </details>
-          </div>
+                  <dt>Layoff</dt>
+                  <dd>Not implemented yet.</dd>
+                </dl>
+              </details>
+            </div>
+          </form>
         </div>
       </div>
     </div>

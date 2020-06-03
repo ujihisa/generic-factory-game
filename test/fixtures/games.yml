@@ -1,0 +1,19 @@
+playing:
+  player: ujihisa
+  month: 2
+  cash: 200
+  storage: 100
+  ingredient: 40
+  product: 10
+  version: '1.0.0'
+  credit: 10
+  money: 100
+  ingredient_subscription: 0
+  messages_raw: '[]'
+  portfolios_raw: '[]'
+  equipment_names_raw: '[]'
+  quality: 0.0
+  mode: 'normal'
+  advertising: false
+  employee_groups_raw: '{}'
+  alerts_raw: '[]'

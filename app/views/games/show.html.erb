@@ -5,7 +5,27 @@
       💸💀💸 GAME OVER
     </font>
   </h1>
-  <%- if 3 <= @game.month %>
+  <%- if @game.mode == 'tutorial' %>
+    <div class="container" style='max-width: 480px;'>
+      <div class="card-deck mb-3 text-center">
+        <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">
+              Let's try again
+            </h4>
+          </div>
+          <div class="card-body">
+            <%= form_with(url: games_path, method: :post) do |form| %>
+              <%= hidden_field_tag :'game[player_id]', @game.player.id %>
+              <%= hidden_field_tag :'game[mode]', 'tutorial' %>
+              <%= form.submit "Start game (Tutorial)", class: 'btn btn-lg btn-block btn-secondary' %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+  <%- elsif 3 <= @game.month %>
     <%= render 'stats' %>
   <%- else %>
     <div class="alert alert-primary" role="alert">
@@ -36,6 +56,29 @@
         </div>
       </div>
     </div>
+    <hr />
+  <%- elsif @game.mode == 'easy' %>
+    <%- if @game.player.user == current_user %>
+      <div class="container" style='max-width: 480px;'>
+        <div class="card-deck mb-3 text-center">
+          <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
+            <div class="card-header">
+              <h4 class="my-0 font-weight-normal">
+                Let's try normal mode
+              </h4>
+            </div>
+            <div class="card-body">
+              <%= form_with(url: games_path, method: :post) do |form| %>
+                <%= hidden_field_tag :'game[player_id]', @game.player.id %>
+                <%= hidden_field_tag :'game[mode]', 'normal' %>
+                <%= form.submit "Start game (Normal)", class: 'btn btn-lg btn-block btn-primary' %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <%- end %>
+    <%= render 'stats' %>
     <hr />
   <%- else  %>
     <%= render 'stats' %>
