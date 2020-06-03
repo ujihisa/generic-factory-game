@@ -21,4 +21,8 @@ class Player < ApplicationRecord
       limit(1).
       first
   end
+
+  def completed?(version, mode)
+    games.exists?(version: version, mode: mode, money: (1000..))
+  end
 end

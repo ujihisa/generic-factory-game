@@ -37,7 +37,8 @@
     🎉 Game Clear!
   </h1>
 
-  <%- if @game.mode == 'tutorial' %>
+  <%- case @game.mode %>
+  <%- when 'tutorial' %>
     <div class="container" style='max-width: 480px;'>
       <div class="card-deck mb-3 text-center">
         <div class="card mb-4 shadow-sm" style='min-width: 220px;'>
@@ -57,7 +58,7 @@
       </div>
     </div>
     <hr />
-  <%- elsif @game.mode == 'easy' %>
+  <%- when 'easy' %>
     <%- if @game.player.user == current_user %>
       <div class="container" style='max-width: 480px;'>
         <div class="card-deck mb-3 text-center">
@@ -80,8 +81,12 @@
     <%- end %>
     <%= render 'stats' %>
     <hr />
-  <%- else  %>
-    <%= render 'stats' %>
+  <%- else # normal %>
+    <%- if current_user && current_user.player.completed?(@game.version, 'normal') %>
+      <%= render 'stats' %>
+    <%- else %>
+      You can see the stats details only if you complete a <%= @game.version %> normal game!
+    <%- end %>
   <%- end %>
 <%- end %>
 
