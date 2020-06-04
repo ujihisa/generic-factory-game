@@ -29,6 +29,9 @@ class GamesController < ApplicationController
     end
 
     @game_hint = @game.hint(@estimate)
+    @ogp = {
+      title: "GenericFactoryGame #{@game.player.name}'s #{@game.mode} game, month #{@game.month}",
+    }
   end
 
   # GET /games/new

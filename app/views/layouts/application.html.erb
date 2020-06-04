@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: http://ogp.me/ns#">
   <head>
     <title>GenericFactoryGame</title>
+    <%- if @ogp %>
+      <meta property="og:title" content="<%= @ogp[:title] %>" />
+      <meta property="og:type" content="website" />
+    <%- end %>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <%= favicon_link_tag  %>
