@@ -1,8 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
 import GFG from '../gfg'
 
+interface Context {
+  credit: number;
+  cash: number;
+}
+
 function Advertise(props) {
-  const context: any = useContext(GFG.GameContext);
+  const context: Context = useContext(GFG.GameContext);
 
   return (<>
     {
