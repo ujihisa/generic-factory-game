@@ -160,7 +160,7 @@ class Game < ApplicationRecord
     # produce
     production_vol = self.capped_production
     self.ingredient -= production_vol / INGREDIENT2PRODUCT
-    messages << "🏭 Consume #{production_vol / INGREDIENT2PRODUCT}t ingredients" if 0 < production_vol
+    messages << "📦 Consume #{production_vol / INGREDIENT2PRODUCT}t ingredients" if 0 < production_vol
     messages << "🏭 Produce #{production_vol}t products" if 0 < production_vol
 
     self.quality = (self.quality * self.product + self.factory.production_quality * production_vol) / (self.product + production_vol).to_f
@@ -184,13 +184,13 @@ class Game < ApplicationRecord
         self.cash -= trade.sales * 10
 
         alerts << "⚠️ Products not enough"
-        alerts << "💸 Pay $#{trade.sales * 10}K penalty for contract #{contract.name}"
+        alerts << "💸 -$#{trade.sales * 10}K penalty for contract #{contract.name}"
       end
     end
     self.cash += sales_total
     if 0 < delivery_total
       messages << "📜 Deliver #{delivery_total}t products"
-      messages << "📜 Gain $#{sales_total}K sales"
+      messages << "📜 +$#{sales_total}K sales"
     end
 
     credit_diff = 0
@@ -226,26 +226,26 @@ class Game < ApplicationRecord
 
     # pay fees
     self.cash -= self.storage / 100
-    messages << "🗄️ Pay $#{self.storage / 100}K for storage" if 0 < storage
+    messages << "🗄️ -$#{self.storage / 100}K for storage" if 0 < storage
 
     salary = self.organization_salary
     self.cash -= salary
-    messages << "💼 Pay $#{salary}K for salary" if 0 < salary
+    messages << "💼 -$#{salary}K for salary" if 0 < salary
 
     self.cash -= self.interest
-    messages << "🏦 Pay $#{self.interest}K for interest" if 0 < interest
+    messages << "🏦 -$#{self.interest}K for interest" if 0 < interest
 
     equipments_cost = self.factory.equipments_cost
     self.cash -= equipments_cost
-    messages << "🏭 Pay $#{equipments_cost}K for factory equipments" if 0 < equipments_cost
+    messages << "🏭 -$#{equipments_cost}K for factory equipments" if 0 < equipments_cost
 
     # receive ingredients
     if 0 < self.ingredient_subscription
       self.ingredient += self.ingredient_subscription
       fee_subscription = (self.ingredient_subscription * 0.10).to_i
       self.cash -= fee_subscription
+      messages << "📦 -$#{fee_subscription}K for subscription"
       messages << "📦 Receive #{self.ingredient_subscription}t ingredient"
-      messages << "📦 Pay $#{fee_subscription}K for subscription"
     end
 
     # overflow
@@ -254,7 +254,7 @@ class Game < ApplicationRecord
       penalty = (diff / 5.0).ceil
 
       alerts << "🗑️ Dispose #{diff}t ingredient due to overflow"
-      alerts << "🗑️ Pay $#{penalty}K penalty for the ingredient overflow"
+      alerts << "🗑️ -$#{penalty}K penalty for the ingredient overflow"
       self.ingredient -= diff
       self.cash -= penalty
     end
