@@ -68,17 +68,12 @@ class GamesController < ApplicationController
       @game.employee_groups_raw = {'Intermediate' => 4}.to_json
       @game.signed_contracts = {'Tutorial': -2}
 
-      @game.messages = <<~EOS.lines.to_a
+      @game.messages = <<~EOS.lines.select(&:present?).to_a
         Welcome to GenericFactoryGame!
         In this tutorial I'd love you to understand "End month" before starting actual game.
         Try clicking random places and make sure the "End month" button does not show the red warning, and then click it. That's it!
 
         The goal of this game is to achieve 1 million dollars. ($1,000K)
-
-        このチュートリアルではGenericFactoryGameの一部の振る舞いについて軽く触れて、ひとまず「End month」を完全に理解してもらいます。
-        いろんなボタンを推したりしてみて、とにかく左下の"End month"のボタンの赤い警告をなくして、それからそれを押してみてください。それだけでいけるはずです!
-
-        このゲームのクリア条件は、資産を$1,000Kにすることです。 (資産=現金-借金)
       EOS
     when 'easy'
       @game.cash = 300
@@ -111,7 +106,18 @@ class GamesController < ApplicationController
     @players = Player.all.reject(&:user)
 
     if @game.save
-      redirect_to @game, alert: @game.messages.join("\n")
+      messages =
+        if @game.mode == 'tutorial'
+          @game.messages + <<~EOS.lines.to_a
+            このチュートリアルではGenericFactoryGameの一部の振る舞いについて軽く触れて、ひとまず「End month」を完全に理解してもらいます。
+            いろんなボタンを押したりしてみて、とにかく左下の"End month"のボタンの赤い警告をなくして、それからそれを押してみてください。それだけでいけるはずです!
+
+            このゲームのクリア条件は、資産を$1,000Kにすることです。 (資産=現金-借金)
+          EOS
+        else
+          @game.messages
+        end
+      redirect_to @game, alert: messages.join("\n")
     else
       render :new
     end
