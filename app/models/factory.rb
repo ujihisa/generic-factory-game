@@ -92,7 +92,7 @@ class Factory
       quality: { Junior: 5, Intermediate: 5, Senior: 5 },
       deprecate: [],
       description: "Industrialization",
-      image: {z: 2, src: 'semiauto-machines.png'},
+      image: {z: 2, src: 'manual-machines.png'},
       modes: ['easy', 'normal'],
     }.freeze,
     'Anormal detector': {
@@ -112,7 +112,7 @@ class Factory
       quality: { Junior: 10, Intermediate: 10, Senior: 10 },
       deprecate: [:'Manual machines'],
       description: "Let the machines do all the jobs",
-      image: {z: 3, src: 'fullauto-machines.png'},
+      image: {z: 3, src: 'semiauto-machines.png'},
       modes: ['normal'],
     }.freeze,
     'Fullauto machines': {
@@ -122,7 +122,7 @@ class Factory
       quality: { Junior: 5, Intermediate: 5, Senior: 5 },
       deprecate: [:'Manual machines', :'Semiauto machines'],
       description: "Let the machines do all the jobs",
-      image: {z: 3, src: 'fullauto-machines.png'},
+      image: {z: 4, src: 'fullauto-machines.png'},
       modes: ['normal'],
     }.freeze,
   }.to_h {|k, v| [k, v.merge(name: k)] }.freeze
