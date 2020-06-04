@@ -4,7 +4,11 @@
     <title>GenericFactoryGame</title>
     <%- if @ogp %>
       <meta property="og:title" content="<%= @ogp[:title] %>" />
+      <meta property="og:description" content="<%= @ogp[:description] %>" />
+      <meta property="og:site_name" content="GenericFactoryGame" />
       <meta property="og:type" content="website" />
+      <meta property="og:url" content="." />
+      <meta property="og:image" content="images/generic-factory-game.png" />
     <%- end %>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 

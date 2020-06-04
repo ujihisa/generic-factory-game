@@ -30,7 +30,7 @@ class GamesController < ApplicationController
 
     @game_hint = @game.hint(@estimate)
     @ogp = {
-      title: "GenericFactoryGame #{@game.player.name}'s #{@game.mode} game, month #{@game.month}",
+      title: "#{@game.player.name}'s #{@game.mode} game, month #{@game.month} (#{@game.status})",
     }
   end
 
