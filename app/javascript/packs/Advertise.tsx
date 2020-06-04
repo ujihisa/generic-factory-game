@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import GFG from '../gfg'
 
 function Advertise(props) {
-  const context = useContext(GFG.GameContext);
+  const context: any = useContext(GFG.GameContext);
 
   return (<>
     {
@@ -18,7 +18,7 @@ function Advertise(props) {
           </button>
         </span>
     }
-    <div className="modal" id="advertiseModal" tabIndex="-1" role="dialog" aria-labelledby="advertiseModalLabel" aria-hidden="true">
+    <div className="modal" id="advertiseModal" tabIndex={-1} role="dialog" aria-labelledby="advertiseModalLabel" aria-hidden="true">
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">

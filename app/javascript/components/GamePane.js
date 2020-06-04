@@ -9,7 +9,7 @@ import Contracts from './Contracts'
 import BuyIngredient from './BuyIngredient'
 import Hiring from './Hiring'
 import Factory from './Factory'
-import Advertise from './Advertise'
+import Advertise from '../packs/Advertise'
 
 function GamePane(props) {
   useEffect(() => {
