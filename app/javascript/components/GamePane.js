@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from "prop-types"
 import Bank from "./Bank"
 import SubscribeIngredient from "./SubscribeIngredient"
-import Storage from "./Storage"
+import Storage from "../packs/Storage"
 import GFG from '../gfg'
 import CurrentStatus from './CurrentStatus'
 import Contracts from './Contracts'

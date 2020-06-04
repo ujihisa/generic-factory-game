@@ -1,13 +1,25 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from "prop-types"
 import GFG from '../gfg'
-import CurrentStatus from './CurrentStatus'
+import CurrentStatus from '../components/CurrentStatus'
+
+interface Context {
+  credit: number;
+  cash: number;
+  storage: number;
+  debt: number;
+  ingredient: number;
+  ingredientSubscription: number;
+  product: number;
+  quality: number;
+  formAuthenticityToken: string;
+}
 
 function Storage(props) {
-  const context = useContext(GFG.GameContext);
-  const [cash, setCash] = useState(context.cash);
-  const [storage, setStorage] = useState(context.storage + 100);
-  const [inputNumberStorage, setInputNumberStorage] = useState(100);
+  const context: Context = useContext(GFG.GameContext);
+  const [cash, setCash] = useState<number>(context.cash);
+  const [storage, setStorage] = useState<number>(context.storage + 100);
+  const [inputNumberStorage, setInputNumberStorage] = useState("100");
 
   const storagePrice = () =>
     (storage - context.storage) / 100;
@@ -29,7 +41,7 @@ function Storage(props) {
             </button>
           </span>
       }
-      <div className="modal" id="storageModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="modal" id="storageModal" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <form action={props.create_storages_game_url} acceptCharset="UTF-8" data-remote="true" method="post">
@@ -64,16 +76,17 @@ function Storage(props) {
                   name="storage" value={storage}
                   min={min} max={max} step="100"
                   onChange={(e) => {
-                    setStorage(e.target.value)
-                    setCash(context.cash - (parseInt(e.target.value, 10) - context.storage) / 100)
-                    setInputNumberStorage(e.target.value - context.storage)
+                    const value = parseInt(e.target.value, 10);
+                    setStorage(value)
+                    setCash(context.cash - (value - context.storage) / 100)
+                    setInputNumberStorage((value - context.storage).toString())
                   }}/>
                 {context.storage}t → {storage}t ({GFG.numberToCurrency(storagePrice())})
                 <CurrentStatus
                   cash={cash}
                   debt={context.debt}
                   credit={context.credit}
-                  storage={parseInt(storage, 10)}
+                  storage={storage}
                   ingredient={context.ingredient}
                   ingredientSubscription={context.ingredientSubscription}
                   product={context.product}
