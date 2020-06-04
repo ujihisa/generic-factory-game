@@ -5,24 +5,53 @@
   </div>
 <%- end %>
 
-<h1>GenericFactoryGame</h1>
-<h2>Version <%= GenericFactoryGame::VERSION %></h2>
-(Released on <%= GenericFactoryGame::RELEASE_DATE %>)
+<div class="jumbotron">
+  <h1 class="display-4">GenericFactoryGame</h1>
+  <p class="lead">
+  GenericFactoryGame is a resource-management and factory building game.
+  As a factory owner, you have a factory that employees consume "generic" ingredients to produce "generic" products. You can sign some contracts with customers who need the products to be delivered, so that you can gain sales.
+  It'll be the best to satisfy exact demands they require -- note that the demands change in certain months!
+  </p>
 
-<br>
-<img src="images/generic-factory-game.png" title="GenericFactoryGame">
+  <p class="lead">
+  <small class="text-muted">
+    GenericFactoryGameは資源管理・工場作成ゲームです。
+    あなたは工場長として、従業員を用いて (一般的な)原料を加工し、(一般的な)商品を作っていきます。
+    その商品を必要とする顧客に販売契約を結び、売上を得ていきましょう。
+    商品生産と需要がぴったりあっていると最高です。ちなみに需要は月ごとに変動するので要注意です!
+  </small>
+  </p>
 
-<h2>MENU</h2>
-<ul>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <img src="images/generic-factory-game.png" title="GenericFactoryGame Logo" width="100%"/>
+      </div>
+      <div class="col">
+        <img src="images/screenshot-1.0.0.png" title="GenericFactoryGame screenshot" width="100%"/>
+      </div>
+    </div>
+  </div>
+
+  <p align="right">
+  Version <%= GenericFactoryGame::VERSION %>
+  Released on <%= GenericFactoryGame::RELEASE_DATE %>
+  </p>
+
   <%- unless current_user %>
-    <li><%= link_to 'Create a new player', new_player_path %>
+    <%= link_to 'Create a new player', new_player_path, class: 'btn btn-primary btn-lg', role: 'button' %>
+    &nbsp;
   <%- end %>
-  <li><%= link_to 'Start a new game', new_game_path %>
-  <li><%= link_to 'List saved games', games_path %>
-  <li><%= link_to 'High score', games_highscore_path %>
-</ul>
 
-<hr/>
+  <%= link_to 'Start a new game', new_game_path, class: 'btn btn-secondary btn-lg', role: 'button' %>
+  &nbsp;
+
+  <%= link_to 'List saved games', games_path, class: 'btn btn-secondary btn-lg', role: 'button' %>
+  &nbsp;
+
+  <%= link_to 'High score', games_highscore_path, class: 'btn btn-secondary btn-lg', role: 'button' %>
+</div>
+
 
 <!--
 <a href="https://gist.github.com/ujihisa/06ab65998f6db112fcb44928b3fd7608">(How to play in Japanese)</a>
