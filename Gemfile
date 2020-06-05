@@ -58,3 +58,6 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'react-rails'
 gem 'devise'
+
+# TODO: remove this
+gem 'sprockets', '4.0.0' # to avoid 4.0.1 bug
