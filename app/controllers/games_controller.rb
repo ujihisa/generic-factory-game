@@ -31,7 +31,7 @@ class GamesController < ApplicationController
     @game_hint = @game.hint(@estimate)
     @ogp = {
       title: "#{@game.player.name}'s #{@game.mode} game (#{@game.status})",
-      description: "Month #{@game.month}, Cash #{@game.cash}, Debt #{@game.debt}",
+      description: "Month $#{@game.month}K, Cash $#{@game.cash}K, Debt $#{@game.debt}K",
     }
   end
 
