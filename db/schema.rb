@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(version: 2020_06_04_212135) do
   create_table "darklaunches", force: :cascade do |t|
     t.string "key", null: false
     t.integer "player_id", null: false
-    t.datetime "created_at", precision: 6, default: "2020-06-04 21:25:55", null: false
-    t.datetime "updated_at", precision: 6, default: "2020-06-04 21:25:55", null: false
+    t.datetime "created_at", precision: 6, default: "2020-06-05 23:06:03", null: false
+    t.datetime "updated_at", precision: 6, default: "2020-06-05 23:06:03", null: false
     t.index ["key"], name: "index_darklaunches_on_key"
     t.index ["player_id"], name: "index_darklaunches_on_player_id", unique: true
   end

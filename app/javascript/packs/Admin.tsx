@@ -50,12 +50,15 @@ function Admin(props) {
             <th scope="col"><strong>month</strong></th>
             <th scope="col"><strong>cash</strong></th>
             <th scope="col"><strong>debt</strong></th>
-            <th scope="col"><strong>updated_at</strong></th>
+            <th scope="col"><strong>updated on</strong></th>
             <th scope="col"><strong>player</strong></th>
           </tr>
           {
-            data && data.tutorials.map((tutorial: Game, i) =>
-              <tr key={i}>
+            data && data.tutorials.map((tutorial: Game, i) => {
+              const updated_on = new Date(Date.parse(tutorial.updated_at)).toISOString().slice(0, 10);
+              const old = Date.parse(tutorial.updated_at) < Date.now() - 60*60*24;
+
+              return <tr key={i}>
                 <td scope="col">
                   <a href={`/games/${tutorial.id}`}>
                     {
@@ -69,12 +72,12 @@ function Admin(props) {
                 </td>
                 <td scope="col">{tutorial.version}</td>
                 <td scope="col">{tutorial.month}</td>
-                <td scope="col">{tutorial.cash}</td>
-                <td scope="col">{tutorial.cash - tutorial.money}</td>
-                <td scope="col">{tutorial.updated_at}</td>
+                <td scope="col">{GFG.numberToCurrency(tutorial.cash)}</td>
+                <td scope="col">{GFG.numberToCurrency(tutorial.cash - tutorial.money)}</td>
+                <td scope="col">{old ? <b>{updated_on}</b> : updated_on}</td>
                 <td scope="col">{tutorial.player.name}</td>
-              </tr>
-            )
+              </tr>;
+            })
           }
         </tbody>
       </table>

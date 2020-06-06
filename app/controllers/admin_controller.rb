@@ -8,7 +8,6 @@ class AdminController < ApplicationController
       format.json do
         json = {
           tutorials: Game.latest.where(
-            version: GenericFactoryGame::VERSION,
             mode: 'tutorial'
           ).order(updated_at: :desc).includes(:player).as_json(include: :player),
         }
