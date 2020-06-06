@@ -43,13 +43,10 @@ function Factory(props) {
         map((eq) => eq.production[as.name]));
 
   const qualitySubtotalFromAssignmentsSummaryItem = (as) => 
-    (0 < as.numRoles.produce)
-      ? (
-        context.employees[as.name].quality +
-        sum(
-          equipmentsForEstimateWithoutDeprecated.
-          map((eq) => eq.quality[as.name])))
-    : 0;
+    context.employees[as.name].quality +
+      sum(
+        equipmentsForEstimateWithoutDeprecated.
+        map((eq) => eq.quality[as.name]))
 
   const [numRoleDiffs, setNumRoleDiffs] =
     useState(props.assignmentsSummary.reduce((o, a) =>
@@ -125,7 +122,7 @@ function Factory(props) {
                         {
                           props.assignmentsSummary.map((as) => 
                             <td key={as.name} scope="col">
-                              <code>{signed(volumeSubtotalFromAssignmentsSummaryItem(as))}</code>
+                              <code>{volumeSubtotalFromAssignmentsSummaryItem(as)}</code>
                             </td>)
                         }
                       </tr>
