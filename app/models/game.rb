@@ -411,7 +411,7 @@ class Game < ApplicationRecord
   end
 
   private def validate_latest
-    unless self.version == GenericFactoryGame::VERSION_MAJOR
+    if self.version_major != GenericFactoryGame::VERSION_MAJOR || self.version_patch != GenericFactoryGame::VERSION_PATCH
       self.errors.add(:version, "You can't play a game from old version")
     end
   end

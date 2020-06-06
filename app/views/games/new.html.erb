@@ -110,7 +110,7 @@
               <%= link_to 'Working in progress', games_path %>
             <%- end %>
             </p>
-            <p>World best score: <%= @world_best_scores[:normal] %> months</p>
+            <p>World best score: <%= @world_best_scores[:normal] || 'N/A' %> months</p>
 
             <p class="card-text">
               The main game. Not too hard to play but can be challenging if you'd like to achieve a higher score.

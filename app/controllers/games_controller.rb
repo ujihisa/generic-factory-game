@@ -49,8 +49,16 @@ class GamesController < ApplicationController
     @players = Player.all.reject(&:user)
 
     @world_best_scores = {
-      easy: Game.where(version_major: GenericFactoryGame::VERSION_MAJOR, money: (1000..), mode: 'easy').order(month: :asc).limit(1).pluck(:month).first,
-      normal: Game.where(version_major: GenericFactoryGame::VERSION_MAJOR, money: (1000..), mode: 'normal').order(month: :asc).limit(1).pluck(:month).first,
+      easy: Game.where(
+        version_major: GenericFactoryGame::VERSION_MAJOR,
+        money: (1000..),
+        mode: 'easy',
+      ).order(month: :asc).limit(1).pluck(:month).first,
+      normal: Game.where(
+        version_major: GenericFactoryGame::VERSION_MAJOR,
+        money: (1000..),
+        mode: 'normal'
+      ).order(month: :asc).limit(1).pluck(:month).first,
     }
   end
 
@@ -59,6 +67,7 @@ class GamesController < ApplicationController
   def create
     @game = Game.new(
       version_major: GenericFactoryGame::VERSION_MAJOR,
+      version_patch: GenericFactoryGame::VERSION_PATCH,
       ingredient_subscription: 0,
       **game_params)
     if @game.player.user && @game.player.user != current_user
@@ -128,7 +137,7 @@ class GamesController < ApplicationController
         end
       redirect_to @game, alert: messages.join("\n")
     else
-      render :new
+      redirect_to new_game_path, alert: messages.join("\n")
     end
   end
 
