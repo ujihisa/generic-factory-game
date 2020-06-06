@@ -281,7 +281,7 @@ class Game < ApplicationRecord
       latest.
       includes(:player).
       where(version: game_version, cash: (1000..), mode: mode).
-      order(month: :asc)
+      order(month: :asc, updated_at: :asc)
     query.to_a.uniq(&:player_id) # :(
   end
 
