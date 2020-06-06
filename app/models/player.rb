@@ -7,7 +7,7 @@ class Player < ApplicationRecord
   def best_game(mode)
     Game.
       latest.
-      where(version_major: GenericFactoryGame::VERSION, player_id: id, cash: (1000..), mode: mode).
+      where(version_major: GenericFactoryGame::VERSION_MAJOR, player_id: id, cash: (1000..), mode: mode).
       order(month: :asc).
       limit(1).
       first

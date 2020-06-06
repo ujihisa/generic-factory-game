@@ -2,7 +2,7 @@
 
 <h1>High score</h2>
 
-<h2>Version <%= GenericFactoryGame::VERSION %></h2>
+<h2>Version <%= GenericFactoryGame::VERSION_MAJOR %></h2>
 
 <%- ['easy', 'normal'].each do |mode| %>
   <h3><%= mode.capitalize %> mode</h3>
@@ -13,6 +13,7 @@
         <th>Name</th>
         <th>Shortest months to win</th>
         <th>Victory date</th>
+        <th>Version</th>
         <th></th>
       </tr>
     </thead>
@@ -36,6 +37,7 @@
             </small>
           </td>
           <td><small><%= game.updated_at.in_time_zone('America/Vancouver').iso8601 %></small></td>
+          <td><small><%= game.version %></small></td>
           <td><small><%= link_to 'Details', game %></small></td>
         </tr>
       <% end %>
