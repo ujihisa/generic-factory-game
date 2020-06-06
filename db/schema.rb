@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_04_212135) do
+ActiveRecord::Schema.define(version: 2020_06_06_222711) do
 
   create_table "admins", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 2020_06_04_212135) do
     t.integer "product", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "version", null: false
+    t.string "version_major", null: false
     t.integer "credit", default: 0, null: false
     t.integer "money", default: 0, null: false
     t.integer "ingredient_subscription", default: 0, null: false
@@ -70,10 +70,11 @@ ActiveRecord::Schema.define(version: 2020_06_04_212135) do
     t.boolean "advertising", default: false, null: false
     t.text "employee_groups_raw", default: "{}", null: false
     t.text "alerts_raw", default: "[]", null: false
+    t.string "version_patch"
     t.index ["mode"], name: "index_games_on_mode"
     t.index ["player_id", "cash", "month"], name: "index_games_on_player_id_and_cash_and_month"
     t.index ["updated_at"], name: "index_games_on_updated_at"
-    t.index ["version"], name: "index_games_on_version"
+    t.index ["version_major"], name: "index_games_on_version_major"
   end
 
   create_table "players", force: :cascade do |t|

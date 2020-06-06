@@ -7,8 +7,8 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @current_games = Game.latest.where(version: GenericFactoryGame::VERSION, mode: ['easy', 'normal']).order(updated_at: :desc)
-    @archived_games = Game.latest.where.not(version: GenericFactoryGame::VERSION).order(version: :desc, updated_at: :desc)
+    @current_games = Game.latest.where(version_major: GenericFactoryGame::VERSION, mode: ['easy', 'normal']).order(updated_at: :desc)
+    @archived_games = Game.latest.where.not(version_major: GenericFactoryGame::VERSION).order(version_major: :desc, updated_at: :desc)
   end
 
   def highscore
@@ -41,8 +41,8 @@ class GamesController < ApplicationController
     @players = Player.all.reject(&:user)
 
     @world_best_scores = {
-      easy: Game.where(version: GenericFactoryGame::VERSION, money: (1000..), mode: 'easy').order(month: :asc).limit(1).pluck(:month).first,
-      normal: Game.where(version: GenericFactoryGame::VERSION, money: (1000..), mode: 'normal').order(month: :asc).limit(1).pluck(:month).first,
+      easy: Game.where(version_major: GenericFactoryGame::VERSION, money: (1000..), mode: 'easy').order(month: :asc).limit(1).pluck(:month).first,
+      normal: Game.where(version_major: GenericFactoryGame::VERSION, money: (1000..), mode: 'normal').order(month: :asc).limit(1).pluck(:month).first,
     }
   end
 
@@ -50,7 +50,7 @@ class GamesController < ApplicationController
   # POST /games.json
   def create
     @game = Game.new(
-      version: GenericFactoryGame::VERSION,
+      version_major: GenericFactoryGame::VERSION,
       ingredient_subscription: 0,
       **game_params)
     if @game.player.user && @game.player.user != current_user

@@ -7,7 +7,7 @@ class Player < ApplicationRecord
   def best_game(mode)
     Game.
       latest.
-      where(version: GenericFactoryGame::VERSION, player_id: id, cash: (1000..), mode: mode).
+      where(version_major: GenericFactoryGame::VERSION, player_id: id, cash: (1000..), mode: mode).
       order(month: :asc).
       limit(1).
       first
@@ -16,13 +16,13 @@ class Player < ApplicationRecord
   def previous_best_game
     Game.
       latest.
-      where('version = ? AND player_id = ? AND 1000 <= cash', GenericFactoryGame::PREVIOUS_VERSION, id).
+      where('version_major = ? AND player_id = ? AND 1000 <= cash', GenericFactoryGame::PREVIOUS_VERSION, id).
       order(month: :asc).
       limit(1).
       first
   end
 
   def completed?(version, mode)
-    games.exists?(version: version, mode: mode, money: (1000..))
+    games.exists?(version_major: version, mode: mode, money: (1000..))
   end
 end

@@ -20,6 +20,10 @@ class Game < ApplicationRecord
 
   INGREDIENT2PRODUCT = 1
 
+  def version
+    "#{version_major}.#{version_patch}"
+  end
+
   def debt
     cash - money
   end
@@ -280,7 +284,7 @@ class Game < ApplicationRecord
     query = Game.
       latest.
       includes(:player).
-      where(version: game_version, cash: (1000..), mode: mode).
+      where(version_major: game_version, cash: (1000..), mode: mode).
       order(month: :asc, updated_at: :asc)
     query.to_a.uniq(&:player_id) # :(
   end
