@@ -82,7 +82,7 @@
     <%= render 'stats' %>
     <hr />
   <%- else # normal %>
-    <%- if current_user && current_user.player.completed?(@game.version, 'normal') %>
+    <%- if current_user && current_user.player.completed?(@game.version_major, 'normal') %>
       <%= render 'stats' %>
     <%- else %>
       You can see the stats details only if you complete a <%= @game.version %> normal game!

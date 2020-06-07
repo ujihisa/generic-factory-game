@@ -22,7 +22,7 @@ class Player < ApplicationRecord
       first
   end
 
-  def completed?(version, mode)
-    games.exists?(version_major: version, mode: mode, money: (1000..))
+  def completed?(version_major, mode)
+    games.exists?(version_major: version_major, mode: mode, money: (1000..))
   end
 end
