@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import PropTypes from "prop-types"
 import GFG from '../gfg'
 import CurrentStatus from '../components/CurrentStatus'
+import { Trans, useTranslation } from 'react-i18next';
 
 interface Context {
   credit: number;
@@ -17,6 +18,8 @@ interface Context {
 
 function Storage(props) {
   const context: Context = useContext(GFG.GameContext);
+  const { t, i18n } = useTranslation();
+
   const [cash, setCash] = useState<number>(context.cash);
   const [storage, setStorage] = useState<number>(context.storage + 100);
   const [inputNumberStorage, setInputNumberStorage] = useState("100");
@@ -31,13 +34,13 @@ function Storage(props) {
       {
         (0 < context.cash)
           ? <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#storageModal">
-            🗄️ Storage
+            <Trans>🗄️ Storage</Trans>
           </button>
           : <span className="d-inline-block" data-toggle="popover"
             title="Feature locked"
             data-content="You need at least 1 cash" >
             <button type="button" className="btn btn-secondary" data-toggle="popover" disabled style={{pointerEvents: "none"}}>
-              🗄️ Storage
+              <Trans>🗄️ Storage</Trans>
             </button>
           </span>
       }
@@ -47,21 +50,23 @@ function Storage(props) {
             <form action={props.create_storages_game_url} acceptCharset="UTF-8" data-remote="true" method="post">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLabel">
-                  🗄️ Storage
+                  <Trans>🗄️ Storage</Trans>
                 </h5>
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div className="modal-body">
-                <ul>
-                  <li><b>$1K</b> to buy 100t capacity storage</li>
-                  <li><b>$1K</b>/month to keep per 100t</li>
-                  <li>Both products and ingredients are stored in storage. You can't store more than the capacity.</li>
+                <Trans>
                   <ul>
-                    <li>The overflow will be simply discarded</li>
+                    <li><b>$1K</b> to buy 100t capacity storage</li>
+                    <li><b>$1K</b>/month to keep per 100t</li>
+                    <li>Both products and ingredients are stored in storage. You can't store more than the capacity.</li>
+                    <ul>
+                      <li>The overflow will be simply discarded, and pay penalty <b>$1K</b> per 5t.</li>
+                    </ul>
                   </ul>
-                </ul>
+                </Trans>
 
                 <input type="number" value={inputNumberStorage}
                   className={(parseInt(inputNumberStorage, 10) + context.storage == storage) ? "form-control" : "form-control is-invalid"}
