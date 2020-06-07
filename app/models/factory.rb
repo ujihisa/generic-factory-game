@@ -58,7 +58,7 @@ class Factory
     'Advanced toolsets': {
       install: 150,
       cost: 5,
-      production: { Junior: 0, Intermediate: 5, Senior: 10 },
+      production: { Junior: 0, Intermediate: 4, Senior: 8 },
       quality: { Junior: 0, Intermediate: 5, Senior: 10 },
       deprecate: [:'Cheap toolsets'],
       description: "Leverage skilled craftspersons. Advanced people need advanced tools.",

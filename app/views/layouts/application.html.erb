@@ -101,6 +101,11 @@
             </li>
           <%- end %>
         </ul>
+        <button id="toggle-languages-button" class='btn btn-outline-secondary' disabled
+          data-toggle="tooltip" title="Experimental language toggler button. Do not expect this to working properly.">
+          ...
+        </button>
+        &nbsp;&nbsp;&nbsp;
         <%- if current_user %>
           <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'btn btn-outline-secondary' %>
         <%- else %>
