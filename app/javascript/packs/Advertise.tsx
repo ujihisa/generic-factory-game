@@ -64,8 +64,8 @@ function Advertise(props) {
             <form action={props.advertise_game_path} acceptCharset="UTF-8" data-remote="true" method="post">
               {
                 80 <= context.cash
-                  ? <input type="submit" value={t("Pay $80K to advertise").toString()} className="btn btn-primary" />
-                  : <input type="submit" value={t("Not enough cash").toString()} className="btn btn-primary" disabled />
+                  ? <input type="submit" value={t<string>("Pay $80K to advertise")} className="btn btn-primary" />
+                  : <input type="submit" value={t<string>("Not enough cash")} className="btn btn-primary" disabled />
               }
             </form>
           </div>
