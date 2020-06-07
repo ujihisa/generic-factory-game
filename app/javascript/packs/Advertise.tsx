@@ -9,7 +9,7 @@ const resources = {
   ja: {
     translation: {
       "📰 Advertise": "📰 広告",
-      "<0>You need at least 5 credit</0><1>Cost&colon; 80K</1><2>You get +10 credit in the next month</2><3>You can only advertise once a month</3>": "<0>少なくともcreditが5必要です</0><1>Cost: $80K</1><2>翌月にcredit +10</2><3>広告は一月に一回まで</3>",
+      "<0>You need at least 5 credit</0><1>Cost&colon; $80K</1><2>You get +10 credit in the next month</2><3>You can only advertise once a month</3>": "<0>少なくともcreditが5必要です</0><1>Cost: $80K</1><2>翌月にcredit +10</2><3>広告は一月に一回まで</3>",
       "Pay $80K to advertise": "広告を行う ($80Kの支払い)",
       "Not enough cash": "Cash不足",
     }
@@ -86,7 +86,7 @@ function Advertise(props) {
             <ul>
               <Trans t={t}>
                 <li>You need at least 5 credit</li>
-                <li>Cost&colon; 80K</li>
+                <li>Cost&colon; $80K</li>
                 <li>You get +10 credit in the next month</li>
                 <li>You can only advertise once a month</li>
               </Trans>
