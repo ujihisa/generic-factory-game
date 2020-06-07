@@ -13,7 +13,7 @@ class PlayerTest < ActiveSupport::TestCase
     assert_not player.completed?('1.0.0', 'normal')
 
     game = player.games.first
-    game.update!(version: '1.0.0', mode: 'normal', money: 1023)
-    assert player.completed?('1.0.0', 'normal')
+    game.update!(version_major: '1.0', version_patch: '0', mode: 'normal', money: 1023)
+    assert player.completed?('1.0', 'normal')
   end
 end
