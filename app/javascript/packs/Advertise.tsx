@@ -2,38 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import GFG from '../gfg';
 import { Trans, useTranslation } from 'react-i18next';
 
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
-
-const resources = {
-  ja: {
-    translation: {
-      "📰 Advertise": "📰 広告",
-      "<0>You need at least 5 credit</0><1>Cost&colon; $80K</1><2>You get +10 credit in the next month</2><3>You can only advertise once a month</3>": "<0>少なくともcreditが5必要です</0><1>Cost: $80K</1><2>翌月にcredit +10</2><3>広告は一月に一回まで</3>",
-      "Pay $80K to advertise": "広告を行う ($80Kの支払い)",
-      "Not enough cash": "Cash不足",
-    }
-  }
-};
-
-i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
-  .init({
-    resources,
-    lng: "en",
-    fallbackLng: "en",
-
-    keySeparator: false, // we do not use keys in form messages.welcome
-    debug: true,
-    missingKeyHandler: ((lng, ns, key, fallbackValue) => {
-      console.log(lng, ns, key, fallbackValue);
-    }),
-
-    interpolation: {
-      escapeValue: false // react already safes from xss
-    }
-  });
-
 interface Context {
   credit: number;
   cash: number;
@@ -86,7 +54,7 @@ function Advertise(props) {
             <ul>
               <Trans t={t}>
                 <li>You need at least 5 credit</li>
-                <li>Cost&colon; $80K</li>
+                <li>Cost&#58; $80K</li>
                 <li>You get +10 credit in the next month</li>
                 <li>You can only advertise once a month</li>
               </Trans>
