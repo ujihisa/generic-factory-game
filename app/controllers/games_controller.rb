@@ -17,6 +17,11 @@ class GamesController < ApplicationController
       version_major: GenericFactoryGame::VERSION_MAJOR,
       version_patch: GenericFactoryGame::VERSION_PATCH,
     ).order(version_major: :desc, updated_at: :desc)
+
+    @ogp = {
+      title: "Saved Data",
+      description: "Saved Data",
+    }
   end
 
   def highscore
