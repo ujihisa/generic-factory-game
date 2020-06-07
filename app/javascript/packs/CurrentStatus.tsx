@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from "prop-types"
 import GFG from '../gfg'
+import { Trans, useTranslation } from 'react-i18next';
 
 interface Context {
   credit: number;
@@ -21,6 +22,7 @@ interface Context {
 
 function CurrentStatus(props) {
   const context: Context = useContext(GFG.GameContext);
+  const { t, i18n } = useTranslation();
 
   const moneyCol = (props.dept == 0) ? props.cash : 123;
 
@@ -66,7 +68,7 @@ function CurrentStatus(props) {
           <tr>
             <th scope="col">
               <strong>
-                <u data-toggle="tooltip" title="If your cash goes less than 0, the game is over. if your total money goes equal or more than 1000, this game ends with your victory.">
+                <u data-toggle="tooltip" title={t("If your cash goes less than 0, the game is over. if your total money goes equal or more than 1000, this game ends with your victory.")}>
                   Money
                 </u>
               </strong>
@@ -76,9 +78,9 @@ function CurrentStatus(props) {
                 (props.debt == 0)
                   ?  <b>{ GFG.numberToCurrency(props.cash) }</b>
                   : <span>
-                    Debt: <b>{ GFG.numberToCurrency(props.debt) }</b><br/>
-                    Cash: <b>{ GFG.numberToCurrency(props.cash) }</b><br/>
-                    Total: <b>{ GFG.numberToCurrency(props.cash - props.debt) }</b>
+                    <Trans>Debt</Trans>: <b>{ GFG.numberToCurrency(props.debt) }</b><br/>
+                    <Trans>Cash</Trans>: <b>{ GFG.numberToCurrency(props.cash) }</b><br/>
+                    <Trans>Total</Trans>: <b>{ GFG.numberToCurrency(props.cash - props.debt) }</b>
                   </span>
               }
               {moneyProgress}
@@ -106,11 +108,11 @@ function CurrentStatus(props) {
             <td scope="col"></td>
           </tr>
           <tr>
-            <th scope="col"><strong>Storage</strong></th>
+            <th scope="col"><strong><Trans>Storage</Trans></strong></th>
             <td scope="col">
               {
                 (props.storage == 0)
-                  ? <div className="alert alert-primary" role="alert">You must buy Storage first</div>
+                  ? <div className="alert alert-primary" role="alert"><Trans>You must buy Storage first</Trans></div>
                   : <>
                     {
                       (() => {
@@ -140,11 +142,11 @@ function CurrentStatus(props) {
                     }
                     Size: { props.storage }t
                     <br/>
-                    Ingredient: { props.ingredient }t (+ { props.ingredientSubscription }t)
+                    <Trans>Ingredient</Trans>: { props.ingredient }t (+ { props.ingredientSubscription }t)
                     <br/>
-                    Product Volume: { props.product }t
+                    <Trans>Product Volume</Trans>: { props.product }t
                     <br/>
-                    Product Quality { props.quality.toPrecision(4) }
+                    <Trans>Product Quality</Trans> { props.quality.toPrecision(4) }
                   </>
               }
             </td>
@@ -157,7 +159,7 @@ function CurrentStatus(props) {
             </td>
           </tr>
           <tr>
-            <th scope="col"><strong>Factory</strong></th>
+            <th scope="col"><strong><Trans>Factory</Trans></strong></th>
             <td scope="col">
               <div style={{position: "relative"}}>
                 <div>
@@ -173,9 +175,9 @@ function CurrentStatus(props) {
                     )
                   }
                   <br/>
-                  Production Volume <b>+{ props.productionVolume }t</b>
+                  <Trans>Production Volume</Trans> <b>+{ props.productionVolume }t</b>
                   <br/>
-                  Production Quality <b>{ props.productionQuality.toPrecision(4) }</b>
+                  <Trans>Production Quality</Trans> <b>{ props.productionQuality.toPrecision(4) }</b>
                   <br/>
                 </div>
                 {
@@ -218,7 +220,7 @@ function CurrentStatus(props) {
                               </li>)
                         }
                       </ul>
-                      : <div className="alert alert-primary" role="alert">You must install Factory base first</div>
+                      : <div className="alert alert-primary" role="alert"><Trans>You must install Factory base first</Trans></div>
                   }
                 </div>
               </div>
@@ -228,7 +230,7 @@ function CurrentStatus(props) {
             </td>
           </tr>
           <tr>
-            <th scope="col"><strong>Contracts</strong></th>
+            <th scope="col"><strong><Trans>Contracts</Trans></strong></th>
             <td scope="col">
               {
                 Object.keys(context.signedContracts).map((c) => context.contractDump[c].name).join(", ")
