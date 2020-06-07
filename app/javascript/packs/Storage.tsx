@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from "prop-types"
 import GFG from '../gfg'
-import CurrentStatus from '../components/CurrentStatus'
+import CurrentStatus from './CurrentStatus'
 import { Trans, useTranslation } from 'react-i18next';
 
 interface Context {

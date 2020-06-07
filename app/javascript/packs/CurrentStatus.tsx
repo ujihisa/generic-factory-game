@@ -1,21 +1,41 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from "prop-types"
-
 import GFG from '../gfg'
 
+interface Context {
+  credit: number;
+  cash: number;
+  storage: number;
+  debt: number;
+  ingredient: number;
+  ingredientSubscription: number;
+  product: number;
+  quality: number;
+  formAuthenticityToken: string;
+  month: number;
+  employeeGroups: any[];
+  equipments: any[];
+  signedContracts: string[];
+  contractDump: { name: string }[];
+}
+
 function CurrentStatus(props) {
-  const context = useContext(GFG.GameContext);
+  const context: Context = useContext(GFG.GameContext);
 
-  const moneyCol = (props.dept == 0) ? props.cash : 123
+  const moneyCol = (props.dept == 0) ? props.cash : 123;
 
-  const moneyProgressGoal = 2 * props.debt + 1000
+  const moneyProgressGoal = 2 * props.debt + 1000;
   const moneyProgress =
     <div className="progress">
-      <div className="progress-bar bg-danger" role="progressbar" style={{width: `${100 * props.debt / moneyProgressGoal}%`}} aria-valuemin="0" aria-valuemax="100"
+      <div className="progress-bar bg-danger" role="progressbar" style={{width: `${100 * props.debt / moneyProgressGoal}%`}}
+        aria-valuemin={0}
+        aria-valuemax={100}
         aria-valuenow={100 * props.debt / moneyProgressGoal}>
         { GFG.numberToCurrency(props.debt) }
       </div>
-      <div className="progress-bar" role="progressbar" style={{width: `${100 * props.cash / moneyProgressGoal}%`}} aria-valuemin="0" aria-valuemax="100"
+      <div className="progress-bar" role="progressbar" style={{width: `${100 * props.cash / moneyProgressGoal}%`}}
+        aria-valuemin={0}
+        aria-valuemax={100}
         aria-valuenow={100 * props.cash / moneyProgressGoal}>
         { GFG.numberToCurrency(props.cash) }
       </div>
@@ -76,7 +96,9 @@ function CurrentStatus(props) {
             <td scope="col">
               { props.credit }
               <div className="progress">
-                <div className="progress-bar bg-secondary" role="progressbar" style={{width: `${props.credit}%`}} aria-valuemin="0" aria-valuemax="100"
+                <div className="progress-bar bg-secondary" role="progressbar" style={{width: `${props.credit}%`}}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
                   aria-valuenow={props.credit}>
                 </div>
               </div>
@@ -96,15 +118,21 @@ function CurrentStatus(props) {
                         const pIngredient = 100 * props.ingredient / props.storage
                         const pIngredientSubscription = 100 * props.ingredientSubscription / props.storage
                         return <div className="progress">
-                          <div className="progress-bar bg-primary" role="progressbar" style={{width: `${pProduct}%`}} aria-valuemin="0" aria-valuemax="100"
+                          <div className="progress-bar bg-primary" role="progressbar" style={{width: `${pProduct}%`}}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
                             aria-valuenow={pProduct}>
                             P
                           </div>
-                          <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredient}%`}} aria-valuemin="0" aria-valuemax="100"
+                          <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredient}%`}}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
                             aria-valuenow={pIngredient}>
                             I
                           </div>
-                          <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredientSubscription}%`, height: "2px"}} aria-valuemin="0" aria-valuemax="100"
+                          <div className="progress-bar bg-info" role="progressbar" style={{width: `${pIngredientSubscription}%`, height: "2px"}}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
                             aria-valuenow={pIngredientSubscription}>
                           </div>
                         </div>
@@ -135,7 +163,7 @@ function CurrentStatus(props) {
                 <div>
                   {
                     Object.values(context.employeeGroups).flatMap((employeeGroup) => 
-                      Array(employeeGroup.num_hired).fill().map((_, i) =>
+                      Array(employeeGroup.num_hired).fill(null).map((_, i) =>
                         <img
                           key={`${employeeGroup.name}-${i}`}
                           src={`/images/${employeeGroup.image}`}

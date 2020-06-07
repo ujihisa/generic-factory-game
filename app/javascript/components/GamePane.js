@@ -4,7 +4,7 @@ import Bank from "./Bank"
 import SubscribeIngredient from "./SubscribeIngredient"
 import Storage from "../packs/Storage"
 import GFG from '../gfg'
-import CurrentStatus from './CurrentStatus'
+import CurrentStatus from '../packs/CurrentStatus'
 import Contracts from './Contracts'
 import BuyIngredient from './BuyIngredient'
 import Hiring from './Hiring'
