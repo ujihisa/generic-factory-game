@@ -20,7 +20,7 @@ class GamesController < ApplicationController
 
     @ogp = {
       title: "Saved Data",
-      description: "Saved Data",
+      description: "#{@current_games.size} games for #{GenericFactoryGame.version}",
     }
   end
 
