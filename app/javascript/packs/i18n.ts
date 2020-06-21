@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-fetch('/translations.json')
+(fetch('/translations.json')
   .then(
     (response) => {
       if (response.status !== 200) {
@@ -38,6 +38,22 @@ fetch('/translations.json')
     }
   ).catch((err) =>
     alert(err)
-  );
+  ));
+
+$(document).on('turbolinks:load', () => {
+  const button = $("#toggle-languages-button");
+
+  button.attr("disabled", null);
+  button.html("🇨🇦")
+  button.click(() => {
+    if (i18n.language == "en") {
+      i18n.changeLanguage("ja");
+      button.html("🇯🇵")
+    } else {
+      i18n.changeLanguage("en");
+      button.html("🇨🇦")
+    }
+  });
+});
 
 export default i18n;

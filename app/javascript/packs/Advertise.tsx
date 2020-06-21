@@ -11,22 +11,6 @@ function Advertise(props) {
   const context: Context = useContext(GFG.GameContext);
   const { t, i18n } = useTranslation();
 
-  useEffect(() => {
-    const button = $("#toggle-languages-button");
-
-    button.attr("disabled", null);
-    button.html("🇨🇦")
-    button.click(() => {
-      if (i18n.language == "en") {
-        i18n.changeLanguage("ja");
-        button.html("🇯🇵")
-      } else {
-        i18n.changeLanguage("en");
-        button.html("🇨🇦")
-      }
-    });
-  }, [])
-
   return (<>
     {
       (10 <= context.credit)
