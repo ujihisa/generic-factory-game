@@ -1,6 +1,4 @@
 class PlayersController < ApplicationController
-  before_action :set_player, only: [:show]
-
   # GET /players/new
   def new
     @player = Player.new
@@ -19,10 +17,6 @@ class PlayersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_player
-      @player = Player.find(params[:id])
-    end
 
     # Only allow a list of trusted parameters through.
     def player_params
