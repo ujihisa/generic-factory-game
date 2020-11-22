@@ -9,8 +9,6 @@ services:
     - PORT=3000
     volumes:
       - .:/app:cached
-    depends_on:
-    - yaichi
   yaichi:
     image: mtsmfm/yaichi:1.7.0
     ports:
