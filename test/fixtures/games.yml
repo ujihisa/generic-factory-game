@@ -5,7 +5,8 @@ playing:
   storage: 100
   ingredient: 40
   product: 10
-  version: '1.0.0'
+  version_major: '1.0'
+  version_patch: '0'
   credit: 10
   money: 100
   ingredient_subscription: 0
