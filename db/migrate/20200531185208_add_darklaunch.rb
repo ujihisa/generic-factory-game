@@ -7,6 +7,9 @@ class AddDarklaunch < ActiveRecord::Migration[6.0]
 
     reversible do |dir|
       dir.up do
+        if Player.count == 0
+          Player.create!(name: 'ujihisa')
+        end
         if player = Player.find(1)
           Darklaunch.create!(
             key: 'enable-bank-client-side-adjuetment-buttons',
