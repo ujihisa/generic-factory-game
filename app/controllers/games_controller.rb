@@ -53,12 +53,12 @@ class GamesController < ApplicationController
         version_major: GenericFactoryGame::VERSION_MAJOR,
         money: (1000..),
         mode: 'easy',
-      ).order(month: :asc).limit(1).pluck(:month).first,
+      ).order(month: :asc).limit(1).pick(:month),
       normal: Game.where(
         version_major: GenericFactoryGame::VERSION_MAJOR,
         money: (1000..),
         mode: 'normal'
-      ).order(month: :asc).limit(1).pluck(:month).first,
+      ).order(month: :asc).limit(1).pick(:month),
     }
   end
 
