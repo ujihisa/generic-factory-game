@@ -1,6 +1,5 @@
 class Player < ApplicationRecord
-  validates_uniqueness_of :name
-  validates :name, length: { in: 1..255 }
+  validates :name, length: { in: 1..255 }, uniqueness: true
   has_many :games
   has_one :user
 
