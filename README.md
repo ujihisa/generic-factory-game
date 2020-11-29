@@ -32,3 +32,13 @@ docker-compose up generic-factory-game
 # Licence
 
 AS-IS
+
+## MEMO
+
+```
+$ time git push heroku master
+...
+real    6m31.569s
+user    0m0.078s
+sys     0m0.108s
+```
