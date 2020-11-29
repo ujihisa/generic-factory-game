@@ -7,8 +7,9 @@ services:
     - 3000
     environment:
     - PORT=3000
+    - RAILS_ENV=development
     volumes:
-      - .:/app:cached
+      - .:/app
   yaichi:
     image: mtsmfm/yaichi:1.7.0
     ports:
