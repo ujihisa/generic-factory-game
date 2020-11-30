@@ -25,20 +25,10 @@ docker-compose up generic-factory-game
 
 |                  | local| CI  | deploy |
 |------------------|------|-----|--------|
-|Dockerfile        | YES  | YES | WILL BE|
+|Dockerfile        | YES  | YES | NO     |
 |docker-compose.yml| YES  | NO  | NO     |
 
 
 # Licence
 
 AS-IS
-
-## MEMO
-
-```
-$ time git push heroku master
-...
-real    6m31.569s
-user    0m0.078s
-sys     0m0.108s
-```
