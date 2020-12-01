@@ -1,12 +1,15 @@
-FROM ruby:2.7.2
+ARG RUBY_VERSION
+FROM ruby:${RUBY_VERSION}
 
 RUN \
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
   apt-get update -qq && apt-get install -y build-essential nodejs yarn
 
-ENV APP_HOME /app
-RUN mkdir $APP_HOME
+ENV APP_HOME=/app \
+  BUNDLE_PATH=/vendor/bundle/$RUBY_VERSION
+RUN mkdir $APP_HOME && \
+  mkdir -p $BUNDLE_PATH
 WORKDIR $APP_HOME
 
 RUN gem install bundler:2.1.4
