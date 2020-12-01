@@ -40,4 +40,4 @@ jobs:
     - name: Run db:migrate
       run: "bin/rake db:create && bin/rake db:migrate"
     - name: Run test
-      run: "bin/webpack -w && bin/rails test"
+      run: "bin/rake webpacker:compile && bin/rails test"
