@@ -31,13 +31,16 @@ jobs:
       with:
         ruby-version: 2.7.2
     - uses: actions/setup-node@v2-beta
-    - name: yarn install
-      uses: borales/actions-yarn@v2.0.0
+    - uses: borales/actions-yarn@v2.0.0
       with:
         cmd: install
     - name: Install dependencies
       run: "bundle install --without development"
     - name: Run db:migrate
       run: "bin/rake db:create && bin/rake db:migrate"
+    - name: Setup Node
+      uses: actions/setup-node@v1
+    - run: "yarn check || bin/rails yarn:install"
+    # - run: "bin/rake webpacker:compile"
     - name: Run test
-      run: "bin/rake webpacker:compile && bin/rails test"
+      run: "bin/rails test"
