@@ -11,7 +11,7 @@ class GameTest < ActiveSupport::TestCase
     game.assign_attributes(cash: 100, money: 100)
     assert_equal 0, game.debt
 
-    game.debt = 10
+    game.debt = 100
     assert_equal 10, game.debt
     assert_equal 90, game.money
   end
