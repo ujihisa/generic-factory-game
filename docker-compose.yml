@@ -11,10 +11,29 @@ services:
     environment:
     - PORT=3000
     - RAILS_ENV=development
+    - WEBPACKER_DEV_SERVER_HOST=webpacker
     volumes:
       - .:/app
       - vendor:/app/vendor
       - node_modules:/app/node_modules
+    depends_on:
+      - webpacker
+  webpacker:
+    build:
+      context: .
+      args:
+        RUBY_VERSION: 2.7.2
+    environment:
+      - NODE_ENV=development
+      - RAILS_ENV=development
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    command: ./bin/webpack-dev-server
+    volumes:
+      - .:/app
+      - vendor:/app/vendor
+      - node_modules:/app/node_modules
+    ports:
+      - '127.0.0.1:3035:3035'
   yaichi:
     image: mtsmfm/yaichi:1.7.0
     ports:
