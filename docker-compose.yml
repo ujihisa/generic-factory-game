@@ -14,6 +14,7 @@ services:
     volumes:
       - .:/app
       - vendor:/app/vendor
+      - node_modules:/app/node_modules
   yaichi:
     image: mtsmfm/yaichi:1.7.0
     ports:
@@ -22,3 +23,4 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 volumes:
   vendor:
+  node_modules:
