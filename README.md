@@ -18,14 +18,14 @@ or run foreground like this:
 
 ```
 docker-compose up -d yaichi
-docker-compose up generic-factory-game
+docker-compose up --build generic-factory-game
 ```
 
 ## Dockerfile and docker-compose.yml
 
 |                  | local| CI  | deploy |
 |------------------|------|-----|--------|
-|Dockerfile        | YES  | YES | NO     |
+|Dockerfile        | YES  | NO  | NO     |
 |docker-compose.yml| YES  | NO  | NO     |
 
 
