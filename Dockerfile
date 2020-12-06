@@ -19,6 +19,6 @@ COPY . $APP_HOME
 
 EXPOSE ${PORT}
 
-RUN yarn install --check-files
+RUN yarn install --check-files --silent
 # RUN RAILS_ENV=production bundle exec rake assets:precompile # It's build time
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]
