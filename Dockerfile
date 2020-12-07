@@ -13,12 +13,13 @@ RUN mkdir $APP_HOME && \
 WORKDIR $APP_HOME
 
 RUN gem install bundler:2.1.4
-ADD Gemfile $APP_HOME/Gemfile
+COPY Gemfile $APP_HOME/Gemfile
 RUN bundle install
-COPY . $APP_HOME
+
+COPY package.json yarn.lock $APP_HOME/
+RUN yarn install --check-files --silent
 
 EXPOSE ${PORT}
 
-RUN yarn install --check-files --silent
 # RUN RAILS_ENV=production bundle exec rake assets:precompile # It's build time
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]

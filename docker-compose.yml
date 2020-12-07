@@ -14,8 +14,6 @@ services:
     - WEBPACKER_DEV_SERVER_HOST=webpacker
     volumes:
       - .:/app
-      - vendor:/app/vendor
-      - node_modules:/app/node_modules
     depends_on:
       - webpacker
   webpacker:
@@ -30,8 +28,6 @@ services:
     command: ./bin/webpack-dev-server
     volumes:
       - .:/app
-      - vendor:/app/vendor
-      - node_modules:/app/node_modules
     ports:
       - '127.0.0.1:3035:3035'
   yaichi:
@@ -40,6 +36,3 @@ services:
       - 80:3000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-volumes:
-  vendor:
-  node_modules:
