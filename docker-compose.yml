@@ -5,7 +5,7 @@ services:
     build:
       context: .
       args:
-        RUBY_VERSION: 3.0.0
+        RUBY_VERSION: 3.0.1
     ports:
     - 3000
     environment:
@@ -20,7 +20,7 @@ services:
     build:
       context: .
       args:
-        RUBY_VERSION: 3.0.0
+        RUBY_VERSION: 3.0.1
     environment:
       - NODE_ENV=development
       - RAILS_ENV=development
