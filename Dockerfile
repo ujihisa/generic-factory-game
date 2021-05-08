@@ -17,7 +17,7 @@ RUN \
 WORKDIR $APP_HOME
 
 RUN gem install bundler:2.1.4
-COPY Gemfile* $APP_HOME/
+COPY Gemfile Gemfile.lock $APP_HOME/
 RUN bundle install --quiet
 
 COPY package.json yarn.lock $APP_HOME/
