@@ -33,10 +33,13 @@
     </div>
   </div>
 
-  <p align="right">
-  Version <%= GenericFactoryGame::VERSION_MAJOR %>
-  Released on <%= GenericFactoryGame::RELEASE_DATE %>
-  </p>
+  <div align="right">
+    Version <%= GenericFactoryGame::VERSION_MAJOR %>
+    Released on <%= GenericFactoryGame::RELEASE_DATE %>
+  </div>
+  <div align="right">
+    (<%= link_to 'Last updates', 'https://github.com/ujihisa/generic-factory-game/commits/master' %>)
+  </div>
 
   <%- unless current_user %>
     <%= link_to 'Create a new player', new_player_path, class: 'btn btn-primary btn-lg', role: 'button' %>
