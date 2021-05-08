@@ -58,3 +58,4 @@ end
 gem 'tzinfo-data'
 gem 'react-rails'
 gem 'devise'
+gem 'rexml' # for bootsnap
