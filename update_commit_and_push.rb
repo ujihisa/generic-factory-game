@@ -3,12 +3,13 @@ if `git branch --show-current`.chomp != 'master'
 end
 
 system('git pull --rebase', exception: true)
+system('bundle lock --update', exception: true)
 system('doo -b bundle update', exception: true)
 if `git diff -- Gemfile.lock` != ''
   system("git add Gemfile.lock && git commit -m 'bundle lock --update'", exception: true)
 end
 
-system('doo yarn upgrade', exception: true)
+system('doo -b yarn upgrade', exception: true)
 if `git diff -- yarn.lock` != ''
   system("git add ./yarn.lock && git commit -m 'yarn upgrade'", exception: true)
 end
