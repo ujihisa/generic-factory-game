@@ -14,7 +14,7 @@ if `git diff -- yarn.lock` != ''
   system("git add ./yarn.lock && git commit -m 'yarn upgrade'", exception: true)
 end
 
-system('doo bin/rails test', exception: true)
+system('doo -b bin/rails test', exception: true)
 
 system('git push', exception: true)
 
