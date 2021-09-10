@@ -25,7 +25,7 @@ COPY --chown=rails Gemfile Gemfile.lock $APP_HOME/
 RUN bundle install --quiet
 
 COPY --chown=rails package.json yarn.lock $APP_HOME/
-RUN yarn install --check-files --silent
+RUN yarn install --check-files --silent --ignore-engines
 
 EXPOSE ${PORT}
 
