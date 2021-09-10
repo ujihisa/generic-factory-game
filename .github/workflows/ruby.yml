@@ -40,6 +40,6 @@ jobs:
       run: "bin/rake db:create && bin/rake db:migrate"
     - name: Setup Node
       uses: actions/setup-node@v1
-    - run: "yarn check || bin/rails yarn:install"
+    - run: "yarn check --ignore-engines || bin/rails yarn:install"
     - name: Run test
       run: "bin/rails test"
