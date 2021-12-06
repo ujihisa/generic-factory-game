@@ -163,7 +163,7 @@ GEM
       execjs
       railties (>= 3.2)
       tilt
-    regexp_parser (2.1.1)
+    regexp_parser (2.2.0)
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
