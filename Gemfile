@@ -21,7 +21,6 @@ group :development do
   gem 'web-console', '>= 3.3.0'
   gem 'listen'
   gem 'spring'
-  gem 'spring-watcher-listen'
 end
 
 group :test do
