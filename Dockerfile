@@ -31,4 +31,5 @@ EXPOSE ${PORT}
 
 COPY --chown=rails . ./
 
+# RUN RAILS_ENV=production bundle exec rake assets:precompile # It's build time
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]
