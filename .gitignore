@@ -24,3 +24,21 @@
 yarn-debug.log*
 .yarn-integrity
 db/*.sqlite3*
+
+/vendor
+
+### temporary
+/old/.bundle
+/old/log/*
+/old/tmp/*
+!/old/log/.keep
+!/old/tmp/.keep
+/old/storage/*
+!/old/storage/.keep
+/old/public/assets
+/old/config/master.key
+/old/public/packs
+/old/public/packs-test
+/old/node_modules
+/old/yarn-error.log
+/old/db/*.sqlite3*
