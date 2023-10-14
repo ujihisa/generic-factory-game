@@ -1,0 +1,19 @@
+version: '3'
+services:
+  generic-factory-game:
+    container_name: generic-factory-game
+    build:
+      context: .
+    ports:
+    - 3000
+    environment:
+    - PORT=3000
+    - RAILS_ENV=development
+    volumes:
+      - .:/app
+  yaichi:
+    image: mtsmfm/yaichi
+    ports:
+      - 80:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
