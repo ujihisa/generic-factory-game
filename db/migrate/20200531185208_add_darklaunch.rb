@@ -1,4 +1,9 @@
 class AddDarklaunch < ActiveRecord::Migration[6.0]
+  class Player < ApplicationRecord
+  end
+  class Darklaunch < ApplicationRecord
+  end
+
   def change
     create_table :darklaunches do |t|
       t.string :key, null: false, index: true
@@ -13,7 +18,7 @@ class AddDarklaunch < ActiveRecord::Migration[6.0]
         if player = Player.find(1)
           Darklaunch.create!(
             key: 'enable-bank-client-side-adjuetment-buttons',
-            player: player)
+            player_id: player.id)
         end
       end
     end

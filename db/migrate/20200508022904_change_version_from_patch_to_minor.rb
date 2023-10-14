@@ -1,4 +1,7 @@
 class ChangeVersionFromPatchToMinor < ActiveRecord::Migration[6.0]
+  class Game < ApplicationRecord
+  end
+
   def up
     Game.where(version: '0.0.1').update_all(version: '0.1.0')
     Game.where(version: '0.0.2').update_all(version: '0.2.0')

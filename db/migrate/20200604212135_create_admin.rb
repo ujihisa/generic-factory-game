@@ -1,4 +1,6 @@
 class CreateAdmin < ActiveRecord::Migration[6.0]
+  class User < ApplicationRecord
+  end
   class Admin < ApplicationRecord
   end
 

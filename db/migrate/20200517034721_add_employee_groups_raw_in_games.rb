@@ -1,4 +1,7 @@
 class AddEmployeeGroupsRawInGames < ActiveRecord::Migration[6.0]
+  class Game < ApplicationRecord
+  end
+
   def change
     reversible do |dir|
       change_table :games do |t|

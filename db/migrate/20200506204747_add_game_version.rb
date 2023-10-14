@@ -1,4 +1,7 @@
 class AddGameVersion < ActiveRecord::Migration[6.0]
+  class Game < ApplicationRecord
+  end
+
   def up
     add_column :games, :version, :string
     add_index :games, :version
