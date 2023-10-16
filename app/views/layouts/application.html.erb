@@ -1,15 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: http://ogp.me/ns#">
   <head>
     <title>GenericFactoryGame</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%- if @ogp %>
+      <meta property="og:title" content="<%= @ogp[:title] %>" />
+      <meta property="og:description" content="<%= @ogp[:description] %>" />
+      <meta property="og:site_name" content="🏭 GenericFactoryGame" />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="." />
+      <!--
+      <meta property="og:image" content="/images/generic-factory-game.png" />
+      -->
+    <%- end %>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <%= favicon_link_tag  %>
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+    <%= javascript_pack_tag 'Admin', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar navbar-expand-md navbar-light fixed-top" style="background-color: #beb3ab;">
+      <%= link_to '/', class: 'navbar-brand' do %>
+        <img src="/images/generic-factory-game.png" style="height: 1em" />
+        GenericFactoryGame
+      <%- end %>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <!--
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          </li>
+          -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Menu
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <%= link_to new_game_path, class: 'dropdown-item' do %>
+                <img src="/images/generic-factory-game.png" style="width: 1em" />
+                Start a new game
+              <%- end %>
+
+              <%= link_to games_path, class: 'dropdown-item' do %>
+                <img src="/images/generic-factory-game.png" style="width: 1em" />
+                List saved games
+              <%- end %>
+
+              <%= link_to games_highscore_path, class: 'dropdown-item' do %>
+                <img src="/images/generic-factory-game.png" style="width: 1em" />
+                High score
+              <%- end %>
+
+              <%= link_to 'https://github.com/ujihisa/generic-factory-game', class: 'dropdown-item' do %>
+                <img src="/images/GitHub-Mark-32px.png" style="width: 1em" style="width: 1em" />
+                Contribute
+              <%- end %>
+
+              <%= link_to 'https://github.com/ujihisa/generic-factory-game/blob/master/CHANGELOG.md#100', class: 'dropdown-item' do %>
+                <img src="/images/GitHub-Mark-32px.png" style="width: 1em" style="width: 1em" />
+                Changelog
+              <%- end %>
+
+              <%= link_to 'https://twitter.com/GenericFactory', class: 'dropdown-item' do %>
+                <img src="/images/Twitter_Social_Icon_Rounded_Square_Color.svg" style="width: 1em" />
+                GenericFactory
+              <%- end %>
+            </div>
+          </li>
+          <%- if @game&.persisted? %>
+            <li class="nav-item active">
+              <div class="nav-link disabled">
+                <b><%= @game.player.name %></b>'s <%= @game.mode %> game
+                /
+                month <b><%= @game.month %></b>
+                /
+                <%= @game.status %>
+                /
+                VERSION_MAJOR <%= @game.version %>
+              </div>
+            </li>
+          <%- end %>
+        </ul>
+        <button id="toggle-languages-button" class='btn btn-outline-secondary' disabled
+          data-toggle="tooltip" title="Experimental language toggler button. Do not expect this to work properly.">
+          ...
+        </button>
+        &nbsp;&nbsp;&nbsp;
+        <%- if current_user %>
+          <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'btn btn-outline-secondary' %>
+        <%- else %>
+          <%= link_to 'Login', new_user_session_path, class: 'btn btn-outline-primary' %>
+        <%- end %>
+      </div>
+    </nav>
+    <br/>
+    <br/>
+    <br/>
+
+    <main role="main">
+      <div class="container">
+        <%= yield %>
+      </div>
+    </main>
+
   </body>
 </html>
