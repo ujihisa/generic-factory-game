@@ -12,6 +12,10 @@ services:
     - RAILS_ENV=development
     volumes:
       - .:/rails
+    depends_on:
+      - yaichi
+    command:
+      bin/rails server -b 0.0.0.0
   yaichi:
     image: mtsmfm/yaichi
     ports:

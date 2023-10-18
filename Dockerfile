@@ -24,7 +24,8 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git pkg-config
+    apt-get install --no-install-recommends -y build-essential git pkg-config nodejs
+# ^ nodejs is for bootsnap's execjs dependency unfortunately.
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
