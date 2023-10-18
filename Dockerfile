@@ -13,6 +13,11 @@ WORKDIR /rails
 #     BUNDLE_PATH="/usr/local/bundle" \
 #     BUNDLE_WITHOUT="development"
 
+# Install packages needed for deployment
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl libsqlite3-0 && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
@@ -36,14 +41,15 @@ RUN bundle exec bootsnap precompile app/ lib/
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
+# ujihisa
+FROM build as dev
+RUN useradd rails --create-home --shell /bin/bash && \
+    chown -R rails:rails db log storage tmp
+RUN chown -R rails:rails /usr/local/bundle # ujihisa
+USER rails:rails
 
 # Final stage for app image
 FROM base
-
-# Install packages needed for deployment
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-0 && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application
 COPY --from=build /usr/local/bundle /usr/local/bundle
