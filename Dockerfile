@@ -44,9 +44,12 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 # ujihisa
 FROM build as dev
+RUN apt-get install -yq sudo postgresql sqlite3
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
-RUN chown -R rails:rails /usr/local/bundle # ujihisa
+RUN echo rails ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/rails
+RUN chmod 0440 /etc/sudoers.d/rails
+RUN chown -R rails:rails /usr/local/bundle
 USER rails:rails
 
 # Final stage for app image
