@@ -1,6 +1,6 @@
 <%- case @game.status %>
 <%- when :game_over %>
-  <h1 class='display-3 jumbotron'>
+  <h1 class='display-3 container-fluid bg-light p-5'>
     <font color=red>
       💸💀💸 GAME OVER
     </font>
@@ -33,7 +33,7 @@
     </div>
   <%- end %>
 <%- when :completed %>
-  <h1 class='display-3 jumbotron'>
+  <h1 class='display-3 container-fluid bg-light p-5'>
     🎉 Game Clear!
   </h1>
 
